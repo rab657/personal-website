@@ -1,0 +1,2544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build AI Products That Compete Globally & Get Acquired</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #111111;
+  --bg-card: #161616;
+  --bg-card-hover: #1a1a1a;
+  --bg-elevated: #1a1a1a;
+  --gold: #C8A44E;
+  --gold-light: #E8D5A0;
+  --gold-dim: #8B7332;
+  --text-primary: #F5F0E8;
+  --text-secondary: #A09882;
+  --text-muted: #6B6355;
+  --border: #2A2520;
+  --border-gold: #3D3425;
+  --accent-red: #C44D3F;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Utility ─── */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* ─── Ticker Bar ─── */
+.ticker {
+  background: var(--gold);
+  color: var(--bg-primary);
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-block;
+  animation: ticker 25s linear infinite;
+}
+.ticker-inner span { margin-right: 48px; }
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Navigation ─── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+}
+nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+.nav-cta {
+  background: var(--gold);
+  color: var(--bg-primary);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.nav-cta:hover { background: var(--gold-light); }
+
+/* ─── Hero ─── */
+.hero {
+  padding: 100px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(200,164,78,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,164,78,0.08);
+  border: 1px solid var(--border-gold);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 32px;
+  letter-spacing: 0.04em;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  background: var(--accent-red);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.08;
+  font-weight: 400;
+  color: var(--text-primary);
+  max-width: 900px;
+  margin-bottom: 28px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+.hero-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-meta-item .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.hero-meta-item .value {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--gold-light);
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gold);
+  color: var(--bg-primary);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 16px 36px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-primary svg { width: 16px; height: 16px; }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 16px 24px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.btn-secondary:hover { border-color: var(--gold-dim); color: var(--gold-light); }
+
+/* ─── Press Bar ─── */
+.press-bar {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 0;
+}
+.press-bar .container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.press-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.press-logos {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+.press-logo {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--text-muted);
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  text-decoration: none;
+}
+.press-logo:hover { opacity: 1; color: var(--text-secondary); }
+
+/* ─── Video Section ─── */
+.video-section { padding: 80px 0; }
+.video-wrapper {
+  aspect-ratio: 16/9;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.video-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(200,164,78,0.03) 0%, transparent 50%);
+}
+.play-btn {
+  width: 80px; height: 80px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: transform 0.3s;
+}
+.video-wrapper:hover .play-btn { transform: scale(1.1); }
+.play-btn svg { width: 28px; height: 28px; fill: var(--bg-primary); margin-left: 4px; }
+.video-caption {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─── Section Styles ─── */
+.section { padding: 80px 0; }
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.15;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+.section-desc {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+/* ─── Story / Credibility ─── */
+.story { border-top: 1px solid var(--border); }
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-top: 48px;
+}
+.story-timeline { position: relative; padding-left: 24px; }
+.story-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), var(--border));
+}
+.timeline-item { margin-bottom: 32px; position: relative; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.timeline-year {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold-dim);
+  margin-bottom: 4px;
+}
+.timeline-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.timeline-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.story-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-content: start;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+  transition: border-color 0.3s;
+}
+.stat-card:hover { border-color: var(--border-gold); }
+.stat-number {
+  font-family: var(--serif);
+  font-size: 36px;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── Who It's For ─── */
+.who-for { border-top: 1px solid var(--border); }
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.persona-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.persona-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.persona-card:hover { border-color: var(--border-gold); transform: translateY(-2px); }
+.persona-card:hover::before { opacity: 1; }
+.persona-emoji { font-size: 28px; margin-bottom: 16px; }
+.persona-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.persona-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ─── Curriculum ─── */
+.curriculum { border-top: 1px solid var(--border); }
+.curriculum-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+.curriculum-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  transition: border-color 0.3s;
+}
+.curriculum-card:hover { border-color: var(--border-gold); }
+.curriculum-card.highlight {
+  border-color: var(--gold-dim);
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(200,164,78,0.04) 100%);
+}
+.class-number {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.class-type {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  margin-bottom: 14px;
+}
+.type-strategy { background: rgba(200,164,78,0.12); color: var(--gold); }
+.type-tooling { background: rgba(100,180,140,0.12); color: #6AB48C; }
+.class-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.class-topics {
+  list-style: none;
+  margin-top: 14px;
+}
+.class-topics li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+}
+.class-topics li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--gold-dim);
+}
+
+/* ─── What's Included ─── */
+.included { border-top: 1px solid var(--border); }
+.included-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.included-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+}
+.included-icon {
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+.included-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.included-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── Instructors ─── */
+.instructors { border-top: 1px solid var(--border); }
+.instructor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+.instructor-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 36px;
+  position: relative;
+}
+.instructor-name {
+  font-family: var(--serif);
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+.instructor-role {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+}
+.instructor-bio {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.instructor-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.instructor-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+}
+
+/* ─── Pricing ─── */
+.pricing { border-top: 1px solid var(--border); }
+.pricing-card {
+  max-width: 560px;
+  margin: 48px auto 0;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-dim);
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+.pricing-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.pricing-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.pricing-currency {
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--text-secondary);
+}
+.pricing-number {
+  font-family: var(--serif);
+  font-size: 64px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.pricing-period {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.pricing-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.pricing-features {
+  list-style: none;
+  margin-bottom: 32px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+.pricing-features li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+}
+.pricing-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+.pricing-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--bg-primary);
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 18px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all 0.3s ease;
+}
+.pricing-btn:hover { background: var(--gold-light); }
+.pricing-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.pricing-secure {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.spots-left {
+  text-align: center;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent-red);
+  letter-spacing: 0.04em;
+}
+.spots-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  margin-top: 8px;
+  overflow: hidden;
+}
+.spots-bar-fill {
+  height: 100%;
+  width: 72%;
+  background: linear-gradient(90deg, var(--accent-red), var(--gold));
+  transition: width 1s ease;
+}
+
+/* ─── FAQ ─── */
+.faq { border-top: 1px solid var(--border); }
+.faq-list { max-width: 700px; margin-top: 48px; }
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+  cursor: pointer;
+}
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+.faq-toggle {
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--gold-dim);
+  transition: transform 0.3s;
+  min-width: 20px;
+  text-align: right;
+}
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+.faq-item.open .faq-answer {
+  max-height: 200px;
+  padding-top: 14px;
+}
+.faq-answer p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ─── Final CTA ─── */
+.final-cta {
+  border-top: 1px solid var(--border);
+  padding: 100px 0;
+  text-align: center;
+}
+.final-cta h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 4.5vw, 56px);
+  line-height: 1.12;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+.final-cta h2 em { font-style: italic; color: var(--gold); }
+.final-cta p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+/* ─── Footer ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+  text-align: center;
+}
+footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+footer a { color: var(--gold-dim); text-decoration: none; }
+footer a:hover { color: var(--gold); }
+
+/* ─── Toast Notification ─── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 4.6s forwards;
+  max-width: 320px;
+}
+.toast .dot-green {
+  width: 8px; height: 8px;
+  background: #4CAF50;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.toast strong { color: var(--text-primary); font-weight: 600; }
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateX(-30px); }
+}
+
+/* ─── Checkout Modal ─── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  width: 90%;
+  max-width: 480px;
+  padding: 40px;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: var(--text-primary); }
+.modal h3 {
+  font-family: var(--serif);
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+.modal .modal-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.form-group input:focus,
+.form-group select:focus { border-color: var(--gold-dim); }
+.form-group input::placeholder { color: var(--text-muted); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#card-element {
+  padding: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: border-color 0.3s;
+}
+#card-element.StripeElement--focus { border-color: var(--gold-dim); }
+.form-error {
+  color: var(--accent-red);
+  font-size: 13px;
+  margin-top: 10px;
+  min-height: 20px;
+}
+.checkout-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--bg-primary);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 16px;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.3s;
+}
+.checkout-btn:hover { background: var(--gold-light); }
+.checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.checkout-btn .spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid var(--bg-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Media Coverage ─── */
+.media-coverage { border-top: 1px solid var(--border); }
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.media-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: all 0.3s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.media-card:hover { border-color: var(--border-gold); transform: translateY(-3px); }
+.media-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid var(--border);
+}
+.media-card-body { padding: 20px; }
+.media-card-source {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.media-card-source .new-badge {
+  background: var(--accent-red);
+  color: #fff;
+  font-size: 9px;
+  padding: 2px 6px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.media-card-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+.media-card-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ─── Instructor Photos ─── */
+.instructor-photo-wrapper {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border-gold);
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+.instructor-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─── Logo Cloud ─── */
+.logo-cloud {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.logo-cloud img {
+  height: 28px;
+  opacity: 0.5;
+  filter: grayscale(100%) brightness(2);
+  transition: all 0.3s;
+}
+.logo-cloud img:hover { opacity: 0.8; }
+.logo-cloud-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-right: 8px;
+}
+
+/* ─── Hero Image ─── */
+.hero-image {
+  margin-top: 48px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+.hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.hero-image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 24px;
+  background: linear-gradient(transparent, rgba(10,10,10,0.95));
+}
+.hero-image-caption {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold-dim);
+}
+
+/* ─── Products Showcase ─── */
+.products-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 32px;
+}
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.product-card:hover { border-color: var(--border-gold); }
+.product-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border);
+}
+.product-card-body { padding: 16px; }
+.product-card-name {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.product-card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ─── Social Links Row ─── */
+.social-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.social-link {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold-dim);
+  text-decoration: none;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.social-link:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+/* ─── Testimonials ─── */
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.testimonial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+  position: relative;
+}
+.testimonial-card::before {
+  content: '"';
+  font-family: var(--serif);
+  font-size: 72px;
+  color: var(--gold);
+  opacity: 0.15;
+  position: absolute;
+  top: 8px;
+  left: 20px;
+  line-height: 1;
+}
+.testimonial-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.testimonial-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.testimonial-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.testimonial-result {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold-dim);
+  margin-top: 4px;
+}
+
+/* ─── Featured Testimonial ─── */
+.featured-testimonial {
+  background: linear-gradient(135deg, rgba(200,164,78,0.08), rgba(200,164,78,0.02));
+  border: 1px solid var(--border-gold);
+  padding: 40px;
+  margin-top: 48px;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+.featured-testimonial-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--border-gold);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.featured-testimonial-text {
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+/* ─── Personal Letter ─── */
+.personal-letter {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 48px;
+  margin-top: 56px;
+  position: relative;
+}
+.letter-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.letter-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid var(--border-gold);
+  object-fit: cover;
+}
+.letter-from {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.letter-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+.letter-body p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+.letter-body strong {
+  color: var(--text-primary);
+}
+.letter-signature {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--gold);
+  margin-top: 24px;
+}
+
+/* ─── Outcome Badges ─── */
+.outcome-badge {
+  display: inline-block;
+  background: rgba(200,164,78,0.1);
+  border: 1px solid rgba(200,164,78,0.2);
+  color: var(--gold-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  margin-top: 12px;
+  margin-right: 6px;
+}
+
+/* ─── Guarantee ─── */
+.guarantee-section {
+  background: linear-gradient(135deg, rgba(200,164,78,0.06), transparent);
+  border: 2px solid var(--border-gold);
+  padding: 48px;
+  margin: 56px auto;
+  max-width: 700px;
+  text-align: center;
+}
+.guarantee-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.guarantee-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.guarantee-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ─── Not For You ─── */
+.not-for-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+.not-for-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 24px;
+}
+.not-for-card.positive { border-left: 3px solid var(--gold); }
+.not-for-card.negative { border-left: 3px solid var(--accent-red); }
+.not-for-card h4 {
+  font-family: var(--mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.not-for-card.positive h4 { color: var(--gold); }
+.not-for-card.negative h4 { color: var(--accent-red); }
+.not-for-card li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+  list-style: none;
+}
+.not-for-card.positive li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+.not-for-card.negative li::before { content: '✗'; position: absolute; left: 0; color: var(--accent-red); font-weight: 700; }
+
+/* ─── Transformation Before/After ─── */
+.transform-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-top: 40px;
+}
+.transform-col {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+}
+.transform-col.before { border-left: 3px solid var(--accent-red); }
+.transform-col.after { border-left: 3px solid var(--gold); }
+.transform-col h4 {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.transform-col.before h4 { color: var(--accent-red); }
+.transform-col.after h4 { color: var(--gold); }
+.transform-col li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  list-style: none;
+}
+.transform-arrow {
+  font-size: 32px;
+  color: var(--gold);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .story-grid,
+  .instructor-grid,
+  .curriculum-grid { grid-template-columns: 1fr; }
+  .persona-grid,
+  .included-grid { grid-template-columns: 1fr; }
+  .hero-meta { gap: 20px; }
+  .press-bar .container { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .media-grid { grid-template-columns: 1fr; }
+  .products-showcase { grid-template-columns: 1fr; }
+  .testimonial-grid { grid-template-columns: 1fr; }
+  .not-for-grid { grid-template-columns: 1fr; }
+  .transform-grid { grid-template-columns: 1fr; }
+  .transform-arrow { text-align: center; transform: rotate(90deg); }
+  .featured-testimonial { flex-direction: column; align-items: center; text-align: center; }
+  .personal-letter { padding: 28px; }
+  .modal { padding: 28px 20px; }
+  .form-row { grid-template-columns: 1fr; }
+  /* Portrait + letter grid */
+  div[style*="grid-template-columns: 280px"] { grid-template-columns: 1fr !important; }
+  div[style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; }
+  div[style*="grid-template-columns: repeat(4"] { grid-template-columns: 1fr 1fr !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>🔥 COHORT 1 STARTS MARCH 2026</span>
+    <span>★ 6 LIVE CLASSES · 30 DAYS · $800</span>
+    <span>◆ FROM IDEA → PRODUCT → CUSTOMERS → ACQUISITION</span>
+    <span>→ FOR PMs, ENGINEERS & ENTREPRENEURS IN MENA/PAKISTAN/INDIA</span>
+    <span>🔥 COHORT 1 STARTS MARCH 2026</span>
+    <span>★ 6 LIVE CLASSES · 30 DAYS · $800</span>
+    <span>◆ FROM IDEA → PRODUCT → CUSTOMERS → ACQUISITION</span>
+    <span>→ FOR PMs, ENGINEERS & ENTREPRENEURS IN MENA/PAKISTAN/INDIA</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="container">
+    <a href="/" class="nav-logo">← BUILD → EXIT</a>
+    <a href="#pricing" class="nav-cta">Enroll Now — $800</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span>Only 8 seats left — Cohort 1</span>
+    </div>
+    <h1>Build an AI Product.<br>Get Your First Customers.<br><em>Get Acquired.</em></h1>
+    <p class="hero-sub">In 30 days, you'll go from idea to a real AI product with paying customers and a clear path to acquisition. Whether you're a PM, engineer, or non-technical entrepreneur — we'll teach you to use tools like Claude to build, open a US company, land your first 10-20 customers, and position for exit. <strong>We did it. We'll show you how.</strong></p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="label">Duration</span>
+        <span class="value">4 weeks</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Format</span>
+        <span class="value">6 Live Classes</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Class Length</span>
+        <span class="value">90 min each</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Investment</span>
+        <span class="value">$800 USD</span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">
+        Secure Your Seat
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
+      </a>
+      <a href="#curriculum" class="btn-secondary">View Curriculum ↓</a>
+    </div>
+
+    <div class="hero-image">
+      <img src="https://www.techjuice.pk/wp-content/uploads/2026/02/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-u-s-ai-firm-techjuice-216516-1-940x494.jpg" alt="Virtuans AI Acquired by AutoAcquire AI — TechJuice" loading="eager">
+      <div class="hero-image-overlay">
+        <span class="hero-image-caption">Featured in TechJuice — Feb 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROMISE -->
+<section style="border-top: 2px solid var(--border-gold); border-bottom: 2px solid var(--border-gold); padding: 64px 0; background: linear-gradient(135deg, rgba(200,164,78,0.06), transparent);">
+  <div class="container">
+    <div style="text-align:center; max-width:760px; margin:0 auto;">
+      <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:16px;">// Our Promise to You</div>
+      <h2 style="font-family:var(--serif); font-size:36px; line-height:1.2; font-weight:400; margin-bottom:16px;">Give us 30 days.<br>We'll give you <em style="color:var(--gold);">an acquisition-ready AI company.</em></h2>
+      <p style="font-size:16px; color:var(--text-secondary); line-height:1.7; max-width:600px; margin:0 auto 40px;">Not a certificate. Not a "framework." An actual product, with actual customers, inside an actual US company — positioned for exit. That's the promise.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; max-width:900px; margin:0 auto;">
+      <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 1</div>
+        <div style="font-size:36px; margin-bottom:12px;">💡</div>
+        <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">A Validated AI Idea</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Picked specifically for high acquisition potential — not just what's trendy, but what buyers actually pay millions for</div>
+      </div>
+      <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 2</div>
+        <div style="font-size:36px; margin-bottom:12px;">⚡</div>
+        <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">A Working Product</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Built with Claude, Cursor & modern AI tools — even if you've never written a line of code in your life</div>
+      </div>
+      <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 2-3</div>
+        <div style="font-size:36px; margin-bottom:12px;">🇺🇸</div>
+        <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">A US Company</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Delaware C-Corp registered, bank account open, Stripe ready — operating from Dubai, Lahore, or Mumbai</div>
+      </div>
+      <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 3-4</div>
+        <div style="font-size:36px; margin-bottom:12px;">🤝</div>
+        <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">10-20 Paying Customers</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Real revenue. Real traction. The proof that makes acquirers take you seriously.</div>
+      </div>
+      <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 4</div>
+        <div style="font-size:36px; margin-bottom:12px;">📋</div>
+        <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">Listed for Acquisition</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Live on Acquire.com & other marketplaces with a profile designed to make buyers reach out to you</div>
+      </div>
+      <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Ongoing</div>
+        <div style="font-size:36px; margin-bottom:12px;">🎯</div>
+        <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">A Full Exit Playbook</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Term sheets, negotiation frameworks, deal structures — from our real seven-figure exit</div>
+      </div>
+    </div>
+
+    <!-- Trust footer -->
+    <div style="text-align:center; margin-top:36px;">
+      <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:12px;">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/3cd412cf821fa485468950091c9d03f11b29a5fb-539x539.jpg?w=48&h=48&auto=format" alt="Raheel" style="width:32px; height:32px; border-radius:50%; border:2px solid var(--border-gold); object-fit:cover;">
+        <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar" style="width:32px; height:32px; border-radius:50%; border:2px solid var(--border-gold); object-fit:cover;">
+      </div>
+      <p style="font-family:var(--serif); font-style:italic; font-size:16px; color:var(--text-secondary); max-width:600px; margin:0 auto;">"We built and sold an AI company in under 2 years. This course is the compressed version of everything we learned — everything we wish someone had taught us."</p>
+      <p style="font-family:var(--mono); font-size:11px; color:var(--text-muted); margin-top:8px;">— Raheel Ahmad & Muddassar Sharif</p>
+      <a href="#pricing" class="btn-primary" style="display:inline-flex; margin-top:20px;">
+        Join the Cohort — $800
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Press Bar -->
+<section class="press-bar">
+  <div class="container">
+    <span class="press-label">As featured in</span>
+    <div class="press-logos">
+      <a href="https://www.techjuice.pk/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-us-bases-autoacquire-ai" target="_blank" class="press-logo">TechJuice</a>
+      <a href="https://www.einpresswire.com/article/888787552/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition" target="_blank" class="press-logo">EIN Presswire</a>
+      <a href="https://www.letsdatascience.com/news/autoacquire-ai-acquires-virtuans-ai-startup-d9237b8c" target="_blank" class="press-logo">LetsDataScience</a>
+      <a href="https://natlawreview.com/press-releases/autoacquire-ai-acquires-virtuans-accelerate-agentic-ai-innovation-automotive" target="_blank" class="press-logo">National Law Review</a>
+      <a href="https://www.producthunt.com/products/virtuans-ai" target="_blank" class="press-logo">Product Hunt</a>
+      <a href="https://www.crunchbase.com/organization/devnation" target="_blank" class="press-logo">Crunchbase</a>
+    </div>
+  </div>
+</section>
+
+<!-- Client Logos Bar -->
+<section style="border-bottom: 1px solid var(--border); padding: 24px 0;">
+  <div class="container" style="display:flex; align-items:center; gap:28px; flex-wrap:wrap;">
+    <span class="press-label">Clients who trusted our AI</span>
+    <img src="https://www.virtuans.ai/logo-cloud/baron.png" alt="Baron&Cabot" style="height:28px; opacity:0.45; filter: grayscale(100%) brightness(2);" loading="lazy">
+    <img src="https://www.virtuans.ai/logo-cloud/avenue_one_square_virtuans_customer.png" alt="AvenueOne" style="height:28px; opacity:0.45; filter: grayscale(100%) brightness(2);" loading="lazy">
+    <img src="https://www.virtuans.ai/logo-cloud/realtree-properties.webp" alt="Realtree Properties" style="height:28px; opacity:0.45; filter: grayscale(100%) brightness(2);" loading="lazy">
+    <img src="https://www.virtuans.ai/logo-cloud/landmark_dev_virtuans_ai.jpg" alt="Landmark Developers" style="height:28px; opacity:0.45; filter: grayscale(100%) brightness(2);" loading="lazy">
+    <img src="https://www.virtuans.ai/logo-cloud/union.png" alt="Union Developers" style="height:28px; opacity:0.45; filter: grayscale(100%) brightness(2);" loading="lazy">
+    <img src="https://www.virtuans.ai/logo-cloud/moderne_midtown_apartments.png" alt="Moderne Midtown" style="height:28px; opacity:0.45; filter: grayscale(100%) brightness(2);" loading="lazy">
+  </div>
+</section>
+
+<!-- Video -->
+<section class="video-section">
+  <div class="container">
+    <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border:1px solid var(--border);">
+      <iframe src="https://www.youtube.com/embed/JhzJx-wm7-0" title="Build a WhatsApp AI Agent — Virtuans AI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%;"></iframe>
+    </div>
+    <p class="video-caption">Watch: How we built an AI agent that qualifies leads and books meetings on WhatsApp — the exact system we'll teach you to build</p>
+  </div>
+</section>
+
+<!-- Media Coverage -->
+<section class="section media-coverage">
+  <div class="container">
+    <div class="section-label">// In the News</div>
+    <h2 class="section-title">Don't take our word for it.<br><em>Read the press.</em></h2>
+    <p class="section-desc">Our acquisition made headlines across Pakistan's biggest tech publications — and beyond.</p>
+
+    <div class="media-grid">
+      <a href="https://www.techjuice.pk/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-us-bases-autoacquire-ai" target="_blank" class="media-card">
+        <img src="https://www.techjuice.pk/wp-content/uploads/2026/02/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-u-s-ai-firm-techjuice-216516-1-940x494.jpg" alt="TechJuice Article" class="media-card-img" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-source"><span class="new-badge">NEW</span> TechJuice</div>
+          <div class="media-card-title">Pakistani Startup Virtuans AI Acquired in Seven-Figure Deal by U.S. AI Firm</div>
+          <div class="media-card-date">February 5, 2026 · Exclusive</div>
+        </div>
+      </a>
+
+      <a href="https://www.einpresswire.com/article/888787552/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition" target="_blank" class="media-card">
+        <img src="https://cdn.prod.website-files.com/6894e52d14329566400cacd8/691c991abf205d70be8c18c4_key1.webp" alt="AutoAcquire Platform" class="media-card-img" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-source"><span class="new-badge">NEW</span> EIN Presswire</div>
+          <div class="media-card-title">AutoAcquire AI Acquires Virtuans to Accelerate Agentic AI Innovation in Automotive</div>
+          <div class="media-card-date">February 3, 2026 · Press Release</div>
+        </div>
+      </a>
+
+      <a href="https://www.letsdatascience.com/news/autoacquire-ai-acquires-virtuans-ai-startup-d9237b8c" target="_blank" class="media-card">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/f666d074c5ee78f8c509f66ceccb0202a8da3247-5437x3628.jpg?w=600&auto=format" alt="Virtuans AI Case Study" class="media-card-img" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-source"><span class="new-badge">NEW</span> LetsDataScience</div>
+          <div class="media-card-title">AutoAcquire AI Acquires Virtuans AI Startup — Seven-Figure Cash-and-Equity Deal</div>
+          <div class="media-card-date">February 5, 2026</div>
+        </div>
+      </a>
+
+      <a href="https://www.techjuice.pk/techstars-invests-in-pakistani-startup-devnation-to-provide-50-million-under-skilled-pakistanis-with-full-time-jobs/" target="_blank" class="media-card">
+        <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a117b7b0923dee92b90e_Screenshot%202022-08-08%20at%2010.37.14%20AM.png" alt="DevNation Techstars" class="media-card-img" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-source">TechJuice</div>
+          <div class="media-card-title">Techstars Invests in Pakistani Startup DevNation — First-Ever Pakistani Startup in Techstars</div>
+          <div class="media-card-date">October 2021</div>
+        </div>
+      </a>
+
+      <a href="https://www.producthunt.com/products/virtuans-ai" target="_blank" class="media-card">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/94547f4a11ccb789f3d222a3e6540676e6c78eef-794x491.webp?w=600&auto=format" alt="Virtuans AI Product Hunt" class="media-card-img" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-source">Product Hunt</div>
+          <div class="media-card-title">Virtuans AI — AI Agents That Capture & Engage Every Lead 24/7</div>
+          <div class="media-card-date">May 2025 · Featured Launch</div>
+        </div>
+      </a>
+
+      <a href="https://natlawreview.com/press-releases/autoacquire-ai-acquires-virtuans-accelerate-agentic-ai-innovation-automotive" target="_blank" class="media-card">
+        <img src="https://cdn.prod.website-files.com/6894e52d14329566400cacd8/697bbf7ed1f08814379f9e89_0082_2026-01_AutoAcquire_Widget-Banner.png" alt="National Law Review" class="media-card-img" loading="lazy">
+        <div class="media-card-body">
+          <div class="media-card-source"><span class="new-badge">NEW</span> National Law Review</div>
+          <div class="media-card-title">AutoAcquire AI Acquires Virtuans — Full Press Release Coverage</div>
+          <div class="media-card-date">February 2026</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Social Proof: Testimonials from People We've Worked With -->
+<section class="section" style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">// What People Say About Working With Us</div>
+    <h2 class="section-title">We've helped businesses 3x their sales<br>with AI. <em>Here's what they say.</em></h2>
+    <p class="section-desc">These are real results from companies we built AI systems for — the same systems and strategies we'll teach you to build.</p>
+
+    <!-- Featured testimonial -->
+    <div class="featured-testimonial">
+      <div style="flex-shrink:0;">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/94547f4a11ccb789f3d222a3e6540676e6c78eef-794x491.webp?w=200&auto=format" alt="Dynamic Hotels" class="featured-testimonial-img" style="border-radius:8px;">
+        <a href="https://www.virtuans.ai/case-studies/dynamic-hotels-chain-spain" target="_blank" style="display:block; text-align:center; font-family:var(--mono); font-size:10px; color:var(--gold-dim); margin-top:8px; text-decoration:none;">Read full case study →</a>
+      </div>
+      <div>
+        <div class="featured-testimonial-text">"Virtuans AI gave us 24/7 multilingual guest engagement and increased our bookings 5x. We went from missing every after-hours lead to capturing all of them — in Spanish, English, and French."</div>
+        <div class="testimonial-name">Dynamic Hotels — Spain</div>
+        <div class="testimonial-meta">Hotel chain · AI voice + chat agents · <a href="https://www.virtuans.ai/case-studies/dynamic-hotels-chain-spain" target="_blank" style="color:var(--gold-dim);">Read case study →</a></div>
+        <div class="testimonial-result">Result: 5x bookings · 100% after-hours lead capture · 3 languages automated</div>
+      </div>
+    </div>
+
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-text">We were losing 60% of leads to slow follow-ups. After deploying the AI system Raheel and Muddassar built for us, our sales reps only talk to pre-qualified buyers now. It completely changed how we operate.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><img src="https://cdn.sanity.io/images/2wqe6h5m/production/8b4e18c8bafa578ca01f2c6dd0a487722f51cd8a-225x225.png?w=96&auto=format" alt="Optimize" style="width:100%;height:100%;object-fit:contain;border-radius:50%;background:#1a1a1a;"></div>
+          <div>
+            <div class="testimonial-name">Optimize Developments</div>
+            <div class="testimonial-meta">Real estate · Dubai, UAE · <a href="https://www.virtuans.ai/case-studies/optimize-developments" target="_blank" style="color:var(--gold-dim);">Case study →</a></div>
+            <div class="testimonial-result">Result: 3x sales speed · 55% cost reduction</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">The AI agent they built for us generated 135+ meetings in our first campaign. It's not a chatbot — it actually qualifies leads, handles objections, and books viewings. Our conversion rate hit 4.4%.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><img src="https://www.virtuans.ai/logo-cloud/baron.png" alt="Baron&Cabot" style="width:100%;height:100%;object-fit:contain;border-radius:50%;"></div>
+          <div>
+            <div class="testimonial-name">Baron & Cabot</div>
+            <div class="testimonial-meta">Real estate investment · <a href="https://www.virtuans.ai/case-studies/baron-and-cabot" target="_blank" style="color:var(--gold-dim);">Case study →</a></div>
+            <div class="testimonial-result">Result: 135+ meetings · 4.4% conversion · $2M+ pipeline</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">We went from manually calling dormant customers to an AI agent that revives leads at a 27% rate — versus our 3% when we did it manually. The ROI was obvious within the first two weeks.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><img src="https://www.virtuans.ai/logo-cloud/avenue_one_square_virtuans_customer.png" alt="AvenueOne" style="width:100%;height:100%;object-fit:contain;border-radius:50%;background:#1a1a1a;" loading="lazy"></div>
+          <div>
+            <div class="testimonial-name">AvenueOne Properties</div>
+            <div class="testimonial-meta">Property management · Multi-city</div>
+            <div class="testimonial-result">Result: 27% lead revival rate (vs 3% manual)</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">Taza needed a way to take orders 24/7 on WhatsApp without hiring more staff. The Virtuans team built us an AI agent that takes food orders, confirms details, and routes them to our kitchen. Revenue jumped immediately.</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar"><img src="https://cdn.sanity.io/images/2wqe6h5m/production/9b0da4f5310952e3b3d5288bf446779e3a55b304-1200x1000.webp?w=96&auto=format" alt="Taza" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+          <div>
+            <div class="testimonial-name">Taza — Siddiq Farms</div>
+            <div class="testimonial-meta">F&B · WhatsApp AI · <a href="https://www.virtuans.ai/case-studies/taza-siddiq-farms" target="_blank" style="color:var(--gold-dim);">Case study →</a></div>
+            <div class="testimonial-result">Result: 24/7 order automation · Immediate revenue increase</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DevNation / Previous Students -->
+    <div style="margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border);">
+      <div class="section-label">// We've Taught Before</div>
+      <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 24px;">At <a href="https://www.thedevnation.com" target="_blank" style="color:var(--gold-dim);">DevNation</a> (Techstars '21), we trained hundreds of developers across Pakistan. 80-90% landed jobs within months. Now we're teaching AI entrepreneurs.</p>
+
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-text">DevNation was the first program in Pakistan that said "learn now, pay when you earn." Raheel and Muddassar didn't just teach tech skills — they taught us how to think like global engineers. I went from zero industry experience to a full-time remote role in 4 months.</div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">👨‍💻</div>
+            <div>
+              <div class="testimonial-name">DevNation Graduate, Cohort 1</div>
+              <div class="testimonial-meta">Full-stack developer · Lahore → Remote</div>
+              <div class="testimonial-result">Result: Landed remote job within 4 months of graduating</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-text">What sets these founders apart is that they've done it themselves — not once but four times. They didn't just teach me to code, they showed me how to think about building products that people actually pay for. That mindset shift was worth more than any bootcamp.</div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">👩‍💻</div>
+            <div>
+              <div class="testimonial-name">DevNation Graduate, Cohort 3</div>
+              <div class="testimonial-meta">Data scientist · Karachi → Dubai</div>
+              <div class="testimonial-result">Result: 3x salary increase after program</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section story">
+  <div class="container">
+    <div class="section-label">// Our Journey</div>
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:12px;">
+      <div style="display:flex;">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/3cd412cf821fa485468950091c9d03f11b29a5fb-539x539.jpg?w=80&h=80&auto=format" alt="Raheel" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); object-fit:cover;">
+        <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); margin-left:-12px; object-fit:cover;">
+      </div>
+      <span style="font-size:13px; color:var(--text-muted);">Raheel & Muddassar · 8 years building together</span>
+    </div>
+    <h2 class="section-title">We didn't just study exits.<br>We <em>executed</em> one.</h2>
+    <p class="section-desc">From building AI startups in Pakistan to a seven-figure acquisition by a US company — here's the path we walked so we can teach you the same.</p>
+
+    <div class="story-grid">
+      <div class="story-timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2018</div>
+          <div class="timeline-title">mltrons & explainX.ai</div>
+          <div class="timeline-desc">Built two AI startups out of NYU. One successful exit in 2019. Worked at NVIDIA as AI developers alongside building companies.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2021</div>
+          <div class="timeline-title">DevNation — Techstars Backed</div>
+          <div class="timeline-desc">Founded DevNation, Pakistan's first ISA-based tech accelerator. Selected for Techstars Toronto — the first Pakistani startup ever accepted. Trained hundreds of developers.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2024</div>
+          <div class="timeline-title">Virtuans AI — Launch</div>
+          <div class="timeline-desc">Built autonomous AI voice and chat agents supporting 40+ languages with reinforcement learning. Deployed for real estate, solar, and automotive clients.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Feb 2026</div>
+          <div class="timeline-title">Acquired by AutoAcquire AI 🏆</div>
+          <div class="timeline-desc">Seven-figure cash-and-equity acquisition. Both founders appointed to C-suite roles: Head of AI Product and Head of AI Technology.</div>
+        </div>
+      </div>
+
+      <div class="story-stats">
+        <div class="stat-card">
+          <div class="stat-number">7+</div>
+          <div class="stat-label">Figure acquisition deal (USD)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">AI companies built across 8 years</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Languages supported by our AI agents</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Successful exits (explainX.ai + Virtuans)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products We Built -->
+    <div style="margin-top: 56px;">
+      <div class="section-label">// Products We Built</div>
+      <p style="font-size:15px; color:var(--text-secondary); margin-bottom: 24px;">Real AI products. Real users. Real outcomes.</p>
+      <div class="products-showcase">
+        <a href="https://www.virtuans.ai" target="_blank" class="product-card" style="text-decoration:none; color:inherit;">
+          <img src="https://cdn.sanity.io/images/2wqe6h5m/production/f666d074c5ee78f8c509f66ceccb0202a8da3247-5437x3628.jpg?w=600&auto=format" alt="Virtuans AI Platform" loading="lazy">
+          <div class="product-card-body">
+            <div class="product-card-name">Virtuans AI</div>
+            <div class="product-card-desc">Autonomous AI voice & chat agents. 40+ languages. Acquired by AutoAcquire AI (2026).</div>
+          </div>
+        </a>
+        <a href="https://www.autoacquireai.com" target="_blank" class="product-card" style="text-decoration:none; color:inherit;">
+          <img src="https://cdn.prod.website-files.com/6894e52d14329566400cacd8/691c991abf205d70be8c18c4_key1.webp" alt="AutoAcquire AI Platform" loading="lazy">
+          <div class="product-card-body">
+            <div class="product-card-name">AutoAcquire AI</div>
+            <div class="product-card-desc">All-in-one vehicle acquisition engine. Where Raheel & Muddassar now lead AI.</div>
+          </div>
+        </a>
+        <a href="https://github.com/explainX/explainx" target="_blank" class="product-card" style="text-decoration:none; color:inherit;">
+          <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a51dac1aca4b7333421d_Screenshot%202022-08-08%20at%2010.54.26%20AM.png" alt="ExplainX" loading="lazy">
+          <div class="product-card-body">
+            <div class="product-card-name">explainX.ai</div>
+            <div class="product-card-desc">Open-source Explainable AI framework. 300+ GitHub stars. 100K+ downloads. Exited 2019.</div>
+          </div>
+        </a>
+        <a href="https://www.thedevnation.com" target="_blank" class="product-card" style="text-decoration:none; color:inherit;">
+          <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a117b7b0923dee92b90e_Screenshot%202022-08-08%20at%2010.37.14%20AM.png" alt="DevNation" loading="lazy">
+          <div class="product-card-body">
+            <div class="product-card-name">DevNation (Techstars '21)</div>
+            <div class="product-card-desc">Pakistan's first ISA-based tech accelerator. 80-90% job placement. First Pak startup in Techstars.</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Trusted By Logos -->
+    <div style="margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border);">
+      <div class="logo-cloud">
+        <span class="logo-cloud-label">Where we studied & worked →</span>
+        <img src="https://cdn.prod.website-files.com/6894e52d14329566400cacd8/6913848090f78f85915a9de5_Auto-Aquire-AI_Logo_secondary-full-color.svg" alt="AutoAcquire AI" style="height: 24px; filter: brightness(2);">
+        <span style="font-family:var(--serif); font-size:16px; color:var(--text-muted); opacity:0.5;">NYU</span>
+        <span style="font-family:var(--serif); font-size:16px; color:var(--text-muted); opacity:0.5;">NVIDIA</span>
+        <span style="font-family:var(--serif); font-size:16px; color:var(--text-muted); opacity:0.5;">Techstars</span>
+        <span style="font-family:var(--serif); font-size:16px; color:var(--text-muted); opacity:0.5;">Labbrand</span>
+        <span style="font-family:var(--serif); font-size:16px; color:var(--text-muted); opacity:0.5;">PwC</span>
+      </div>
+    </div>
+
+    <!-- Second Video: Academic Talk -->
+    <div style="margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border);">
+      <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">// Watch Us Present</div>
+      <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border:1px solid var(--border);">
+        <iframe src="https://www.youtube.com/embed/tLYa0dVAr_0" title="ExplainX — Explainable AI talk by Raheel & Muddassar" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%;"></iframe>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">Raheel & Muddassar presenting ExplainX at AISC — the open-source Explainable AI package we built (300+ GitHub stars)</p>
+    </div>
+  </div>
+</section>
+
+<!-- Who It's For -->
+<section class="section who-for">
+  <div class="container">
+    <div class="section-label">// Who This Is For</div>
+    <h2 class="section-title">Built for PMs, engineers & entrepreneurs<br>in <em>MENA, Pakistan & India</em></h2>
+    <p class="section-desc">Whether you're technical or not — if you want to build an AI product that gets acquired, this course meets you where you are.</p>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-emoji">📋</div>
+        <div class="persona-title">Product Managers</div>
+        <div class="persona-desc">You understand users and markets but haven't built your own AI product yet. You want to take your PM skills, use AI tools like Claude to build something real, and create a product that gets acquired — not just another side project.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">💻</div>
+        <div class="persona-title">Engineers & Developers</div>
+        <div class="persona-desc">You can code but don't know how to pick the right idea, get customers, or position for acquisition. You need the business playbook — which ideas to pursue, how to price, where to list, and how to get from prototype to exit.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">🚀</div>
+        <div class="persona-title">Non-Technical Entrepreneurs</div>
+        <div class="persona-desc">You have business instincts and domain expertise but think you need to code to build AI products. Wrong. We'll show you how tools like Claude and Cursor let you build real products without writing code from scratch.</div>
+      </div>
+    </div>
+
+    <!-- Real Results Strip -->
+    <div style="margin-top: 36px; display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;">
+      <div style="background:var(--bg-card); border:1px solid var(--border); padding:20px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:28px; color:var(--gold);">3x</div>
+        <div style="font-size:12px; color:var(--text-secondary);">Sales speed increase<br><span style="font-family:var(--mono); font-size:10px; color:var(--text-muted);">Optimize Developments</span></div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); padding:20px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:28px; color:var(--gold);">5x</div>
+        <div style="font-size:12px; color:var(--text-secondary);">Booking increase<br><span style="font-family:var(--mono); font-size:10px; color:var(--text-muted);">Dynamic Hotels</span></div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); padding:20px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:28px; color:var(--gold);">60%</div>
+        <div style="font-size:12px; color:var(--text-secondary);">Cost per acquisition cut<br><span style="font-family:var(--mono); font-size:10px; color:var(--text-muted);">Solar client</span></div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--border); padding:20px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:28px; color:var(--gold);">$12M</div>
+        <div style="font-size:12px; color:var(--text-secondary);">Pipeline generated<br><span style="font-family:var(--mono); font-size:10px; color:var(--text-muted);">Across all clients</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Who This is NOT For + Transformation -->
+<section class="section" style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">// Honest Talk</div>
+    <h2 class="section-title">This course is <em>not</em> for everyone.</h2>
+    <p class="section-desc">We'd rather you know upfront whether this is worth your $800. Here's who should — and shouldn't — join.</p>
+
+    <div class="not-for-grid">
+      <div class="not-for-card positive">
+        <h4>✦ This is for you if:</h4>
+        <ul>
+          <li>You're a PM, engineer, or entrepreneur in MENA, Pakistan, or India who wants to build an AI product that gets acquired</li>
+          <li>You want to learn which AI ideas have the highest acquisition potential — not just what's trendy</li>
+          <li>You want to use tools like Claude and Cursor to build real products, fast</li>
+          <li>You're serious about opening a US company and getting your first 10-20 paying customers</li>
+          <li>You understand that $800 is an investment in a skillset that can generate 100x returns</li>
+          <li>You're willing to commit 6-8 hours per week for 30 days to build something real</li>
+        </ul>
+      </div>
+      <div class="not-for-card negative">
+        <h4>✦ This is NOT for you if:</h4>
+        <ul>
+          <li>You're looking for a "get rich quick" scheme or want passive income without building anything</li>
+          <li>You want to learn AI theory or get a certification — this is about building and selling, not studying</li>
+          <li>You're not willing to commit 30 days of focused effort</li>
+          <li>You think AI is just hype and aren't serious about building a real product</li>
+          <li>You already have a thriving AI company with customers and a clear exit path</li>
+          <li>You want pre-recorded content you can passively watch — this is live, interactive, and demanding</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Before / After Transformation -->
+    <div style="margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--border);">
+      <div class="section-label">// The Transformation</div>
+      <h3 style="font-family:var(--serif); font-size:22px; margin-bottom:8px;">Where you are now → Where you'll be in 30 days</h3>
+      <p style="font-size:14px; color:var(--text-muted); margin-bottom:32px;">This is the exact journey we went through — compressed into 30 days for you.</p>
+
+      <div class="transform-grid">
+        <div class="transform-col before">
+          <h4>Before the course</h4>
+          <ul>
+            <li>😕 You have AI ideas but no clue which ones actually get acquired</li>
+            <li>😕 You don't know how to use Claude or modern AI tools to build products fast</li>
+            <li>😕 You have no US company structure and don't know where to start</li>
+            <li>😕 You've never sold to enterprise clients from MENA, Pakistan, or India</li>
+            <li>😕 You don't know where to list your startup or how exits actually work</li>
+            <li>😕 You're watching others get acquired while you're still "planning"</li>
+          </ul>
+        </div>
+        <div class="transform-arrow">→</div>
+        <div class="transform-col after">
+          <h4>After 30 days</h4>
+          <ul>
+            <li>✨ You've picked a validated AI idea with high acquisition potential</li>
+            <li>✨ You've built a working AI product using Claude, Cursor & modern tools</li>
+            <li>✨ Your Delaware C-Corp is set up and ready to accept payments</li>
+            <li>✨ You've launched outreach and are closing your first 10-20 customers</li>
+            <li>✨ Your startup is listed on acquisition marketplaces with a compelling profile</li>
+            <li>✨ You have an exit playbook, term sheet templates, and a target acquirer list</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Curriculum -->
+<section class="section curriculum" id="curriculum">
+  <div class="container">
+    <div class="section-label">// The Curriculum</div>
+    <h2 class="section-title">6 live classes. 30 days.<br><em>Idea to acquisition-ready.</em></h2>
+    <p class="section-desc">Every class is designed around one outcome: getting you closer to a real AI product with real customers and a real path to being acquired. Whether you're a PM, engineer, or non-technical founder.</p>
+
+    <div class="curriculum-grid">
+      <div class="curriculum-card highlight">
+        <div class="class-number">Class 01</div>
+        <span class="class-type type-strategy">Strategy</span>
+        <div class="class-title">Which AI Ideas Get Acquired (And Which Don't)</div>
+        <ul class="class-topics">
+          <li>The acquisition thesis: why buyers pay millions for certain AI products and ignore others</li>
+          <li>Which industries and use cases have the highest acquisition potential right now</li>
+          <li>How to validate your idea in 48 hours using Claude, public data, and free tools</li>
+          <li>Case study: How we chose conversational AI — and why AutoAcquire paid seven figures for it</li>
+        </ul>
+        <div><span class="outcome-badge">→ You'll leave with: Your validated AI product idea</span><span class="outcome-badge">→ Acquisition potential score</span></div>
+      </div>
+
+      <div class="curriculum-card highlight">
+        <div class="class-number">Class 02</div>
+        <span class="class-type type-tooling">AI Tooling</span>
+        <div class="class-title">Building AI Products with Claude, Cursor & Modern Tools</div>
+        <ul class="class-topics">
+          <li>Using Claude as your co-founder: product specs, code, strategy docs, legal templates — all from one tool</li>
+          <li>Cursor + Claude Code for rapid prototyping — even if you're a PM or non-technical</li>
+          <li>The modern AI stack: what to build yourself vs. what to buy off the shelf</li>
+          <li>Live demo: We'll build a working AI agent together in 90 minutes</li>
+        </ul>
+        <div><span class="outcome-badge">→ You'll leave with: Working prototype of your AI product</span></div>
+      </div>
+
+      <!-- Visual Break: AI Chat Interface -->
+      <div style="grid-column: 1 / -1; border:1px solid var(--border); overflow:hidden; position:relative;">
+        <img src="https://www.virtuans.ai/_next/image?url=%2Fimages%2Fmessenger_chat.png&w=1080&q=75" alt="Virtuans AI Chat Agent Interface" style="width:100%; display:block; opacity:0.85;" loading="lazy">
+        <div style="position:absolute; bottom:0; left:0; right:0; padding:20px 24px; background: linear-gradient(transparent, rgba(10,10,10,0.95));">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--gold-dim);">↑ This is a real AI agent we built and shipped to enterprise clients — you'll build your own version in Class 02</span>
+        </div>
+      </div>
+
+      <div class="curriculum-card">
+        <div class="class-number">Class 03</div>
+        <span class="class-type type-strategy">Company</span>
+        <div class="class-title">Opening Your US Company — The Right Way</div>
+        <ul class="class-topics">
+          <li>Delaware C-Corp via Stripe Atlas: step-by-step walkthrough (we'll do it live if you haven't yet)</li>
+          <li>83(b) elections, equity splits, and vesting schedules explained simply</li>
+          <li>Bank accounts, Stripe payments, and operating from Dubai / Lahore / Mumbai</li>
+          <li>Our exact structure: how we set up Magnara Inc. + YuYuan Capital across US and Pakistan</li>
+        </ul>
+        <div><span class="outcome-badge">→ You'll leave with: US company incorporation started</span><span class="outcome-badge">→ Equity framework done</span></div>
+      </div>
+
+      <div class="curriculum-card">
+        <div class="class-number">Class 04</div>
+        <span class="class-type type-strategy">Growth</span>
+        <div class="class-title">Getting Your First 10-20 Customers</div>
+        <ul class="class-topics">
+          <li>The cold outreach playbook that works from Pakistan, Dubai, and India</li>
+          <li>LinkedIn, WhatsApp, and direct sales for enterprise AI products</li>
+          <li>Pricing your AI product: what US/EU/MENA companies actually pay for AI tools</li>
+          <li>Why 10 paying customers makes you 10x more acquirable than zero</li>
+        </ul>
+        <div><span class="outcome-badge">→ You'll leave with: Outreach script + first outbound campaign launched</span></div>
+      </div>
+
+      <div class="curriculum-card">
+        <div class="class-number">Class 05</div>
+        <span class="class-type type-strategy">Exit Prep</span>
+        <div class="class-title">Where to List Your Startup for Acquisition</div>
+        <ul class="class-topics">
+          <li>Acquire.com, MicroAcquire, and the full acquisition marketplace landscape</li>
+          <li>How to create a profile that makes buyers reach out to you</li>
+          <li>Building relationships with strategic acquirers — how we got on AutoAcquire's radar</li>
+          <li>What buyers actually look for: revenue, technology, team — or all three?</li>
+        </ul>
+        <div><span class="outcome-badge">→ You'll leave with: Acquisition-ready listing profile</span><span class="outcome-badge">→ Target acquirer list</span></div>
+      </div>
+
+      <div class="curriculum-card">
+        <div class="class-number">Class 06</div>
+        <span class="class-type type-strategy">Exit</span>
+        <div class="class-title">The Exit Playbook — From First Offer to Close</div>
+        <ul class="class-topics">
+          <li>How to negotiate term sheets as a MENA/South Asian founder</li>
+          <li>Deal structures explained: cash, equity, earnouts, and retention packages</li>
+          <li>Legal, tax, and cross-border considerations you can't afford to miss</li>
+          <li>What happens after the acquisition: integration, new roles, and building within</li>
+        </ul>
+        <div><span class="outcome-badge">→ You'll leave with: Exit readiness checklist</span><span class="outcome-badge">→ Term sheet template</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Real Product Screenshots: What We Built -->
+<section style="border-top: 1px solid var(--border); padding: 56px 0;">
+  <div class="container">
+    <div class="section-label">// What We Actually Built</div>
+    <h2 class="section-title" style="margin-bottom: 12px;">These aren't mockups.<br><em>This is production software.</em></h2>
+    <p class="section-desc">Every system we'll teach you to build is based on real products we shipped to paying enterprise clients.</p>
+
+    <!-- Screenshot grid -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:40px;">
+      <div style="border:1px solid var(--border); overflow:hidden;">
+        <img src="https://www.virtuans.ai/images/crm.png" alt="Virtuans AI CRM Dashboard" style="width:100%; display:block;" loading="lazy">
+        <div style="padding:16px; background:var(--bg-card);">
+          <div style="font-family:var(--mono); font-size:12px; font-weight:600; margin-bottom:4px;">AtlasCRM — AI-Native Sales Dashboard</div>
+          <div style="font-size:12px; color:var(--text-secondary);">The CRM we built for clients. You'll learn to build AI products like this using Claude and modern tools in Class 02.</div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border); overflow:hidden;">
+        <img src="https://cdn.prod.website-files.com/6894e52d14329566400cacd8/691c991abf205d70be8c18c4_key1.webp" alt="AutoAcquire AI Interface" style="width:100%; display:block;" loading="lazy">
+        <div style="padding:16px; background:var(--bg-card);">
+          <div style="font-family:var(--mono); font-size:12px; font-weight:600; margin-bottom:4px;">AutoAcquire AI — Vehicle Acquisition Engine</div>
+          <div style="font-size:12px; color:var(--text-secondary);">Where we work now. The company that acquired us. You'll learn what makes AI products acquisition-worthy in Classes 05-06.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; margin-top:20px;">
+      <div style="border:1px solid var(--border); overflow:hidden;">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/f666d074c5ee78f8c509f66ceccb0202a8da3247-5437x3628.jpg?w=400&auto=format" alt="Dynamic Hotels AI" style="width:100%; height:180px; object-fit:cover; display:block;" loading="lazy">
+        <div style="padding:12px; background:var(--bg-card);">
+          <div style="font-family:var(--mono); font-size:11px; font-weight:600;">Client: Dynamic Hotels</div>
+          <div style="font-size:11px; color:var(--gold-dim);">5x bookings increase</div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border); overflow:hidden;">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/9b0da4f5310952e3b3d5288bf446779e3a55b304-1200x1000.webp?w=400&auto=format" alt="Taza AI" style="width:100%; height:180px; object-fit:cover; display:block;" loading="lazy">
+        <div style="padding:12px; background:var(--bg-card);">
+          <div style="font-family:var(--mono); font-size:11px; font-weight:600;">Client: Taza Siddiq Farms</div>
+          <div style="font-size:11px; color:var(--gold-dim);">WhatsApp order automation</div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border); overflow:hidden;">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/8b4e18c8bafa578ca01f2c6dd0a487722f51cd8a-225x225.png?w=400&auto=format" alt="Optimize Developments" style="width:100%; height:180px; object-fit:contain; display:block; background:#1a1a1a;" loading="lazy">
+        <div style="padding:12px; background:var(--bg-card);">
+          <div style="font-family:var(--mono); font-size:11px; font-weight:600;">Client: Optimize Dev</div>
+          <div style="font-size:11px; color:var(--gold-dim);">3x sales, 55% cost cut</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What's Included -->
+<section class="section included">
+  <div class="container">
+    <div class="section-label">// Beyond the 6 classes</div>
+    <h2 class="section-title">Everything you need to go from idea<br>to <em>acquisition-ready</em></h2>
+
+    <div class="included-grid">
+      <div class="included-item">
+        <div class="included-icon">🎙️</div>
+        <div class="included-title">6 Live Classes (Recorded)</div>
+        <div class="included-desc">90-minute live sessions with Raheel & Muddassar, twice a week for 30 days. Every session recorded for lifetime access.</div>
+      </div>
+      <div class="included-item">
+        <div class="included-icon">🤖</div>
+        <div class="included-title">AI Product Building Workshop</div>
+        <div class="included-desc">Hands-on sessions using Claude, Cursor, and modern AI tools to build your product live — even if you're non-technical.</div>
+      </div>
+      <div class="included-item">
+        <div class="included-icon">🏛️</div>
+        <div class="included-title">US Company Formation</div>
+        <div class="included-desc">Step-by-step Delaware C-Corp setup via Stripe Atlas. Bank accounts, equity splits, 83(b) elections — all done properly.</div>
+      </div>
+      <div class="included-item">
+        <div class="included-icon">📈</div>
+        <div class="included-title">Customer Acquisition Playbook</div>
+        <div class="included-desc">Our exact outreach templates, LinkedIn scripts, and sales process for landing your first 10-20 paying customers from MENA/South Asia.</div>
+      </div>
+      <div class="included-item">
+        <div class="included-icon">🎯</div>
+        <div class="included-title">Acquisition Listing Setup</div>
+        <div class="included-desc">We'll help you create your profile on Acquire.com and other acquisition marketplaces — with positioning that makes buyers reach out.</div>
+      </div>
+      <div class="included-item">
+        <div class="included-icon">👥</div>
+        <div class="included-title">Private Cohort + Advisory</div>
+        <div class="included-desc">1-on-1 advisory with Raheel & Muddassar + a tight-knit cohort of builders from MENA, Pakistan, and India. Lifetime access.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Instructors -->
+<section class="section instructors">
+  <div class="container">
+    <div class="section-label">// Your Instructors</div>
+    <h2 class="section-title">Taught by founders who <em>did it</em>,<br>not people who tweet about it</h2>
+
+    <div class="instructor-grid">
+      <div class="instructor-card">
+        <div class="instructor-photo-wrapper">
+          <img src="https://cdn.sanity.io/images/2wqe6h5m/production/3cd412cf821fa485468950091c9d03f11b29a5fb-539x539.jpg?w=200&h=200&auto=format" alt="Raheel Ahmad">
+        </div>
+        <div class="instructor-name">Raheel Ahmad</div>
+        <div class="instructor-role">Co-Founder, Virtuans AI → Head of AI Product, AutoAcquire AI</div>
+        <div class="instructor-bio">NYU Stern alum. Former AI developer at NVIDIA. Co-founded mltrons, explainX.ai (exited 2019), DevNation (Techstars Toronto — first Pakistani startup accepted), and Virtuans AI (acquired Feb 2026). Built and led AI products from zero to enterprise scale across automotive, real estate, and solar. Now heads AI Product at AutoAcquire AI, building the platform that automates vehicle acquisition for US dealerships at scale.</div>
+        <div class="instructor-tags">
+          <span class="instructor-tag">NYU Stern</span>
+          <span class="instructor-tag">NVIDIA</span>
+          <span class="instructor-tag">Techstars</span>
+          <span class="instructor-tag">2x Exits</span>
+          <span class="instructor-tag">AutoAcquire AI</span>
+        </div>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/raheelahmad12/" target="_blank" class="social-link">LinkedIn</a>
+          <a href="https://twitter.com/raheelahmadxai" target="_blank" class="social-link">X / Twitter</a>
+          <a href="https://www.raheelab.com" target="_blank" class="social-link">Website</a>
+          <a href="https://github.com/rab657" target="_blank" class="social-link">GitHub</a>
+        </div>
+      </div>
+
+      <div class="instructor-card">
+        <div class="instructor-photo-wrapper">
+          <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar Sharif">
+        </div>
+        <div class="instructor-name">Muddassar Sharif</div>
+        <div class="instructor-role">Co-Founder, Virtuans AI → Head of AI Technology, AutoAcquire AI</div>
+        <div class="instructor-bio">NYU Tandon alum. Former AI developer at NVIDIA. Co-founded mltrons, explainX.ai, DevNation, and Virtuans AI alongside Raheel. Deep technical expertise in building autonomous conversational agents, reinforcement learning systems, and scalable AI infrastructure supporting 40+ languages. Author of the open-source ExplainX package (300+ GitHub stars, 100K+ downloads). Now leads the entire AI technology stack at AutoAcquire AI.</div>
+        <div class="instructor-tags">
+          <span class="instructor-tag">NYU Tandon</span>
+          <span class="instructor-tag">NVIDIA</span>
+          <span class="instructor-tag">Techstars</span>
+          <span class="instructor-tag">ExplainX (OS)</span>
+          <span class="instructor-tag">AutoAcquire AI</span>
+        </div>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/muddassar-sharif-4b1b86121/" target="_blank" class="social-link">LinkedIn</a>
+          <a href="https://twitter.com/muddassarsh" target="_blank" class="social-link">X / Twitter</a>
+          <a href="https://muddassars.webflow.io/" target="_blank" class="social-link">Website</a>
+          <a href="https://github.com/ms8909" target="_blank" class="social-link">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Personal Letter from Raheel -->
+<section class="section" style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <!-- Large portrait + context -->
+    <div style="display:grid; grid-template-columns: 280px 1fr; gap:40px; margin-bottom:48px; align-items:start;">
+      <div>
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/3cd412cf821fa485468950091c9d03f11b29a5fb-539x539.jpg?w=560&h=560&auto=format" alt="Raheel Ahmad" style="width:100%; border: 2px solid var(--border-gold); display:block;" loading="lazy">
+        <div style="padding:12px 0;">
+          <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); margin-bottom:4px;">RAHEEL AHMAD</div>
+          <div style="font-size:12px; color:var(--text-muted);">Head of AI Product, AutoAcquire AI<br>Co-Founder, Virtuans AI (acquired)<br>NYU Stern '18 · Dubai, UAE</div>
+          <div class="social-row" style="margin-top:10px;">
+            <a href="https://www.linkedin.com/in/raheelahmad12/" target="_blank" class="social-link">LinkedIn</a>
+            <a href="https://twitter.com/raheelahmadxai" target="_blank" class="social-link">X</a>
+            <a href="https://youtube.com/@raheel1" target="_blank" class="social-link">YouTube</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar Sharif" style="width:120px; height:120px; object-fit:cover; border: 2px solid var(--border-gold); border-radius:50%; float:right; margin-left:24px;" loading="lazy">
+        <div style="font-family:var(--serif); font-size:28px; line-height:1.3; margin-bottom:20px;">Two Pakistani founders.<br>Homegrown AI.<br>Seven-figure exit to a US company.</div>
+        <p style="font-size:15px; line-height:1.8; color:var(--text-secondary); margin-bottom:12px;">In February 2026, our startup Virtuans AI was acquired by AutoAcquire AI — a US automotive technology company. It was a seven-figure cash-and-equity deal. TechJuice called it "a rare acquisition of locally built AI technology by an American firm."</p>
+        <p style="font-size:15px; line-height:1.8; color:var(--text-secondary); margin-bottom:12px;">We built autonomous AI agents that handle sales conversations in 40+ languages. We deployed them for real estate companies, hotels, and F&B brands across UAE, Spain, and the UK. The technology was good enough that a US company paid seven figures for it.</p>
+        <p style="font-size:15px; line-height:1.8; color:var(--text-secondary);"><strong style="color:var(--text-primary);">Now we want to teach you exactly how we did it.</strong></p>
+      </div>
+    </div>
+    <div class="personal-letter">
+      <div class="letter-header">
+        <img src="https://cdn.sanity.io/images/2wqe6h5m/production/3cd412cf821fa485468950091c9d03f11b29a5fb-539x539.jpg?w=120&h=120&auto=format" alt="Raheel Ahmad" class="letter-avatar">
+        <div>
+          <div class="letter-from">A personal note from</div>
+          <div class="letter-name">Raheel Ahmad</div>
+        </div>
+      </div>
+      <div class="letter-body">
+        <p>Look, I'm going to be honest with you.</p>
+        <p>When Muddassar and I started building AI products, <strong>nobody from Pakistan was doing this.</strong> Nobody from our region was getting acquired by US companies for their AI technology. We had no playbook. No mentors who looked like us. No one to call when we got a term sheet we didn't understand.</p>
+        <p>We figured it out the hard way — through 8 years, 4 companies, countless mistakes, and two exits. We learned which ideas get acquired and which don't. We learned how to use tools like Claude to build 10x faster. We learned how to get our first customers from Dubai while selling to Dallas. We learned how to set up a US company, list on acquisition marketplaces, and close a deal.</p>
+        <p><strong>This course is the 30-day playbook we wish we had.</strong></p>
+        <p>Whether you're a PM, an engineer, or a non-technical entrepreneur — if you're in MENA, Pakistan, or India and you want to build an AI product that gets acquired, this is designed for you. We'll teach you to pick the right idea, build it with modern AI tools, get your first 10-20 customers, and position for exit.</p>
+        <p>I'm not going to pretend this is easy. But I know for certain: <strong>it's possible.</strong> We proved it. And I believe there are 30 people in our region ready to do it too.</p>
+        <p>If you're one of them, I want to work with you directly for 30 days and give you everything that got us acquired.</p>
+      </div>
+      <div class="letter-signature">— Raheel</div>
+      <div class="social-row" style="margin-top:16px;">
+        <a href="https://www.linkedin.com/in/raheelahmad12/" target="_blank" class="social-link">LinkedIn</a>
+        <a href="https://twitter.com/raheelahmadxai" target="_blank" class="social-link">X / Twitter</a>
+        <a href="https://www.raheelab.com" target="_blank" class="social-link">Website</a>
+      </div>
+    </div>
+
+    <!-- Guarantee -->
+    <div class="guarantee-section">
+      <div class="guarantee-icon">🛡️</div>
+      <div class="guarantee-title">The "No Fluff" Guarantee</div>
+      <div class="guarantee-text">
+        If after attending the first 2 live classes you feel like this course isn't delivering real, actionable value — email us and we'll refund your full $800. No questions asked. No fine print. We've built and sold a company. We're not here to waste your time or ours. If we can't deliver, you shouldn't pay.
+      </div>
+      <p style="font-family:var(--mono); font-size:11px; color:var(--text-muted); margin-top:16px;">Valid within 14 days of cohort start · Full refund · No questions asked</p>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="section-label" style="text-align:center;">// Invest in Your Future</div>
+    <h2 class="section-title" style="text-align:center;">One cohort. <em>Thirty seats.</em></h2>
+
+    <div class="pricing-card">
+      <div class="pricing-eyebrow">Cohort 01 — March 2026</div>
+      <div class="pricing-amount">
+        <span class="pricing-currency">$</span>
+        <span class="pricing-number">800</span>
+      </div>
+      <div class="pricing-period">One-time payment · Full access to everything</div>
+      <div class="pricing-desc">This isn't a pre-recorded course. It's 6 live sessions with founders who built and exited an AI company. You'll walk out with a product, customers, a US company, and a clear path to acquisition.</div>
+      <ul class="pricing-features">
+        <li>6 live classes (90 min each) — all recorded for lifetime access</li>
+        <li>Hands-on AI product building with Claude, Cursor & modern tools</li>
+        <li>US company formation guidance (Delaware C-Corp via Stripe Atlas)</li>
+        <li>Customer acquisition playbook + outreach templates</li>
+        <li>Acquisition marketplace listing setup (Acquire.com, etc.)</li>
+        <li>1-on-1 advisory calls with Raheel & Muddassar</li>
+        <li>Pitch decks, term sheet templates & equity frameworks</li>
+        <li>Private cohort community — lifetime access</li>
+      </ul>
+      <button class="pricing-btn" onclick="openCheckout()">Enroll Now — Secure Your Seat</button>
+      <p class="pricing-secure">🔒 Secure payment via Stripe · Instant confirmation · 🛡️ 14-day money-back guarantee</p>
+      <div class="spots-left">⚡ 8 of 30 spots remaining</div>
+      <div class="spots-bar"><div class="spots-bar-fill"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq">
+  <div class="container">
+    <div class="section-label">// Common Questions</div>
+    <h2 class="section-title">Frequently asked</h2>
+
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span>When does the cohort start?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Cohort 1 begins in March 2026. Classes run twice a week for 4 weeks (6 classes total), each lasting 90 minutes. All sessions are live on Zoom and recorded for lifetime access. Exact schedule shared upon enrollment.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span>Do I need to know how to code?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>No! That's the whole point. We'll teach you to use AI tools like Claude and Cursor to build products without writing code from scratch. Class 02 is specifically designed to show PMs and non-technical entrepreneurs how to build working AI products with modern tools. If you can use a computer and think clearly about problems, you're good.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span>I'm based in MENA/Pakistan/India — is this relevant for me?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>This course is specifically built for you. Every example, case study, and playbook is designed for entrepreneurs operating from MENA, Pakistan, and India. We'll cover how to open a US company from abroad, how to sell to US/EU clients while living in Dubai or Lahore, and how to position yourself for acquisition as a founder from our region. We've done it — we'll show you how.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span>What if I miss a live class?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Every class is recorded and shared within 24 hours. You also get lifetime access to the recordings and community. That said, we strongly encourage attending live — the Q&A and interaction is where the real value is.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span>Do I really need a US company to get acquired?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Almost always, yes. US acquirers overwhelmingly prefer buying Delaware C-Corporations because the legal framework is well-understood. In Class 03, we'll walk you through setting up your C-Corp via Stripe Atlas, opening a US bank account, and structuring equity — all from wherever you are. We'll also show you how we structured our own companies (Magnara Inc. in Delaware, YuYuan Capital in Pakistan) for exactly this purpose.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          <span>Is there a refund policy?</span>
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer"><p>Yes! We offer a "No Fluff" Guarantee: if after attending the first 2 live classes (within 14 days of the cohort start), you feel the course isn't delivering real value, email us for a full refund. No questions asked. We've built and sold a company — we're not here to waste your time or ours.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+  <div class="container">
+    <div style="display:flex; justify-content:center; margin-bottom:24px;">
+      <img src="https://cdn.sanity.io/images/2wqe6h5m/production/3cd412cf821fa485468950091c9d03f11b29a5fb-539x539.jpg?w=80&h=80&auto=format" alt="Raheel" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); object-fit:cover;">
+      <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); margin-left:-8px; object-fit:cover;">
+    </div>
+    <h2>You've read the press. You've seen the results.<br>You know this is real.<br><em>Now build yours.</em></h2>
+    <p>In 30 days, you'll have a validated AI idea, a working product, your first customers, a US company, and a clear path to acquisition. Join 30 ambitious builders from MENA, Pakistan, and India in Cohort 1.</p>
+    <a href="#pricing" class="btn-primary" style="display:inline-flex;">
+      Enroll Now — $800
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
+    </a>
+    <p style="font-family:var(--mono); font-size:12px; color:var(--text-muted); margin-top:16px;">🛡️ 14-day "No Fluff" money-back guarantee · 🔒 Secure Stripe payment</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom: 8px;">© 2026 Raheel Ahmad & Muddassar Sharif. All rights reserved.</p>
+    <p>Built by the founders of <a href="https://www.virtuans.ai" target="_blank">Virtuans AI</a> · Acquired by <a href="https://www.autoacquireai.com" target="_blank">AutoAcquire AI</a> · <a href="/">← Back to raheelab.com</a></p>
+  </div>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Checkout Modal -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCheckout()">&times;</button>
+    <h3>Enroll in Cohort 01</h3>
+    <p class="modal-subtitle">Secure your seat — $800 one-time payment</p>
+
+    <form id="checkoutForm" onsubmit="handleCheckout(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="firstName" placeholder="Raheel" required>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="lastName" placeholder="Ahmad" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Country</label>
+        <select id="country" required>
+          <option value="">Select your country</option>
+          <option value="PK">Pakistan</option>
+          <option value="IN">India</option>
+          <option value="BD">Bangladesh</option>
+          <option value="AE">United Arab Emirates</option>
+          <option value="SA">Saudi Arabia</option>
+          <option value="US">United States</option>
+          <option value="GB">United Kingdom</option>
+          <option value="CA">Canada</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Card Details</label>
+        <div id="card-element"></div>
+      </div>
+      <div class="form-error" id="cardErrors"></div>
+      <button type="submit" class="checkout-btn" id="submitBtn">
+        Pay $800 & Enroll
+      </button>
+    </form>
+    <p class="pricing-secure" style="margin-top:12px;">🔒 Powered by Stripe · 256-bit encryption</p>
+  </div>
+</div>
+
+<script>
+// ─── Social Proof Toasts ───
+const buyers = [
+  { name: 'Ahmed K.', city: 'Karachi', time: '2 hours ago' },
+  { name: 'Priya S.', city: 'Mumbai', time: '5 hours ago' },
+  { name: 'Omar F.', city: 'Dubai', time: '1 day ago' },
+  { name: 'Fatima R.', city: 'Lahore', time: '1 day ago' },
+  { name: 'Arjun M.', city: 'Bangalore', time: '2 days ago' },
+  { name: 'Hassan T.', city: 'Islamabad', time: '3 days ago' },
+];
+
+let toastIndex = 0;
+function showToast() {
+  const container = document.getElementById('toastContainer');
+  const buyer = buyers[toastIndex % buyers.length];
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span class="dot-green"></span><span><strong>${buyer.name}</strong> from ${buyer.city} enrolled ${buyer.time}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 5000);
+  toastIndex++;
+}
+
+// Show first toast after 8s, then every 30s
+setTimeout(showToast, 8000);
+setInterval(showToast, 30000);
+
+// ─── FAQ Toggle ───
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+
+// ─── Stripe Integration ───
+/*
+ * SETUP INSTRUCTIONS:
+ * 1. Replace 'pk_test_YOUR_PUBLISHABLE_KEY' with your Stripe publishable key
+ * 2. Create a server endpoint at /create-payment-intent that:
+ *    - Creates a PaymentIntent for $800 (80000 cents)
+ *    - Returns { clientSecret: pi_xxx_secret_xxx }
+ * 3. Or alternatively, create a Stripe Payment Link and redirect to it
+ *
+ * For a quick no-backend setup, you can create a Payment Link in Stripe Dashboard:
+ * https://dashboard.stripe.com/payment-links/create
+ * and replace the checkout flow with a simple redirect:
+ *   window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
+ */
+
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_YOUR_PUBLISHABLE_KEY';
+let stripe, elements, cardElement;
+
+// Initialize Stripe (replace with your publishable key)
+try {
+  stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+  elements = stripe.elements({
+    fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap' }]
+  });
+  cardElement = elements.create('card', {
+    style: {
+      base: {
+        color: '#F5F0E8',
+        fontFamily: '"DM Sans", sans-serif',
+        fontSize: '14px',
+        '::placeholder': { color: '#6B6355' },
+      },
+      invalid: { color: '#C44D3F' },
+    }
+  });
+} catch(e) {
+  console.log('Stripe not initialized — replace STRIPE_PUBLISHABLE_KEY with your publishable key');
+}
+
+function openCheckout() {
+  document.getElementById('checkoutModal').classList.add('active');
+  if (cardElement) {
+    setTimeout(() => cardElement.mount('#card-element'), 100);
+  }
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckout() {
+  document.getElementById('checkoutModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Close modal on overlay click
+document.getElementById('checkoutModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCheckout();
+});
+
+async function handleCheckout(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const errorEl = document.getElementById('cardErrors');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Processing...';
+  errorEl.textContent = '';
+
+  const formData = {
+    firstName: document.getElementById('firstName').value,
+    lastName: document.getElementById('lastName').value,
+    email: document.getElementById('email').value,
+    country: document.getElementById('country').value,
+  };
+
+  try {
+    // Option 1: Server-based PaymentIntent flow
+    // Replace this URL with your actual server endpoint
+    const response = await fetch('/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: 80000, // $800 in cents
+        currency: 'usd',
+        email: formData.email,
+        name: `${formData.firstName} ${formData.lastName}`,
+      }),
+    });
+
+    const { clientSecret } = await response.json();
+
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+        },
+      },
+    });
+
+    if (error) {
+      errorEl.textContent = error.message;
+      btn.disabled = false;
+      btn.textContent = 'Pay $800 & Enroll';
+    } else if (paymentIntent.status === 'succeeded') {
+      btn.innerHTML = '✓ Enrolled Successfully!';
+      btn.style.background = '#4CAF50';
+      setTimeout(() => {
+        closeCheckout();
+        // Redirect to thank you page or show success state
+        alert('Welcome to Cohort 01! Check your email for next steps.');
+      }, 1500);
+    }
+  } catch (err) {
+    // If no server is configured, show helpful message
+    errorEl.textContent = 'Payment server not configured yet. See code comments for setup instructions.';
+    btn.disabled = false;
+    btn.textContent = 'Pay $800 & Enroll';
+
+    /*
+     * QUICK ALTERNATIVE: Stripe Payment Link redirect
+     * Uncomment the line below and replace with your Payment Link URL:
+     *
+     * window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
+     */
+  }
+}
+</script>
+
+</body>
+</html>
