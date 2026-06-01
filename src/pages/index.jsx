@@ -61,8 +61,8 @@ const PRESS_GROUPS = [
     label: "// The Acquisition", title: "In the press.",
     desc: "Our seven-figure acquisition by AutoAcquire AI, covered across U.S. and Pakistani media.",
     items: [
-      { source: "TechJuice", title: "Pakistani Startup Virtuans AI Acquired in Seven-Figure Deal by U.S. AI Firm", date: "Feb 2026", feat: true, url: "https://www.techjuice.pk/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-us-bases-autoacquire-ai/", img: "https://www.techjuice.pk/wp-content/uploads/2026/02/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-u-s-ai-firm-techjuice-216516-1.jpg" },
       { source: "Business Recorder", title: "US tech firm AutoAcquire AI acquires Pakistani AI startup Virtuans in seven-figure deal", date: "Feb 2026", feat: true, url: "https://www.brecorder.com/news/40406499/us-tech-firm-autoacquire-ai-acquires-pakistani-ai-startup-virtuans-in-seven-figure-deal", img: IMG_VIRTUANS },
+      { source: "TechJuice", title: "Pakistani Startup Virtuans AI Acquired in Seven-Figure Deal by U.S. AI Firm", date: "Feb 2026", feat: true, url: "https://www.techjuice.pk/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-us-bases-autoacquire-ai/", img: "https://www.techjuice.pk/wp-content/uploads/2026/02/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-u-s-ai-firm-techjuice-216516-1.jpg" },
       { source: "Profit — Pakistan Today", title: "Pakistani startup Virtuans AI acquired by US automotive tech firm", date: "Feb 2026", url: "https://profit.pakistantoday.com.pk/2026/02/10/pakistani-startup-virtuans-ai-acquired-by-us-automotive-tech-firm/", img: "https://profit.pakistantoday.com.pk/wp-content/uploads/2026/02/Virtuans.webp" },
       { source: "HUM English", title: "US firm AutoAcquire acquires Pakistani AI startup Virtuans in multimillion-dollar deal", date: "Feb 2026", url: "https://humenglish.com/latest/us-firm-autoacquire-acquires-pakistani-ai-startup-virtuans-in-multimillion-dollar-deal/", img: "https://humenglish341f88e60e.blob.core.windows.net/humenglish/uploads/2026/02/ai.jpg" },
       { source: "Let's Data Science", title: "AutoAcquire AI Acquires Virtuans AI Startup", date: "Feb 2026", url: "https://letsdatascience.com/news/autoacquire-ai-acquires-virtuans-ai-startup-d9237b8c", img: IMG_VIRTUANS },
@@ -146,6 +146,19 @@ const SOCIALS = [
 
 const sColor = (s) => s==="acquired"?"#D4A853":s==="exited"?"#888":s==="building"?"#60A5FA":"#4ADE80"
 
+// Admin panel is dev-only — never rendered in production builds
+const DEV = process.env.NODE_ENV !== "production"
+
+// "As seen in" logo strip on the home page (favicon-based brand marks)
+const SEEN_IN = [
+  { name: "Business Recorder", domain: "brecorder.com", url: "https://www.brecorder.com/news/40406499/us-tech-firm-autoacquire-ai-acquires-pakistani-ai-startup-virtuans-in-seven-figure-deal" },
+  { name: "Pakistan Today", domain: "pakistantoday.com.pk", url: "https://profit.pakistantoday.com.pk/2026/02/10/pakistani-startup-virtuans-ai-acquired-by-us-automotive-tech-firm/" },
+  { name: "TechJuice", domain: "techjuice.pk", url: "https://www.techjuice.pk/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-us-bases-autoacquire-ai/" },
+  { name: "EIN Presswire", domain: "einpresswire.com", url: "https://www.einpresswire.com/article/888787552/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition" },
+  { name: "Product Hunt", domain: "producthunt.com", url: "https://www.producthunt.com/products/virtuans-ai" },
+  { name: "National Law Review", domain: "natlawreview.com", url: "https://natlawreview.com/press-releases/autoacquire-ai-acquires-virtuans-accelerate-agentic-ai-innovation-automotive" },
+]
+
 function Admin({ c, setC, close }) {
   const [f, setF] = useState({...c})
   const [ok, setOk] = useState(false)
@@ -190,7 +203,9 @@ export default function Home({ ytVideos = [] }) {
 
   useEffect(()=>{ try{const s=localStorage.getItem("rs-v3");if(s)setC(JSON.parse(s))}catch(e){} },[])
   useEffect(()=>{ if(!c.ghostKey)return; fetch(`${c.ghostUrl}/ghost/api/content/posts/?key=${c.ghostKey}&limit=12&include=tags&fields=title,slug,feature_image,excerpt,published_at,reading_time`).then(r=>r.json()).then(d=>{if(d.posts?.length)setPosts(d.posts)}).catch(()=>{}) },[c.ghostKey,c.ghostUrl])
-  useEffect(()=>{ const h=(e)=>{if(e.ctrlKey&&e.shiftKey&&e.key==="A")setAdm(true)}; window.addEventListener("keydown",h); return()=>window.removeEventListener("keydown",h) },[])
+  useEffect(()=>{ if(!DEV)return; const h=(e)=>{if(e.ctrlKey&&e.shiftKey&&e.key==="A")setAdm(true)}; window.addEventListener("keydown",h); return()=>window.removeEventListener("keydown",h) },[])
+  // Swap any preview image that failed to load (incl. before hydration) for its branded placeholder
+  useEffect(()=>{ document.querySelectorAll("img[data-ph]").forEach((img)=>{ const swap=()=>{ img.style.display="none"; const ph=img.nextElementSibling; if(ph) ph.style.display="flex" }; if(img.complete && img.naturalWidth===0) swap(); else img.addEventListener("error", swap, {once:true}) }) },[pg])
 
   const go = (p) => { setPg(p); setMenu(false); window.scrollTo(0,0) }
   const NAV = [{k:"home",l:"Home"},{k:"ventures",l:"Ventures"},{k:"blog",l:"Blog"},{k:"videos",l:"Videos"},{k:"press",l:"Press"},{k:"course",l:c.courseName,href:"/academy.html"}]
@@ -216,7 +231,7 @@ export default function Home({ ytVideos = [] }) {
             {NAV.map(n=> n.href
               ? <a key={n.k} href={n.href} className="nb" style={{textDecoration:"none"}}>{n.l}</a>
               : <button key={n.k} onClick={()=>go(n.k)} className={`nb ${pg===n.k?"on":""}`}>{n.l}</button>)}
-            <button onClick={()=>setAdm(true)} className="nb" style={{fontSize:11,opacity:.3}} title="Ctrl+Shift+A">⚙</button>
+            {DEV && <button onClick={()=>setAdm(true)} className="nb" style={{fontSize:11,opacity:.3}} title="Ctrl+Shift+A">⚙</button>}
           </div>
           <button className="navtoggle" onClick={()=>setMenu(m=>!m)} aria-label="Toggle menu">{menu?"✕":"☰"}</button>
         </div>
@@ -224,21 +239,21 @@ export default function Home({ ytVideos = [] }) {
           {NAV.map(n=> n.href
             ? <a key={n.k} href={n.href} className="nb" style={{textAlign:"left",width:"100%",padding:"12px 6px",fontSize:15,textDecoration:"none"}}>{n.l}</a>
             : <button key={n.k} onClick={()=>go(n.k)} className={`nb ${pg===n.k?"on":""}`} style={{textAlign:"left",width:"100%",padding:"12px 6px",fontSize:15}}>{n.l}</button>)}
-          <button onClick={()=>{setAdm(true);setMenu(false)}} className="nb" style={{textAlign:"left",width:"100%",padding:"12px 6px",fontSize:13,opacity:.5}}>⚙ Admin</button>
+          {DEV && <button onClick={()=>{setAdm(true);setMenu(false)}} className="nb" style={{textAlign:"left",width:"100%",padding:"12px 6px",fontSize:13,opacity:.5}}>⚙ Admin</button>}
         </div>}
       </nav>
 
-      {adm && <Admin c={c} setC={setC} close={()=>setAdm(false)} />}
+      {DEV && adm && <Admin c={c} setC={setC} close={()=>setAdm(false)} />}
 
       <div style={{maxWidth:1080,margin:"0 auto",padding:"0 24px"}}>
 
         {/* ══ HOME ══ */}
         {pg==="home" && <>
           {/* Banner */}
-          <a href={PRESS[0].url} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:12,padding:"12px 18px",margin:"20px 0 0",border:"1px solid rgba(212,168,83,.2)",background:"rgba(212,168,83,.04)",textDecoration:"none"}}>
-            <span style={{fontSize:16}}>🏆</span>
-            <div style={{flex:1}}><div style={{fontSize:13,fontWeight:600,color:"#ddd"}}>Virtuans AI acquired by AutoAcquire AI — seven-figure deal</div><div style={{fontSize:11,color:"#777",fontFamily:"var(--m)"}}>TechJuice · Feb 2026</div></div>
-            <span style={{color:"#444"}}>→</span>
+          <a href={PRESS_GROUPS[0].items[0].url} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:12,padding:"12px 18px",margin:"20px 0 0",border:"1px solid rgba(212,168,83,.2)",background:"rgba(212,168,83,.04)",textDecoration:"none"}}>
+            <span style={{fontSize:16,flexShrink:0}}>🏆</span>
+            <div style={{flex:1,minWidth:0}}><div style={{fontSize:13,fontWeight:600,color:"#ddd"}}>Virtuans AI acquired by AutoAcquire AI — seven-figure deal</div><div style={{fontSize:11,color:"#777",fontFamily:"var(--m)"}}>Business Recorder · Feb 2026</div></div>
+            <span style={{color:"#444",flexShrink:0}}>→</span>
           </a>
 
           {/* Hero */}
@@ -270,10 +285,44 @@ export default function Home({ ytVideos = [] }) {
             ))}
           </div>
 
-          {/* Press strip */}
-          <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:14,padding:"18px 0",borderBottom:"1px solid var(--bd)"}}>
+          {/* Press logo strip */}
+          <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:"16px 24px",padding:"22px 0",borderBottom:"1px solid var(--bd)"}}>
             <span style={{fontFamily:"var(--m)",fontSize:10,color:"#444",textTransform:"uppercase",letterSpacing:".1em"}}>As seen in</span>
-            {PRESS.slice(0,5).map((p,i)=><a key={i} href={p.url} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#555",textDecoration:"none"}} onMouseEnter={e=>e.target.style.color="var(--g)"} onMouseLeave={e=>e.target.style.color="#555"}>{p.source}</a>)}
+            {SEEN_IN.map((s,i)=>(
+              <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" title={s.name} style={{display:"flex",alignItems:"center",gap:8,textDecoration:"none",opacity:.55,transition:"opacity .25s"}} onMouseEnter={e=>e.currentTarget.style.opacity=1} onMouseLeave={e=>e.currentTarget.style.opacity=.55}>
+                <img src={`https://www.google.com/s2/favicons?domain=${s.domain}&sz=128`} alt="" width={20} height={20} style={{display:"block",borderRadius:4,flexShrink:0}} loading="lazy" />
+                <span style={{fontFamily:"var(--m)",fontSize:12,color:"#999",whiteSpace:"nowrap"}}>{s.name}</span>
+              </a>
+            ))}
+          </div>
+
+          {/* Featured acquisition coverage */}
+          <div style={{padding:"48px 0 8px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:12,flexWrap:"wrap",marginBottom:22}}>
+              <div>
+                <div style={{fontFamily:"var(--m)",fontSize:11,color:"var(--g)",textTransform:"uppercase",letterSpacing:".12em",marginBottom:8}}>{"// Acquisition Coverage"}</div>
+                <h2 style={{fontFamily:"var(--s)",fontSize:28,lineHeight:1.15,fontWeight:400}}>Virtuans AI → AutoAcquire AI</h2>
+              </div>
+              <button onClick={()=>go("press")} style={{background:"none",border:"1px solid var(--bd)",color:"#999",padding:"9px 18px",fontSize:12,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>All press →</button>
+            </div>
+            <div className="bg" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
+              {PRESS_GROUPS[0].items.slice(0,3).map((p,i)=>(
+                <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="bc">
+                  <div style={{position:"relative"}}>
+                    {p.img && <img src={p.img} alt="" loading="lazy" data-ph="1" onError={e=>{e.currentTarget.style.display="none"; const ph=e.currentTarget.nextElementSibling; if(ph) ph.style.display="flex"}} style={{width:"100%",height:160,objectFit:"cover",display:"block",borderBottom:"1px solid var(--bd)"}} />}
+                    <div style={{display:p.img?"none":"flex",height:160,alignItems:"center",justifyContent:"center",padding:"0 18px",textAlign:"center",borderBottom:"1px solid var(--bd)",background:"linear-gradient(135deg,#161616,rgba(212,168,83,.07))"}}><span style={{fontFamily:"var(--s)",fontSize:22,color:"#8B7332"}}>{p.source}</span></div>
+                  </div>
+                  <div style={{padding:14}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+                      <span style={{fontFamily:"var(--m)",fontSize:10,color:"var(--g)"}}>{p.source}</span>
+                      {p.date&&<span style={{fontFamily:"var(--m)",fontSize:10,color:"#444"}}>{p.date}</span>}
+                      {p.feat&&<span style={{fontSize:8,background:"rgba(212,168,83,.15)",color:"var(--g)",padding:"2px 6px",fontFamily:"var(--m)",fontWeight:600}}>NEW</span>}
+                    </div>
+                    <div style={{fontFamily:"var(--s)",fontSize:16,lineHeight:1.3,color:"#eee"}}>{p.title}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Articles + Sidebar */}
@@ -451,7 +500,7 @@ export default function Home({ ytVideos = [] }) {
                 {g.items.map((p,i)=>(
                   <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="bc">
                     <div style={{position:"relative"}}>
-                      {p.img && <img src={p.img} alt="" loading="lazy" onError={e=>{e.currentTarget.style.display="none"; const ph=e.currentTarget.nextElementSibling; if(ph) ph.style.display="flex"}} style={{width:"100%",height:160,objectFit:"cover",display:"block",borderBottom:"1px solid var(--bd)"}} />}
+                      {p.img && <img src={p.img} alt="" loading="lazy" data-ph="1" onError={e=>{e.currentTarget.style.display="none"; const ph=e.currentTarget.nextElementSibling; if(ph) ph.style.display="flex"}} style={{width:"100%",height:160,objectFit:"cover",display:"block",borderBottom:"1px solid var(--bd)"}} />}
                       <div style={{display:p.img?"none":"flex",height:160,alignItems:"center",justifyContent:"center",padding:"0 18px",textAlign:"center",borderBottom:"1px solid var(--bd)",background:"linear-gradient(135deg,#161616,rgba(212,168,83,.07))"}}><span style={{fontFamily:"var(--s)",fontSize:22,color:"#8B7332"}}>{p.source}</span></div>
                     </div>
                     <div style={{padding:14}}>
