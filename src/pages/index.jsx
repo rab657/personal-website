@@ -48,6 +48,76 @@ const PRESS = [
   { title: "Virtuans AI — Featured Launch", source: "Product Hunt", url: "https://www.producthunt.com/products/virtuans-ai", date: "May 2025" },
 ]
 
+// Reused on-brand assets for items whose source blocks scrapers / has no og:image
+const IMG_VIRTUANS = "https://cdn.sanity.io/images/2wqe6h5m/production/f666d074c5ee78f8c509f66ceccb0202a8da3247-5437x3628.jpg?w=600&auto=format"
+const IMG_AUTOACQUIRE = "https://cdn.prod.website-files.com/6894e52d14329566400cacd8/691c991abf205d70be8c18c4_key1.webp"
+const IMG_AUTOACQUIRE_BANNER = "https://cdn.prod.website-files.com/6894e52d14329566400cacd8/697bbf7ed1f08814379f9e89_0082_2026-01_AutoAcquire_Widget-Banner.png"
+const IMG_EXPLAINX = "https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a51dac1aca4b7333421d_Screenshot%202022-08-08%20at%2010.54.26%20AM.png"
+const IMG_DEVNATION = "https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a117b7b0923dee92b90e_Screenshot%202022-08-08%20at%2010.37.14%20AM.png"
+
+// Press grouped by category — each item links out, most with a real preview image
+const PRESS_GROUPS = [
+  {
+    label: "// The Acquisition", title: "In the press.",
+    desc: "Our seven-figure acquisition by AutoAcquire AI, covered across U.S. and Pakistani media.",
+    items: [
+      { source: "TechJuice", title: "Pakistani Startup Virtuans AI Acquired in Seven-Figure Deal by U.S. AI Firm", date: "Feb 2026", feat: true, url: "https://www.techjuice.pk/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-us-bases-autoacquire-ai/", img: "https://www.techjuice.pk/wp-content/uploads/2026/02/pakistani-startup-virtuans-ai-acquired-in-seven-figure-deal-by-u-s-ai-firm-techjuice-216516-1.jpg" },
+      { source: "Business Recorder", title: "US tech firm AutoAcquire AI acquires Pakistani AI startup Virtuans in seven-figure deal", date: "Feb 2026", feat: true, url: "https://www.brecorder.com/news/40406499/us-tech-firm-autoacquire-ai-acquires-pakistani-ai-startup-virtuans-in-seven-figure-deal", img: IMG_VIRTUANS },
+      { source: "Profit — Pakistan Today", title: "Pakistani startup Virtuans AI acquired by US automotive tech firm", date: "Feb 2026", url: "https://profit.pakistantoday.com.pk/2026/02/10/pakistani-startup-virtuans-ai-acquired-by-us-automotive-tech-firm/", img: "https://profit.pakistantoday.com.pk/wp-content/uploads/2026/02/Virtuans.webp" },
+      { source: "HUM English", title: "US firm AutoAcquire acquires Pakistani AI startup Virtuans in multimillion-dollar deal", date: "Feb 2026", url: "https://humenglish.com/latest/us-firm-autoacquire-acquires-pakistani-ai-startup-virtuans-in-multimillion-dollar-deal/", img: "https://humenglish341f88e60e.blob.core.windows.net/humenglish/uploads/2026/02/ai.jpg" },
+      { source: "Let's Data Science", title: "AutoAcquire AI Acquires Virtuans AI Startup", date: "Feb 2026", url: "https://letsdatascience.com/news/autoacquire-ai-acquires-virtuans-ai-startup-d9237b8c", img: IMG_VIRTUANS },
+      { source: "EIN Presswire", title: "AutoAcquire AI Acquires Virtuans to Accelerate Agentic AI Innovation", date: "Feb 2026", url: "https://www.einpresswire.com/article/888787552/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition", img: IMG_AUTOACQUIRE },
+      { source: "Desert Sun", title: "AutoAcquire AI Acquires Virtuans to Accelerate Agentic AI Innovation", date: "Feb 2026", url: "https://www.desertsun.com/press-release/story/85983/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition/", img: IMG_AUTOACQUIRE_BANNER },
+      { source: "Pensacola News Journal", title: "AutoAcquire AI Acquires Virtuans to Accelerate Agentic AI Innovation", date: "Feb 2026", url: "https://www.pnj.com/press-release/story/29596/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition/", img: IMG_AUTOACQUIRE_BANNER },
+      { source: "National Law Review", title: "AutoAcquire AI Acquires Virtuans — Press Coverage", date: "Feb 2026", url: "https://natlawreview.com/press-releases/autoacquire-ai-acquires-virtuans-accelerate-agentic-ai-innovation-automotive", img: IMG_AUTOACQUIRE_BANNER },
+      { source: "Product Hunt", title: "Virtuans AI — Featured Launch", date: "May 2025", url: "https://www.producthunt.com/products/virtuans-ai", img: "https://cdn.sanity.io/images/2wqe6h5m/production/94547f4a11ccb789f3d222a3e6540676e6c78eef-794x491.webp?w=600&auto=format" },
+    ],
+  },
+  {
+    label: "// Writing & Features", title: "Articles & publications.",
+    desc: "Bylines and features on AI, explainability, and building from emerging markets.",
+    items: [
+      { source: "HackerNoon", title: "Building Machine Learning Algorithms That We Can Trust", date: "2020", url: "https://hackernoon.com/building-machine-learning-algorithms-that-we-can-trust-nzcw32td", img: "https://hackernoon.imgix.net/images/tshy3y20.jpg" },
+      { source: "AI Time Journal", title: "Practical Explainable AI: Unlocking the Black Box & Building Trustworthy AI", date: "2020", url: "https://www.aitimejournal.com/practical-explainable-ai-unlocking-the-black-box-and-building-trustworthy-ai-systems-2/24799/", img: "https://cdn.bcl.to/sites/aitimejournal/wp-content/uploads/2020/07/5ef2d79a4cea7748500a4477_Screen-Shot-2020-06-24-at-12.33.17-AM.png" },
+      { source: "Towards Data Science", title: "How Can We Build Explainable AI?", date: "2020", url: "https://medium.com/data-science/how-can-we-build-explainable-ai-f79f4a134406", img: IMG_EXPLAINX },
+      { source: "Towards Data Science", title: "6 Essential Practices to Implement Machine Learning in Your Organization", date: "2020", url: "https://medium.com/data-science/6-essential-practices-to-successfully-implement-machine-learning-in-your-organization-cfba8d7cafbb", img: IMG_EXPLAINX },
+      { source: "Towards Data Science", title: "Get Started With Data Science and Win During COVID-19", date: "2020", url: "https://medium.com/data-science/get-started-with-data-science-and-win-during-covid-19-97365da7bccb", img: IMG_EXPLAINX },
+      { source: "TechNode", title: "Investors say capital winter will prune China's overheated tech sector (quoted)", date: "Jun 2019", url: "https://technode.com/2019/06/04/investors-say-capital-winter-will-prune-chinas-overheated-tech-sector/", img: "https://i0.wp.com/technode.com/wp-content/uploads/2019/05/snow-3762470_1280.jpg?fit=1280%2C720&ssl=1" },
+      { source: "Daily Times", title: "The Dark Side of the Moon", date: "2020", url: "https://dailytimes.com.pk/618510/the-dark-side-of-the-moon/" },
+      { source: "Crypto Investment Times", title: "Pieces of the Same Puzzle: AI & Blockchain (feature)", date: "2020", url: "https://www.linkedin.com/pulse/pieces-same-puzzle-ai-blockchain-aly-madhavji-%E7%A9%86%E4%BA%9A%E9%9C%96/" },
+      { source: "Formtek", title: "Algorithmic Economy: Unintended Consequences from Algorithmic Errors (quoted)", date: "2020", url: "https://formtek.com/blog/algorithmic-economy-unintended-consequences-from-algorithmic-errors/" },
+      { source: "Towards Data Science", title: "All articles on Medium / TDS", date: "Archive", url: "https://medium.com/@raheelb" },
+      { source: "HackerNoon", title: "All articles on HackerNoon", date: "Archive", url: "https://hackernoon.com/u/rab657" },
+    ],
+  },
+  {
+    label: "// Stage & Screen", title: "Talks & interviews.",
+    desc: "Conference talks, fireside chats, and interviews — from TEDx Beijing to AI research conferences.",
+    items: [
+      { source: "AISC", title: "ExplainX — Explainable AI (AISC Live Session)", date: "2020", url: "https://www.youtube.com/watch?v=tLYa0dVAr_0", img: "https://i.ytimg.com/vi/tLYa0dVAr_0/hqdefault.jpg" },
+      { source: "FDML Conference", title: "Speaker — Federated & Distributed Machine Learning Conference 2020", date: "2020", url: "https://www.youtube.com/watch?v=6t1HtbDBP1c", img: "https://i.ytimg.com/vi/6t1HtbDBP1c/hqdefault.jpg" },
+      { source: "Daftarkhwan", title: "Fireside Chat at Daftarkhwan Conference", date: "2021", url: "https://www.youtube.com/watch?v=oZJUlPo8Nvw", img: "https://i.ytimg.com/vi/oZJUlPo8Nvw/hqdefault.jpg" },
+      { source: "The New York News", title: "Fireside Chat with Raheel Ahmad, Co-Founder of DevNation", date: "2021", url: "https://www.thenewyork.news/fireside-chat-with-raheel-ahmad-co-founder-of-devnation", img: "https://www.thenewyork.news/wp-content/uploads/2021/08/54728557_10218954140628659_7024503790967455744_n-1024x692.jpeg" },
+      { source: "TechJuice", title: "DevNation: Become a Software Engineer with Zero Upfront Cost", date: "2021", url: "https://www.techjuice.pk/become-a-software-engineer-with-zero-upfront-cost-devnation-is-on-a-mission-to-create-1-million-software-engineers-in-pakistan-by-2025", img: "https://www.techjuice.pk/wp-content/uploads/2021/03/value-proposition1.png" },
+      { source: "SuperVisas", title: "Interview: The Techstars Co-Founders of DevNation", date: "2021", url: "https://supervisas.com/blog/techstars-co-founders-of-devnation/", img: IMG_DEVNATION },
+      { source: "Koko Spotlights", title: "Startup Spotlight: DevNation", date: "2021", url: "https://kokospotlights.me/blogs/devnation/", img: IMG_DEVNATION },
+      { source: "TEDx", title: "Speaker @ TEDxYouth (Beijing)", date: "2019", url: "https://www.ted.com/tedx/events/34424" },
+    ],
+  },
+]
+
+const AWARDS = [
+  "UAE Golden Visa — 10-year residency",
+  "NVIDIA Inception Program for AI Startups (2019)",
+  "ALPHA Startup Track — RISE 2019, Hong Kong",
+  "Winner — TECOM Conf. Startup Pitch, Shanghai (2019)",
+  "2nd Prize — Smart China Expo Cup in Big Data (2019)",
+  "Top 2 — Caohejing Overseas Pitch Competition (2019)",
+  "Top 8 — Intel FPGA Competition (2019)",
+  "Winner — $50,000 Zhenjiang Government High-Tech Grant (2020)",
+  "Visiting Research Scholar, Explainable AI — NYU Tandon",
+]
+
 const GALLERY = [
   "/gallery/image-1.jpg",
   "/gallery/image-2.jpg",
@@ -370,21 +440,46 @@ export default function Home({ ytVideos = [] }) {
 
         {/* ══ PRESS ══ */}
         {pg==="press" && <div style={{padding:"60px 0"}}>
-          <SH l="// Press & Media" t="In the news." s="Our acquisition and companies covered by major tech and legal publications." />
-          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            {PRESS.map((p,i)=>(
-              <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="bc" style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px"}}>
-                <div>
-                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
-                    <span style={{fontFamily:"var(--m)",fontSize:10,color:"var(--g)"}}>{p.source}</span>
-                    <span style={{fontFamily:"var(--m)",fontSize:10,color:"#444"}}>{p.date}</span>
-                    {p.feat&&<span style={{fontSize:8,background:"rgba(212,168,83,.15)",color:"var(--g)",padding:"2px 6px",fontFamily:"var(--m)",fontWeight:600}}>NEW</span>}
-                  </div>
-                  <div style={{fontSize:14,fontWeight:500,color:"#ddd"}}>{p.title}</div>
+          <SH l="// Press & Recognition" t="In the press." s="Coverage of our acquisition, plus years of articles, talks, and interviews on AI." />
+
+          {PRESS_GROUPS.map((g,gi)=>(
+            <div key={gi} style={{marginTop:gi===0?8:52}}>
+              <div style={{fontFamily:"var(--m)",fontSize:11,color:"var(--g)",textTransform:"uppercase",letterSpacing:".12em",marginBottom:4}}>{g.label}</div>
+              <h3 style={{fontFamily:"var(--s)",fontSize:24,fontWeight:400,marginBottom:6}}>{g.title}</h3>
+              {g.desc&&<p style={{fontSize:13,color:"#777",maxWidth:580,lineHeight:1.6,marginBottom:22}}>{g.desc}</p>}
+              <div className="bg" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
+                {g.items.map((p,i)=>(
+                  <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="bc">
+                    <div style={{position:"relative"}}>
+                      {p.img && <img src={p.img} alt="" loading="lazy" onError={e=>{e.currentTarget.style.display="none"; const ph=e.currentTarget.nextElementSibling; if(ph) ph.style.display="flex"}} style={{width:"100%",height:160,objectFit:"cover",display:"block",borderBottom:"1px solid var(--bd)"}} />}
+                      <div style={{display:p.img?"none":"flex",height:160,alignItems:"center",justifyContent:"center",padding:"0 18px",textAlign:"center",borderBottom:"1px solid var(--bd)",background:"linear-gradient(135deg,#161616,rgba(212,168,83,.07))"}}><span style={{fontFamily:"var(--s)",fontSize:22,color:"#8B7332"}}>{p.source}</span></div>
+                    </div>
+                    <div style={{padding:14}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:5}}>
+                        <span style={{fontFamily:"var(--m)",fontSize:10,color:"var(--g)"}}>{p.source}</span>
+                        {p.date&&<span style={{fontFamily:"var(--m)",fontSize:10,color:"#444"}}>{p.date}</span>}
+                        {p.feat&&<span style={{fontSize:8,background:"rgba(212,168,83,.15)",color:"var(--g)",padding:"2px 6px",fontFamily:"var(--m)",fontWeight:600}}>NEW</span>}
+                      </div>
+                      <div style={{fontFamily:"var(--s)",fontSize:16,lineHeight:1.3,color:"#eee"}}>{p.title}</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {/* Awards & Recognition */}
+          <div style={{marginTop:56,paddingTop:40,borderTop:"1px solid var(--bd)"}}>
+            <div style={{fontFamily:"var(--m)",fontSize:11,color:"var(--g)",textTransform:"uppercase",letterSpacing:".12em",marginBottom:4}}>{"// Awards & Recognition"}</div>
+            <h3 style={{fontFamily:"var(--s)",fontSize:24,fontWeight:400,marginBottom:20}}>Honors & competitions.</h3>
+            <div className="bg" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
+              {AWARDS.map((a,i)=>(
+                <div key={i} style={{display:"flex",alignItems:"center",gap:10,border:"1px solid var(--bd)",padding:"12px 16px"}}>
+                  <span style={{color:"var(--g)",flexShrink:0,fontSize:13}}>★</span>
+                  <span style={{fontSize:13,color:"#bbb",lineHeight:1.4}}>{a}</span>
                 </div>
-                <span style={{color:"#444",fontSize:18,flexShrink:0}}>→</span>
-              </a>
-            ))}
+              ))}
+            </div>
           </div>
         </div>}
 
