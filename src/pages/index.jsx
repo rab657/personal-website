@@ -49,11 +49,11 @@ const PRESS = [
 ]
 
 const GALLERY = [
-  "https://www.raheelab.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimage-1.0c4ed946.jpg&w=640&q=75",
-  "https://www.raheelab.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimage-2.9c910f41.jpg&w=640&q=75",
-  "https://www.raheelab.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimage-3.8796e735.jpg&w=640&q=75",
-  "https://www.raheelab.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimage-4.f7cd6f74.jpg&w=640&q=75",
-  "https://www.raheelab.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fimage-5.c90f1e34.jpg&w=640&q=75",
+  "/gallery/image-1.jpg",
+  "/gallery/image-2.jpg",
+  "/gallery/image-3.jpg",
+  "/gallery/image-4.jpg",
+  "/gallery/image-5.jpg",
 ]
 
 const TIMELINE = [
