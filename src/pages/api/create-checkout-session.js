@@ -15,12 +15,20 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' })
   }
 
-  const key = process.env.STRIPE_SECRET_KEY
-  const price = process.env.STRIPE_PRICE_ID
+  // Secret key: prefer STRIPE_SECRET_KEY; fall back to STRIPE_REAL_SECRET_KEY.
+  const key = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_REAL_SECRET_KEY
+  const live = !!key && key.startsWith('sk_live')
+  // Price: explicit STRIPE_PRICE_ID wins; otherwise match the key's mode
+  // (live key -> live price, test key -> test price) using the COURSE_* names.
+  const price =
+    process.env.STRIPE_PRICE_ID ||
+    (live ? process.env.STRIPE_COURSE_PRICE_ID_LIVE : process.env.STRIPE_COURSE_PRICE_ID_TEST) ||
+    process.env.STRIPE_COURSE_PRICE_ID_TEST ||
+    process.env.STRIPE_COURSE_PRICE_ID_LIVE
   if (!key || !price) {
     return res
       .status(500)
-      .json({ error: 'Checkout not configured (missing STRIPE_SECRET_KEY or STRIPE_PRICE_ID).' })
+      .json({ error: 'Checkout not configured (missing Stripe secret key or price id).' })
   }
 
   const { email, event_id, fbp, fbc, source } = req.body || {}
