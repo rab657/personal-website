@@ -20,6 +20,7 @@
  * No npm dependencies needed — uses Node's crypto + global fetch (Node 18+/24).
  */
 import crypto from 'crypto'
+import { sendEmail, purchaseWelcomeHtml } from '../../lib/email'
 
 // Stripe needs the raw request body to verify the signature — disable Next's parser.
 export const config = { api: { bodyParser: false } }
@@ -154,6 +155,17 @@ export default async function handler(req, res) {
       }
     } else {
       console.warn('[CAPI] META_CAPI_TOKEN not set — skipping')
+    }
+
+    // Send the post-purchase welcome email (no-ops if RESEND_API_KEY isn't set)
+    if (email) {
+      const fullName = obj.customer_details?.name || obj.charges?.data?.[0]?.billing_details?.name || ''
+      const firstName = fullName.trim().split(/\s+/)[0] || ''
+      await sendEmail({
+        to: email,
+        subject: "You're in 🎉 — AI Product Academy, Cohort 01",
+        html: purchaseWelcomeHtml({ firstName }),
+      })
     }
   }
 

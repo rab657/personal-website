@@ -234,7 +234,8 @@ function unlock(e){
   if(!email) return;
   try { localStorage.setItem('academy_lead_email', email); } catch(_){}
   if (window.fbTrack) fbTrack('Lead', { content_name: 'AI Product Academy — Free Training' });
-  /* TODO: POST `email` to your email tool (Beehiiv/Kit) or webhook here for the nurture sequence */
+  // Send the welcome/"training unlocked" email via Resend (fire-and-forget)
+  try { fetch('/api/lead', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: email }) }); } catch(_){}
   document.getElementById('squeeze').style.display = 'none';
   var t = document.getElementById('training');
   t.style.display = 'block';
