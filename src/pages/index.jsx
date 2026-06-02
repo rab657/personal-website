@@ -198,7 +198,7 @@ export default function Home({ ytVideos = [] }) {
     bio: "Entrepreneur and AI product leader. Co-founded Virtuans AI (acquired by AutoAcquire AI, seven-figure deal). Head of AI Product at AutoAcquire AI. NYU Stern '18. Based in Dubai.",
     profileImg: "/profile.jpeg",
     ghostUrl: "https://blog.raheelab.com", ghostKey: "",
-    courseName: "AI Product Academy", courseTag: "Learn to build with AI before you get left behind. Build real products with Claude, automate your job, and do the work of 20 — in 30 days. 6 live classes.", coursePrice: "$599", courseUrl: "/start.html",
+    courseName: "AI Product Academy", courseTag: "Learn to build with AI before you get left behind. Build real products with Claude, automate your job, and do the work of 20 — in 30 days. 6 live classes.", coursePrice: "$650", courseUrl: "/start.html",
   })
 
   useEffect(()=>{ try{const s=localStorage.getItem("rs-v3");if(s)setC(JSON.parse(s))}catch(e){} },[])
