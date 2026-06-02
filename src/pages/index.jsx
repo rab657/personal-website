@@ -13,7 +13,7 @@ const FALLBACK_POSTS = [
 
 const VENTURES = [
   { name: "AutoAcquire AI", role: "Head of AI Product", period: "2026 — Present", status: "current", desc: "Leading AI product for America's $1T used car market. Building agentic AI that automates vehicle acquisition for US dealerships at scale.", url: "https://www.autoacquireai.com", img: "https://cdn.prod.website-files.com/6894e52d14329566400cacd8/691c991abf205d70be8c18c4_key1.webp", badge: "CURRENT" },
-  { name: "Virtuans AI", role: "Co-Founder & CEO", period: "2024 — 2026", status: "acquired", desc: "Autonomous AI voice & chat agents for enterprise sales. 40+ languages. $12M pipeline generated. Acquired by AutoAcquire AI in a seven-figure cash-and-equity deal.", url: "https://www.virtuans.ai", img: "https://cdn.sanity.io/images/2wqe6h5m/production/f666d074c5ee78f8c509f66ceccb0202a8da3247-5437x3628.jpg?w=600&auto=format", badge: "ACQUIRED" },
+  { name: "Virtuans AI", role: "Co-Founder & CEO", period: "2024 — 2026", status: "acquired", desc: "Autonomous AI voice & chat agents for enterprise sales. 40+ languages. $12M pipeline generated. Acquired by AutoAcquire AI in a seven-figure cash-and-equity deal.", url: "https://www.virtuans.ai", img: "https://www.virtuans.ai/images/crm.png", badge: "ACQUIRED" },
   { name: "Magnara, Inc.", role: "Founder", period: "2025 — Present", status: "building", desc: "AI procurement platform for hardware manufacturers. Cross-border China sourcing autopilot. Delaware C-Corp. Building AgenticCalling (MCP-native AI voice infra).", url: null, img: null, badge: "BUILDING" },
   { name: "Voltec Appliances", role: "Operator", period: "2023 — Present", status: "current", desc: "Solar equipment & EVE LFP lithium battery import/export from China to Pakistan. Family business modernized with AI-driven procurement.", url: null, img: null, badge: "OPERATING" },
   { name: "DevNation", role: "Co-Founder", period: "2021 — Present", status: "current", desc: "Pakistan's first ISA-based tech accelerator. Techstars Toronto '21 — first Pakistani startup accepted. 80-90% job placement rate.", url: "https://www.thedevnation.com", img: "https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a117b7b0923dee92b90e_Screenshot%202022-08-08%20at%2010.37.14%20AM.png", badge: "TECHSTARS" },
@@ -49,7 +49,7 @@ const PRESS = [
 ]
 
 // Reused on-brand assets for items whose source blocks scrapers / has no og:image
-const IMG_VIRTUANS = "https://cdn.sanity.io/images/2wqe6h5m/production/f666d074c5ee78f8c509f66ceccb0202a8da3247-5437x3628.jpg?w=600&auto=format"
+const IMG_VIRTUANS = "https://www.virtuans.ai/images/crm.png"
 const IMG_AUTOACQUIRE = "https://cdn.prod.website-files.com/6894e52d14329566400cacd8/691c991abf205d70be8c18c4_key1.webp"
 const IMG_AUTOACQUIRE_BANNER = "https://cdn.prod.website-files.com/6894e52d14329566400cacd8/697bbf7ed1f08814379f9e89_0082_2026-01_AutoAcquire_Widget-Banner.png"
 const IMG_EXPLAINX = "https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62f0a51dac1aca4b7333421d_Screenshot%202022-08-08%20at%2010.54.26%20AM.png"
@@ -70,7 +70,7 @@ const PRESS_GROUPS = [
       { source: "Desert Sun", title: "AutoAcquire AI Acquires Virtuans to Accelerate Agentic AI Innovation", date: "Feb 2026", url: "https://www.desertsun.com/press-release/story/85983/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition/", img: IMG_AUTOACQUIRE_BANNER },
       { source: "Pensacola News Journal", title: "AutoAcquire AI Acquires Virtuans to Accelerate Agentic AI Innovation", date: "Feb 2026", url: "https://www.pnj.com/press-release/story/29596/autoacquire-ai-acquires-virtuans-to-accelerate-agentic-ai-innovation-in-automotive-dealer-acquisition/", img: IMG_AUTOACQUIRE_BANNER },
       { source: "National Law Review", title: "AutoAcquire AI Acquires Virtuans — Press Coverage", date: "Feb 2026", url: "https://natlawreview.com/press-releases/autoacquire-ai-acquires-virtuans-accelerate-agentic-ai-innovation-automotive", img: IMG_AUTOACQUIRE_BANNER },
-      { source: "Product Hunt", title: "Virtuans AI — Featured Launch", date: "May 2025", url: "https://www.producthunt.com/products/virtuans-ai", img: "https://cdn.sanity.io/images/2wqe6h5m/production/94547f4a11ccb789f3d222a3e6540676e6c78eef-794x491.webp?w=600&auto=format" },
+      { source: "Product Hunt", title: "Virtuans AI — Featured Launch", date: "May 2025", url: "https://www.producthunt.com/products/virtuans-ai", img: "https://www.virtuans.ai/_next/image?url=%2Fimages%2Fmessenger_chat.png&w=1080&q=75" },
     ],
   },
   {
