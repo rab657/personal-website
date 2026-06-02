@@ -65,6 +65,14 @@ h1 em{font-style:italic;color:var(--gold)}
 .trust .t{font-size:13px;color:var(--txt2)}
 .trust .t b{color:var(--txt)}
 /* training (revealed) */
+.lockvid{position:relative;aspect-ratio:16/9;border:1px solid var(--bdg);overflow:hidden;margin:6px 0 26px;cursor:pointer;background:#000}
+.lockvid>img{width:100%;height:100%;object-fit:cover;filter:blur(16px) brightness(.42);transform:scale(1.18)}
+.lockvid .lov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px;padding:0 20px}
+.lockvid .play{width:66px;height:66px;border-radius:50%;background:rgba(200,164,78,.94);display:flex;align-items:center;justify-content:center;margin-bottom:8px;transition:transform .3s}
+.lockvid:hover .play{transform:scale(1.08)}
+.lockvid .play svg{width:24px;height:24px;fill:#0A0A0A;margin-left:3px}
+.lockvid .lt{font-family:var(--serif);font-size:21px;color:#fff}
+.lockvid .lk{font-family:var(--mono);font-size:12px;color:var(--gold-l);letter-spacing:.04em}
 #training{display:none}
 .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-d);margin-bottom:14px}
 .vsl{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid var(--bdg);margin-bottom:14px;background:#000}
@@ -123,7 +131,17 @@ footer a{color:var(--gold-d);text-decoration:none}
   <div class="wrap">
     <div class="badge"><span class="dot"></span><span>Free 20-minute training · Cohort 01 closing</span></div>
     <h1>How two people do the work of <em>twenty</em> — using AI.</h1>
-    <p class="sub">AI won't take your job — but someone who's mastered it will. Watch the exact system we used to build &amp; <b>sell</b> an AI company, and now run on solo: building products with Claude &amp; Cursor, and automating everything else with agents, workflows &amp; cron. <b>Enter your email to watch instantly.</b></p>
+    <p class="sub">AI won't take your job — but someone who's mastered it will. Watch the exact system we used to build &amp; <b>sell</b> an AI company, and now run solo: building products with Claude, and automating everything else with agents, workflows &amp; cron. <b>Enter your email to unlock it instantly.</b></p>
+
+    <!-- Locked/blurred VSL teaser — unlocks on opt-in -->
+    <div class="lockvid" onclick="document.getElementById('email').focus()">
+      <img src="https://i.ytimg.com/vi/JhzJx-wm7-0/hqdefault.jpg" alt="">
+      <div class="lov">
+        <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="lt">Your 20-minute training</div>
+        <div class="lk">🔒 Locked — enter your email below to unlock</div>
+      </div>
+    </div>
 
     <form class="optin" id="optinForm" onsubmit="unlock(event)">
       <input type="email" id="email" placeholder="Your best email" required>
@@ -158,7 +176,7 @@ footer a{color:var(--gold-d);text-decoration:none}
       <h2>The AI Product Academy</h2>
       <p class="lead">6 live classes over 30 days. From AI-curious to AI operator — taught by two founders who actually did it.</p>
       <ul class="feat">
-        <li>Build real apps, tools &amp; artifacts with Claude &amp; Cursor — no dev team</li>
+        <li>Build real apps, tools &amp; artifacts with Claude — no dev team</li>
         <li>Automate your own job with agents, workflows &amp; cron jobs</li>
         <li>The system to do the work of 20 people, solo</li>
         <li>Turn your new AI skills into income (first paying customers)</li>

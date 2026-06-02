@@ -198,7 +198,7 @@ export default function Home({ ytVideos = [] }) {
     bio: "Entrepreneur and AI product leader. Co-founded Virtuans AI (acquired by AutoAcquire AI, seven-figure deal). Head of AI Product at AutoAcquire AI. NYU Stern '18. Based in Dubai.",
     profileImg: "/profile.jpeg",
     ghostUrl: "https://blog.raheelab.com", ghostKey: "",
-    courseName: "AI Product Academy", courseTag: "Learn to build with AI before you get left behind. Build real products with Claude & Cursor, automate your job, and do the work of 20 — in 30 days. 6 live classes.", coursePrice: "$599", courseUrl: "/start.html",
+    courseName: "AI Product Academy", courseTag: "Learn to build with AI before you get left behind. Build real products with Claude, automate your job, and do the work of 20 — in 30 days. 6 live classes.", coursePrice: "$599", courseUrl: "/start.html",
   })
 
   useEffect(()=>{ try{const s=localStorage.getItem("rs-v3");if(s)setC(JSON.parse(s))}catch(e){} },[])
@@ -540,7 +540,7 @@ export default function Home({ ytVideos = [] }) {
               <h2 style={{fontFamily:"var(--s)",fontSize:36,fontWeight:400,lineHeight:1.15,marginBottom:12}}>{c.courseName}</h2>
               <p style={{fontSize:15,color:"#999",lineHeight:1.7,marginBottom:24}}>{c.courseTag}</p>
               <h3 style={{fontFamily:"var(--s)",fontSize:20,marginBottom:14}}>In 30 days, you&apos;ll walk out with:</h3>
-              {["A validated AI idea scored for acquisition potential","A working product built with Claude, Cursor & modern AI tools","A US Delaware C-Corp — registered, bank account open","Your first 10-20 paying customers","Your startup listed on Acquire.com","A full exit playbook from our real seven-figure deal"].map((x,i)=>(
+              {["A validated AI idea scored for acquisition potential","A working product built with Claude & modern AI tools","A US Delaware C-Corp — registered, bank account open","Your first 10-20 paying customers","Your startup listed on Acquire.com","A full exit playbook from our real seven-figure deal"].map((x,i)=>(
                 <div key={i} style={{display:"flex",gap:9,marginBottom:10}}><span style={{color:"var(--g)",fontWeight:700}}>✓</span><span style={{color:"#ccc",fontSize:14}}>{x}</span></div>
               ))}
               <div style={{marginTop:28,padding:20,background:"rgba(212,168,83,.05)",border:"1px solid rgba(212,168,83,.15)"}}>
@@ -556,7 +556,7 @@ export default function Home({ ytVideos = [] }) {
               <div style={{fontFamily:"var(--m)",fontSize:10,color:"var(--g)",textTransform:"uppercase",letterSpacing:".1em",marginBottom:8}}>Cohort 01</div>
               <div style={{fontFamily:"var(--s)",fontSize:42,marginBottom:3}}>{c.coursePrice}</div>
               <div style={{fontSize:12,color:"#666",marginBottom:18}}>One-time · 6 live classes · 30 days</div>
-              {["6 live classes (90 min each)","AI product building with Claude & Cursor","US company formation guidance","Customer acquisition playbook","Acquisition marketplace listing","1-on-1 advisory calls","Private cohort community"].map((f,i)=>(
+              {["6 live classes (90 min each)","AI product building with Claude","US company formation guidance","Customer acquisition playbook","Acquisition marketplace listing","1-on-1 advisory calls","Private cohort community"].map((f,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:7,marginBottom:8}}><span style={{color:"var(--g)",fontSize:10}}>●</span><span style={{fontSize:12,color:"#aaa"}}>{f}</span></div>
               ))}
               <a href={c.courseUrl||"#"} style={{display:"block",background:"var(--g)",color:"#000",padding:13,textAlign:"center",fontWeight:700,fontSize:14,textDecoration:"none",marginTop:18}}>Enroll Now</a>
