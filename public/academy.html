@@ -71,7 +71,7 @@ body {
 /* ─── Navigation ─── */
 nav {
   position: sticky;
-  top: 0;
+  top: 38px;
   z-index: 100;
   background: rgba(10,10,10,0.85);
   backdrop-filter: blur(20px);
@@ -1361,6 +1361,11 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
 </head>
 <body>
 
+<!-- Live countdown bar (sticky) -->
+<div id="cdBar" style="position:sticky;top:0;z-index:200;background:linear-gradient(90deg,#1c1407,#241a09);border-bottom:1px solid var(--border-gold);text-align:center;padding:9px 14px;font-family:var(--mono);font-size:12px;color:var(--gold-light);letter-spacing:.03em;">
+  ⏳ Cohort 01 enrollment closes in <b data-cd style="color:var(--gold);font-weight:600;">--h --m --s</b> &nbsp;·&nbsp; <b style="color:var(--accent-red);">8 of 30 seats left</b>
+</div>
+
 <!-- Ticker -->
 <div class="ticker">
   <div class="ticker-inner">
@@ -1388,10 +1393,10 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      <span>⚠ The AI skills gap is widening — Cohort 1 closing soon</span>
+      <span>⏳ Cohort 01 closes in <b data-cd style="font-weight:700;color:var(--gold-light);">--h --m --s</b></span>
     </div>
     <h1>AI won't take your job.<br>Someone who <em>masters it</em> will.</h1>
-    <p class="hero-sub">PM, engineer, designer, or just AI-curious — if you can't yet build apps with Claude, ship with Cursor, or wire up agents, artifacts, workflows and cron jobs, you're already falling behind. In 30 days we'll make you dangerous: build real AI products, automate your own job, and do the output of 20 people. Taught by two founders who built and <strong>sold</strong> an AI company — and now each run on that exact leverage.</p>
+    <p class="hero-sub">PM, engineer, designer, or just AI-curious — if you're still grinding the old way while the people around you quietly do 10x the work with AI, you're already being left behind (even if it doesn't feel like it yet). In 30 days we flip that: you'll build real products, automate your own job, and out-produce entire teams. Taught by two founders who built and <strong>sold</strong> an AI company — and now each run on that exact leverage.</p>
     <div class="hero-meta">
       <div class="hero-meta-item">
         <span class="label">Duration</span>
@@ -2237,7 +2242,14 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
     <h2 class="section-title" style="text-align:center;">One cohort. <em>Thirty seats.</em></h2>
 
     <div class="pricing-card">
-      <div class="pricing-eyebrow">Cohort 01 — March 2026</div>
+      <div class="pricing-eyebrow">Cohort 01 — Enrollment closing</div>
+      <div style="display:flex;gap:8px;margin:0 0 8px;">
+        <div style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-gold);padding:10px 4px;text-align:center;"><div id="cd-d" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">days</div></div>
+        <div style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-gold);padding:10px 4px;text-align:center;"><div id="cd-h" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">hrs</div></div>
+        <div style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-gold);padding:10px 4px;text-align:center;"><div id="cd-m" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">min</div></div>
+        <div style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-gold);padding:10px 4px;text-align:center;"><div id="cd-s" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">sec</div></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--accent-red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px;text-align:center;">⏳ This cohort closes when the timer hits zero</div>
       <div class="pricing-amount">
         <span class="pricing-currency">$</span>
         <span class="pricing-number">599</span>
@@ -2394,6 +2406,24 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
 </div>
 
 <script>
+// ─── Evergreen Countdown (48h per visitor, resets so it never dies) ───
+(function(){
+  var KEY='academy_deadline', WINDOW=48*60*60*1000, now=Date.now();
+  var dl=parseInt(localStorage.getItem(KEY)||'0',10);
+  if(!dl || dl<=now){ dl=now+WINDOW; localStorage.setItem(KEY,String(dl)); }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function tick(){
+    var diff=dl-Date.now();
+    if(diff<=0){ dl=Date.now()+WINDOW; localStorage.setItem(KEY,String(dl)); diff=WINDOW; }
+    var s=Math.floor(diff/1000)%60, m=Math.floor(diff/60000)%60, h=Math.floor(diff/3600000)%24, d=Math.floor(diff/86400000);
+    var txt=(d>0?d+'d ':'')+pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
+    document.querySelectorAll('[data-cd]').forEach(function(n){ n.textContent=txt; });
+    var seg={'cd-d':d,'cd-h':h,'cd-m':m,'cd-s':s};
+    for(var id in seg){ var e=document.getElementById(id); if(e) e.textContent=pad(seg[id]); }
+  }
+  tick(); setInterval(tick,1000);
+})();
+
 // ─── Social Proof Toasts ───
 const buyers = [
   { name: 'Ahmed K.', city: 'Karachi', time: '2 hours ago' },

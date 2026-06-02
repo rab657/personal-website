@@ -38,7 +38,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--txt);line-height:1
 .logo{font-family:var(--serif);font-size:20px;color:var(--txt);letter-spacing:.01em}
 .logo span{color:var(--gold)}
 /* scarcity strip */
-.scar{background:rgba(196,77,63,.1);border-bottom:1px solid var(--bdg);text-align:center;padding:9px 14px;font-family:var(--mono);font-size:11px;color:var(--gold-l);letter-spacing:.05em}
+.scar{position:sticky;top:0;z-index:300;background:rgba(196,77,63,.12);border-bottom:1px solid var(--bdg);text-align:center;padding:9px 14px;font-family:var(--mono);font-size:11px;color:var(--gold-l);letter-spacing:.05em}
 .scar b{color:var(--red)}
 /* stage */
 .stage{padding:54px 0 70px}
@@ -115,7 +115,7 @@ footer a{color:var(--gold-d);text-decoration:none}
 </head>
 <body>
 
-<div class="scar">⚠ COHORT 01 — <b>ONLY 8 OF 30 SEATS LEFT</b> · ENROLLMENT CLOSING SOON</div>
+<div class="scar">⏳ ENROLLMENT CLOSES IN <b data-cd style="color:var(--gold)">--h --m --s</b> &nbsp;·&nbsp; <b style="color:var(--red)">ONLY 8 OF 30 SEATS LEFT</b></div>
 <div class="topbar"><span class="logo">raheel<span>.</span></span></div>
 
 <!-- ============ STAGE 1: SQUEEZE ============ -->
@@ -165,6 +165,13 @@ footer a{color:var(--gold-d);text-decoration:none}
         <li>Optional: the full build-to-exit playbook from our 7-figure sale</li>
         <li>6 live classes (recorded) · 1-on-1 advisory · private cohort — lifetime access</li>
       </ul>
+      <div style="display:flex;gap:8px;margin:0 0 8px;">
+        <div style="flex:1;background:var(--bg2);border:1px solid var(--bdg);padding:10px 4px;text-align:center;"><div id="cd-d" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">days</div></div>
+        <div style="flex:1;background:var(--bg2);border:1px solid var(--bdg);padding:10px 4px;text-align:center;"><div id="cd-h" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">hrs</div></div>
+        <div style="flex:1;background:var(--bg2);border:1px solid var(--bdg);padding:10px 4px;text-align:center;"><div id="cd-m" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">min</div></div>
+        <div style="flex:1;background:var(--bg2);border:1px solid var(--bdg);padding:10px 4px;text-align:center;"><div id="cd-s" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">sec</div></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;">⏳ Seat + $599 price expire when the timer hits zero</div>
       <div class="price"><span class="cur">$</span><span class="num">599</span><span class="was">$800</span></div>
       <div class="price-sub">One-time · 6 live classes · 30 days · 14-day money-back guarantee</div>
       <button class="btn btn-wide" onclick="openCheckout()">Claim Your Seat — $599</button>
@@ -203,6 +210,24 @@ footer a{color:var(--gold-d);text-decoration:none}
 </div>
 
 <script>
+// ===== Evergreen Countdown (48h per visitor, resets so it never dies) =====
+(function(){
+  var KEY='academy_deadline', WINDOW=48*60*60*1000, now=Date.now();
+  var dl=parseInt(localStorage.getItem(KEY)||'0',10);
+  if(!dl || dl<=now){ dl=now+WINDOW; localStorage.setItem(KEY,String(dl)); }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function tick(){
+    var diff=dl-Date.now();
+    if(diff<=0){ dl=Date.now()+WINDOW; localStorage.setItem(KEY,String(dl)); diff=WINDOW; }
+    var s=Math.floor(diff/1000)%60, m=Math.floor(diff/60000)%60, h=Math.floor(diff/3600000)%24, d=Math.floor(diff/86400000);
+    var txt=(d>0?d+'d ':'')+pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
+    document.querySelectorAll('[data-cd]').forEach(function(n){ n.textContent=txt; });
+    var seg={'cd-d':d,'cd-h':h,'cd-m':m,'cd-s':s};
+    for(var id in seg){ var e=document.getElementById(id); if(e) e.textContent=pad(seg[id]); }
+  }
+  tick(); setInterval(tick,1000);
+})();
+
 // ===== Opt-in → reveal VSL =====
 function unlock(e){
   e.preventDefault();
