@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>You're in — AI Product Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','3295834153930056');fbq('track','PageView');
+// Fire the browser Purchase with the SAME event_id the server webhook uses,
+// so Meta dedupes the Pixel + CAPI Purchase into one.
+(function(){
+  var eid=new URLSearchParams(location.search).get('eid')||undefined;
+  fbq('track','Purchase',{value:650,currency:'USD',content_name:'AI Product Academy — Cohort 01'}, eid?{eventID:eid}:undefined);
+})();
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=3295834153930056&ev=PageView&noscript=1"/></noscript>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',-apple-system,sans-serif;background:#0A0A0A;color:#F5F0E8;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px}
+.check{width:72px;height:72px;border-radius:50%;background:rgba(76,175,80,.12);border:1px solid #4CAF50;color:#4CAF50;font-size:36px;display:flex;align-items:center;justify-content:center;margin:0 auto 26px}
+h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(34px,6vw,52px);font-weight:400;line-height:1.1;margin-bottom:16px}
+h1 em{font-style:italic;color:#C8A44E}
+p{font-size:16px;color:#A09882;line-height:1.7;margin-bottom:14px}
+.box{border:1px solid #2A2520;background:#161616;text-align:left;padding:24px;margin:28px 0;border-radius:2px}
+.box h2{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#8B7332;margin-bottom:14px}
+.box li{font-size:14px;color:#A09882;line-height:1.6;margin-bottom:9px;list-style:none;padding-left:22px;position:relative}
+.box li::before{content:'→';position:absolute;left:0;color:#8B7332}
+.btn{display:inline-block;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8B7332;text-decoration:none;border:1px solid #2A2520;padding:10px 20px}
+.btn:hover{border-color:#8B7332;color:#C8A44E}
+.cohort{font-family:'JetBrains Mono',monospace;font-size:12px;color:#C8A44E;letter-spacing:.06em;margin-bottom:24px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="check">✓</div>
+    <div class="cohort">COHORT 01 · STARTS JULY 1, 2026</div>
+    <h1>You're in. <em>Welcome aboard.</em></h1>
+    <p>Your seat in the AI Product Academy is confirmed. A receipt and your onboarding email are on the way — check your inbox (and spam, just in case).</p>
+    <div class="box">
+      <h2>What happens next</h2>
+      <ul>
+        <li>You'll get a welcome email with your cohort details &amp; class schedule</li>
+        <li>An invite to the private community where everything happens</li>
+        <li>Pre-work so you hit the ground running on day one</li>
+        <li>Questions? Just reply to the welcome email — it reaches us directly</li>
+      </ul>
+    </div>
+    <p style="font-size:13px;color:#6B6355;">See you on the inside — Raheel &amp; Muddassar.</p>
+    <a href="/academy.html" class="btn">← Back to the Academy</a>
+  </div>
+</body>
+</html>

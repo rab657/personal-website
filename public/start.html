@@ -192,7 +192,7 @@ footer a{color:var(--gold-d);text-decoration:none}
       <div style="font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;">⏳ Seat + $650 price expire when the timer hits zero</div>
       <div class="price"><span class="cur">$</span><span class="num">650</span><span class="was">$800</span></div>
       <div class="price-sub">One-time · 6 live classes · 30 days · 14-day money-back guarantee</div>
-      <button class="btn btn-wide" onclick="openCheckout()">Claim Your Seat — $650</button>
+      <button class="btn btn-wide" onclick="goCheckout(this)">Claim Your Seat — $650</button>
       <div class="secure">🔒 Secure Stripe checkout · Instant confirmation</div>
       <div class="spots" style="color:var(--gold)">★ Limited intake — we keep each cohort small &amp; selective</div>
     </div>
@@ -206,25 +206,7 @@ footer a{color:var(--gold-d);text-decoration:none}
 
 <footer><p>© 2026 Raheel Ahmad &amp; Muddassar Sharif · <a href="/academy.html">Full curriculum</a></p></footer>
 
-<!-- Checkout modal -->
-<div class="ov" id="checkoutModal">
-  <div class="modal">
-    <button class="x" onclick="closeCheckout()">&times;</button>
-    <h3>Claim your seat</h3>
-    <p class="ms">Cohort 01 · $650 one-time payment</p>
-    <form id="checkoutForm" onsubmit="handleCheckout(event)">
-      <div class="frow">
-        <div class="fg"><label>First name</label><input type="text" id="firstName" placeholder="Raheel" required></div>
-        <div class="fg"><label>Last name</label><input type="text" id="lastName" placeholder="Ahmad" required></div>
-      </div>
-      <div class="fg"><label>Email</label><input type="email" id="cemail" placeholder="you@example.com" required></div>
-      <div class="fg"><label>Card details</label><div id="card-element"></div></div>
-      <div class="ferr" id="cardErrors"></div>
-      <button type="submit" class="btn btn-wide" id="submitBtn">Pay $650 &amp; Enroll</button>
-    </form>
-    <p class="secure" style="margin-top:12px;">🔒 Powered by Stripe · 256-bit encryption</p>
-  </div>
-</div>
+<!-- Checkout is now Stripe-hosted via /api/create-checkout-session (see goCheckout) -->
 
 <script>
 // ===== Evergreen Countdown (48h per visitor, resets so it never dies) =====
@@ -257,52 +239,26 @@ function unlock(e){
   var t = document.getElementById('training');
   t.style.display = 'block';
   window.scrollTo(0,0);
-  // prefill checkout email
-  document.getElementById('cemail').value = email;
   if (window.fbTrack) fbTrack('ViewContent', { content_name: 'VSL — AI Product Academy' });
 }
 
-// ===== Stripe checkout ($650) =====
-const STRIPE_PUBLISHABLE_KEY = 'pk_test_YOUR_PUBLISHABLE_KEY';
-let stripe, elements, cardElement;
-try {
-  stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-  elements = stripe.elements({ fonts:[{cssSrc:'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap'}] });
-  cardElement = elements.create('card', { style:{ base:{ color:'#F5F0E8', fontFamily:'"DM Sans", sans-serif', fontSize:'14px', '::placeholder':{color:'#6B6355'} }, invalid:{ color:'#C44D3F' } } });
-} catch(e){ console.log('Stripe not initialized — replace STRIPE_PUBLISHABLE_KEY with your key'); }
-
-function openCheckout(){
-  document.getElementById('checkoutModal').classList.add('active');
-  if (cardElement) setTimeout(()=>cardElement.mount('#card-element'), 100);
-  document.body.style.overflow = 'hidden';
-  if (window.fbTrack) fbTrack('InitiateCheckout', { value: 650, currency:'USD', content_name:'AI Product Academy — Cohort 01' });
-}
-function closeCheckout(){ document.getElementById('checkoutModal').classList.remove('active'); document.body.style.overflow=''; }
-document.getElementById('checkoutModal').addEventListener('click', function(e){ if(e.target===this) closeCheckout(); });
-
-async function handleCheckout(e){
-  e.preventDefault();
-  var btn = document.getElementById('submitBtn'), err = document.getElementById('cardErrors');
-  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Processing...'; err.textContent='';
-  var data = { firstName:firstName.value, lastName:lastName.value, email:cemail.value };
+// ===== Hosted Stripe Checkout (redirect) =====
+function readCookie(n){ var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)'); return m?m.pop():''; }
+async function goCheckout(btn){
+  try { if (window.fbTrack) fbTrack('InitiateCheckout', { value:650, currency:'USD', content_name:'AI Product Academy — Cohort 01' }); } catch(_){}
+  var label; if(btn){ label=btn.textContent; btn.textContent='Loading checkout…'; btn.disabled=true; }
+  var email=''; try { email=localStorage.getItem('academy_lead_email')||''; } catch(_){}
+  var eid='evt_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
   try {
-    // Server-based PaymentIntent flow — point this at your endpoint (amount = 65000 cents)
-    const r = await fetch('/create-payment-intent', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ amount:65000, currency:'usd', email:data.email, name:data.firstName+' '+data.lastName }) });
-    const { clientSecret } = await r.json();
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method:{ card:cardElement, billing_details:{ name:data.firstName+' '+data.lastName, email:data.email } } });
-    if (error){ err.textContent = error.message; btn.disabled=false; btn.textContent='Pay $650 & Enroll'; }
-    else if (paymentIntent.status==='succeeded'){
-      if (window.fbTrack) fbTrack('Purchase', { value: 650, currency:'USD', content_name:'AI Product Academy — Cohort 01' });
-      btn.innerHTML='✓ Enrolled!'; btn.style.background='#4CAF50';
-      setTimeout(()=>{ closeCheckout(); alert('Welcome to Cohort 01! Check your email for next steps.'); }, 1500);
-    }
-  } catch(err2){
-    err.textContent = 'Payment server not configured yet. Add your Stripe key + /create-payment-intent endpoint (or swap in a Stripe Payment Link).';
-    btn.disabled=false; btn.textContent='Pay $650 & Enroll';
-    /* QUICK ALTERNATIVE (no backend): window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK'; */
-  }
+    var r = await fetch('/api/create-checkout-session', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email:email, event_id:eid, fbp:readCookie('_fbp'), fbc:readCookie('_fbc'), source:'start' })
+    });
+    var j = await r.json();
+    if (j.url) { window.location.href = j.url; return; }
+    alert(j.error || 'Checkout is being set up — please try again shortly.');
+  } catch(_){ alert('Could not start checkout. Please try again.'); }
+  if(btn){ btn.textContent=label; btn.disabled=false; }
 }
 </script>
 

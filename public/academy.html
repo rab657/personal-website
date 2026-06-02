@@ -2242,7 +2242,7 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
         <li>1-on-1 advisory calls with Raheel & Muddassar</li>
         <li>Private cohort community — lifetime access</li>
       </ul>
-      <button class="pricing-btn" onclick="openCheckout()">Enroll Now — Secure Your Seat</button>
+      <button class="pricing-btn" onclick="goCheckout(this)">Enroll Now — Secure Your Seat</button>
       <p class="pricing-secure">🔒 Secure payment via Stripe · Instant confirmation · 🛡️ 14-day money-back guarantee</p>
       <div class="spots-left" style="color:var(--gold);">★ Limited intake — we keep each cohort small &amp; selective</div>
     </div>
@@ -2330,55 +2330,7 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Checkout Modal -->
-<div class="modal-overlay" id="checkoutModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeCheckout()">&times;</button>
-    <h3>Enroll in Cohort 01</h3>
-    <p class="modal-subtitle">Secure your seat — $650 one-time payment</p>
-
-    <form id="checkoutForm" onsubmit="handleCheckout(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" id="firstName" placeholder="Raheel" required>
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" id="lastName" placeholder="Ahmad" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="email" placeholder="you@example.com" required>
-      </div>
-      <div class="form-group">
-        <label>Country</label>
-        <select id="country" required>
-          <option value="">Select your country</option>
-          <option value="PK">Pakistan</option>
-          <option value="IN">India</option>
-          <option value="BD">Bangladesh</option>
-          <option value="AE">United Arab Emirates</option>
-          <option value="SA">Saudi Arabia</option>
-          <option value="US">United States</option>
-          <option value="GB">United Kingdom</option>
-          <option value="CA">Canada</option>
-          <option value="OTHER">Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Card Details</label>
-        <div id="card-element"></div>
-      </div>
-      <div class="form-error" id="cardErrors"></div>
-      <button type="submit" class="checkout-btn" id="submitBtn">
-        Pay $650 & Enroll
-      </button>
-    </form>
-    <p class="pricing-secure" style="margin-top:12px;">🔒 Powered by Stripe · 256-bit encryption</p>
-  </div>
-</div>
+<!-- Checkout is now Stripe-hosted via /api/create-checkout-session (see goCheckout) -->
 
 <script>
 // ─── Evergreen Countdown (48h per visitor, resets so it never dies) ───
@@ -2430,134 +2382,23 @@ function toggleFaq(el) {
   el.classList.toggle('open');
 }
 
-// ─── Stripe Integration ───
-/*
- * SETUP INSTRUCTIONS:
- * 1. Replace 'pk_test_YOUR_PUBLISHABLE_KEY' with your Stripe publishable key
- * 2. Create a server endpoint at /create-payment-intent that:
- *    - Creates a PaymentIntent for $650 (65000 cents)
- *    - Returns { clientSecret: pi_xxx_secret_xxx }
- * 3. Or alternatively, create a Stripe Payment Link and redirect to it
- *
- * For a quick no-backend setup, you can create a Payment Link in Stripe Dashboard:
- * https://dashboard.stripe.com/payment-links/create
- * and replace the checkout flow with a simple redirect:
- *   window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
- */
-
-const STRIPE_PUBLISHABLE_KEY = 'pk_test_YOUR_PUBLISHABLE_KEY';
-let stripe, elements, cardElement;
-
-// Initialize Stripe (replace with your publishable key)
-try {
-  stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-  elements = stripe.elements({
-    fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap' }]
-  });
-  cardElement = elements.create('card', {
-    style: {
-      base: {
-        color: '#F5F0E8',
-        fontFamily: '"DM Sans", sans-serif',
-        fontSize: '14px',
-        '::placeholder': { color: '#6B6355' },
-      },
-      invalid: { color: '#C44D3F' },
-    }
-  });
-} catch(e) {
-  console.log('Stripe not initialized — replace STRIPE_PUBLISHABLE_KEY with your publishable key');
-}
-
-function openCheckout() {
-  document.getElementById('checkoutModal').classList.add('active');
-  if (cardElement) {
-    setTimeout(() => cardElement.mount('#card-element'), 100);
-  }
-  document.body.style.overflow = 'hidden';
-  if (window.fbTrack) fbTrack('InitiateCheckout', { value: 650, currency: 'USD', content_name: 'AI Product Academy — Cohort 01' });
-}
-
-function closeCheckout() {
-  document.getElementById('checkoutModal').classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-// Close modal on overlay click
-document.getElementById('checkoutModal').addEventListener('click', function(e) {
-  if (e.target === this) closeCheckout();
-});
-
-async function handleCheckout(e) {
-  e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  const errorEl = document.getElementById('cardErrors');
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Processing...';
-  errorEl.textContent = '';
-  if (window.fbTrack) fbTrack('Lead', { value: 650, currency: 'USD', content_name: 'AI Product Academy — Cohort 01' });
-
-  const formData = {
-    firstName: document.getElementById('firstName').value,
-    lastName: document.getElementById('lastName').value,
-    email: document.getElementById('email').value,
-    country: document.getElementById('country').value,
-  };
-
+// ─── Hosted Stripe Checkout (redirect) ───
+function readCookie(n){ var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)'); return m?m.pop():''; }
+async function goCheckout(btn){
+  try { if (window.fbTrack) fbTrack('InitiateCheckout', { value:650, currency:'USD', content_name:'AI Product Academy — Cohort 01' }); } catch(_){}
+  var label; if(btn){ label=btn.textContent; btn.textContent='Loading checkout…'; btn.disabled=true; }
+  var email=''; try { email=localStorage.getItem('academy_lead_email')||''; } catch(_){}
+  var eid='evt_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
   try {
-    // Option 1: Server-based PaymentIntent flow
-    // Replace this URL with your actual server endpoint
-    const response = await fetch('/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: 65000, // $650 in cents
-        currency: 'usd',
-        email: formData.email,
-        name: `${formData.firstName} ${formData.lastName}`,
-      }),
+    var r = await fetch('/api/create-checkout-session', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email:email, event_id:eid, fbp:readCookie('_fbp'), fbc:readCookie('_fbc'), source:'academy' })
     });
-
-    const { clientSecret } = await response.json();
-
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: cardElement,
-        billing_details: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-        },
-      },
-    });
-
-    if (error) {
-      errorEl.textContent = error.message;
-      btn.disabled = false;
-      btn.textContent = 'Pay $650 & Enroll';
-    } else if (paymentIntent.status === 'succeeded') {
-      if (window.fbTrack) fbTrack('Purchase', { value: 650, currency: 'USD', content_name: 'AI Product Academy — Cohort 01' });
-      btn.innerHTML = '✓ Enrolled Successfully!';
-      btn.style.background = '#4CAF50';
-      setTimeout(() => {
-        closeCheckout();
-        // Redirect to thank you page or show success state
-        alert('Welcome to Cohort 01! Check your email for next steps.');
-      }, 1500);
-    }
-  } catch (err) {
-    // If no server is configured, show helpful message
-    errorEl.textContent = 'Payment server not configured yet. See code comments for setup instructions.';
-    btn.disabled = false;
-    btn.textContent = 'Pay $650 & Enroll';
-
-    /*
-     * QUICK ALTERNATIVE: Stripe Payment Link redirect
-     * Uncomment the line below and replace with your Payment Link URL:
-     *
-     * window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
-     */
-  }
+    var j = await r.json();
+    if (j.url) { window.location.href = j.url; return; }
+    alert(j.error || 'Checkout is being set up — please try again shortly.');
+  } catch(_){ alert('Could not start checkout. Please try again.'); }
+  if(btn){ btn.textContent=label; btn.disabled=false; }
 }
 </script>
 
