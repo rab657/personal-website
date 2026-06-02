@@ -2333,15 +2333,12 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
 <!-- Checkout is now Stripe-hosted via /api/create-checkout-session (see goCheckout) -->
 
 <script>
-// ─── Evergreen Countdown (48h per visitor, resets so it never dies) ───
+// ─── Countdown to launch (Cohort 01 — July 1, 2026) ───
 (function(){
-  var KEY='academy_deadline', WINDOW=48*60*60*1000, now=Date.now();
-  var dl=parseInt(localStorage.getItem(KEY)||'0',10);
-  if(!dl || dl<=now){ dl=now+WINDOW; localStorage.setItem(KEY,String(dl)); }
+  var dl=Date.UTC(2026,6,1,0,0,0); // enrollment closes / cohort starts July 1, 2026 (00:00 UTC)
   function pad(n){ return (n<10?'0':'')+n; }
   function tick(){
-    var diff=dl-Date.now();
-    if(diff<=0){ dl=Date.now()+WINDOW; localStorage.setItem(KEY,String(dl)); diff=WINDOW; }
+    var diff=dl-Date.now(); if(diff<0) diff=0;
     var s=Math.floor(diff/1000)%60, m=Math.floor(diff/60000)%60, h=Math.floor(diff/3600000)%24, d=Math.floor(diff/86400000);
     var txt=(d>0?d+'d ':'')+pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
     document.querySelectorAll('[data-cd]').forEach(function(n){ n.textContent=txt; });
