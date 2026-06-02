@@ -1338,10 +1338,12 @@ footer a:hover { color: var(--gold); }
   .personal-letter { padding: 28px; }
   .modal { padding: 28px 20px; }
   .form-row { grid-template-columns: 1fr; }
-  /* Portrait + letter grid */
-  div[style*="grid-template-columns: 280px"] { grid-template-columns: 1fr !important; }
-  div[style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
-  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; }
+  /* Collapse EVERY inline-styled grid on mobile (1fr by default, stats stay 2-up) */
+  div[style*="grid-template-columns: 280px"],
+  div[style*="grid-template-columns: 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr auto 1fr"],
+  div[style*="grid-template-columns: repeat(2"],
+  div[style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr !important; }
   div[style*="grid-template-columns: repeat(4"] { grid-template-columns: 1fr 1fr !important; }
 }
 </style>
@@ -1965,10 +1967,10 @@ if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); f
       </div>
 
       <!-- Visual Break: AI Chat Interface -->
-      <div style="grid-column: 1 / -1; border:1px solid var(--border); overflow:hidden; position:relative;">
-        <img src="https://www.virtuans.ai/_next/image?url=%2Fimages%2Fmessenger_chat.png&w=1080&q=75" alt="Virtuans AI Chat Agent Interface" style="width:100%; display:block; opacity:0.85;" loading="lazy">
-        <div style="position:absolute; bottom:0; left:0; right:0; padding:20px 24px; background: linear-gradient(transparent, rgba(10,10,10,0.95));">
-          <span style="font-family:var(--mono); font-size:12px; color:var(--gold-dim);">↑ This is a real AI agent we built and shipped to enterprise clients — you'll build your own version in Class 02</span>
+      <div style="grid-column: 1 / -1; border:1px solid var(--border); overflow:hidden;">
+        <img src="https://www.virtuans.ai/_next/image?url=%2Fimages%2Fmessenger_chat.png&w=1080&q=75" alt="Virtuans AI Chat Agent Interface" style="width:100%; max-height:340px; object-fit:cover; object-position:top center; display:block; opacity:0.9;" loading="lazy">
+        <div style="padding:14px 18px; background:var(--bg-card); border-top:1px solid var(--border);">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--gold-dim);">↑ A real AI agent we built and shipped to enterprise clients — you'll build your own version in Class 02</span>
         </div>
       </div>
 
