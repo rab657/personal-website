@@ -1327,8 +1327,31 @@ footer a:hover { color: var(--gold); }
   color: var(--gold);
 }
 
+/* sticky mobile enroll bar (hidden on desktop) */
+.mobile-buybar { display: none; }
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
+  .hero { padding: 44px 0 52px; }
+  .container { padding: 0 18px; }
+  /* keep large serif headings from overflowing narrow screens */
+  .hero h1 { font-size: 33px; line-height: 1.14; }
+  .section-title { font-size: 27px; line-height: 1.2; }
+  .final-cta h2 { font-size: 27px; line-height: 1.25; }
+  .hero-sub { font-size: 16px; }
+  /* avoid double-sticky overlap: countdown scrolls away, nav pins to top */
+  #cdBar { position: static; }
+  nav { top: 0; }
+  body { padding-bottom: 60px; }
+  .mobile-buybar {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 400;
+    background: var(--gold); color: var(--bg-primary);
+    font-family: var(--sans); font-weight: 700; font-size: 15px;
+    padding: 15px 16px; text-decoration: none; letter-spacing: 0.02em;
+    box-shadow: 0 -6px 24px rgba(0,0,0,0.45);
+  }
+  .mobile-buybar s { opacity: 0.6; font-weight: 500; font-size: 13px; }
   .story-grid,
   .instructor-grid,
   .curriculum-grid { grid-template-columns: 1fr; }
@@ -1376,18 +1399,18 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
 
 <!-- Live countdown bar (sticky) -->
 <div id="cdBar" style="position:sticky;top:0;z-index:200;background:linear-gradient(90deg,#1c1407,#241a09);border-bottom:1px solid var(--border-gold);text-align:center;padding:9px 14px;font-family:var(--mono);font-size:12px;color:var(--gold-light);letter-spacing:.03em;">
-  ⏳ Enrollment closes in <b data-cd style="color:var(--gold);font-weight:600;">--h --m --s</b> &nbsp;·&nbsp; <b style="color:var(--accent-red);">Limited intake — we take very few</b>
+  ⏳ Founding price <b style="color:var(--gold);">$650</b> ends in <b data-cd style="color:var(--gold);font-weight:600;">--h --m --s</b> &nbsp;·&nbsp; <b style="color:var(--accent-red);">then it goes to $800</b>
 </div>
 
 <!-- Ticker -->
 <div class="ticker">
   <div class="ticker-inner">
     <span>⚠ THE AI SKILLS GAP IS HERE — DON'T GET LEFT BEHIND</span>
-    <span>★ 6 LIVE CLASSES · 30 DAYS · BUILD WITH AI</span>
+    <span>★ 6 LIVE CLASSES · 4 WEEKS · BUILD WITH AI</span>
     <span>◆ CLAUDE · AGENTS · ARTIFACTS · WORKFLOWS · CRON · AUTOMATION</span>
     <span>→ DO THE WORK OF 20 PEOPLE — OR BE REPLACED BY SOMEONE WHO CAN</span>
     <span>⚠ THE AI SKILLS GAP IS HERE — DON'T GET LEFT BEHIND</span>
-    <span>★ 6 LIVE CLASSES · 30 DAYS · BUILD WITH AI</span>
+    <span>★ 6 LIVE CLASSES · 4 WEEKS · BUILD WITH AI</span>
     <span>◆ CLAUDE · AGENTS · ARTIFACTS · WORKFLOWS · CRON · AUTOMATION</span>
     <span>→ DO THE WORK OF 20 PEOPLE — OR BE REPLACED BY SOMEONE WHO CAN</span>
   </div>
@@ -1406,7 +1429,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
   <div class="container">
     <div class="hero-badge">
       <span class="dot"></span>
-      <span>⏳ Cohort 01 closes in <b data-cd style="font-weight:700;color:var(--gold-light);">--h --m --s</b></span>
+      <span>⏳ Founding price ($650) ends in <b data-cd style="font-weight:700;color:var(--gold-light);">--h --m --s</b></span>
     </div>
     <h1>AI won't take your job.<br>Someone who <em>masters it</em> will.</h1>
     <p class="hero-sub">PM, engineer, designer, or just AI-curious — if you're still grinding the old way while the people around you quietly do 10x the work with AI, you're already being left behind (even if it doesn't feel like it yet). In 30 days we flip that: you'll build real products, automate your own job, and out-produce entire teams. Taught by two founders who built and <strong>sold</strong> an AI company — and now each run on that exact leverage.</p>
@@ -1421,7 +1444,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       </div>
       <div class="hero-meta-item">
         <span class="label">Class Length</span>
-        <span class="value">90 min each</span>
+        <span class="value">60 min each</span>
       </div>
       <div class="hero-meta-item">
         <span class="label">Investment</span>
@@ -1948,7 +1971,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
           <li>Using Claude as your co-builder: apps, internal tools, docs and code — from plain English</li>
           <li>Claude Code to ship real software even if you've never coded</li>
           <li>Building shareable artifacts and mini-apps in minutes, not weeks</li>
-          <li>Live build: we ship a working tool together in 90 minutes</li>
+          <li>Live build: we ship a working tool together, start to finish</li>
         </ul>
         <div><span class="outcome-badge">→ You'll leave with: Your first real AI-built product or tool</span></div>
       </div>
@@ -2064,7 +2087,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       <div class="included-item">
         <div class="included-icon">🎙️</div>
         <div class="included-title">6 Live Classes (Recorded)</div>
-        <div class="included-desc">90-minute live sessions with Raheel & Muddassar, twice a week for 30 days. Every session recorded for lifetime access.</div>
+        <div class="included-desc">60-minute live sessions with Raheel & Muddassar across 4 weeks. Every session recorded for lifetime access.</div>
       </div>
       <div class="included-item">
         <div class="included-icon">🤖</div>
@@ -2236,15 +2259,16 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
         <div style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-gold);padding:10px 4px;text-align:center;"><div id="cd-m" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">min</div></div>
         <div style="flex:1;background:var(--bg-secondary);border:1px solid var(--border-gold);padding:10px 4px;text-align:center;"><div id="cd-s" style="font-family:var(--serif);font-size:26px;color:var(--gold);line-height:1;">--</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;">sec</div></div>
       </div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--accent-red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px;text-align:center;">⏳ This cohort closes when the timer hits zero</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--accent-red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px;text-align:center;">⏳ Founding price ends when the timer hits zero — then $800</div>
+      <div style="text-align:center;font-family:var(--mono);font-size:13px;color:var(--text-muted);margin-bottom:2px;">Founding-cohort price · <s style="color:var(--accent-red);">$800</s> &nbsp;you save $150</div>
       <div class="pricing-amount">
         <span class="pricing-currency">$</span>
         <span class="pricing-number">650</span>
       </div>
-      <div class="pricing-period">One-time payment · Full access to everything</div>
+      <div class="pricing-period">One-time payment · Full access · price rises to $800 soon</div>
       <div class="pricing-desc">This isn't a pre-recorded course. It's 6 live sessions with two founders who built and sold an AI company — and now do the work of an entire team with AI. You'll walk out able to build, automate and out-produce.</div>
       <ul class="pricing-features">
-        <li>6 live classes (90 min each) — all recorded for lifetime access</li>
+        <li>6 live classes (60 min each) — all recorded for lifetime access</li>
         <li>Hands-on AI building with Claude — apps, agents, artifacts</li>
         <li>Automate your job: workflows, cron & agent systems</li>
         <li>The "do the work of 20" leverage system</li>
@@ -2272,7 +2296,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
           <span>When does the cohort start?</span>
           <span class="faq-toggle">+</span>
         </div>
-        <div class="faq-answer"><p>Cohort 1 begins in July 1, 2026. Classes run twice a week for 4 weeks (6 classes total), each lasting 90 minutes. All sessions are live on Zoom and recorded for lifetime access. Exact schedule shared upon enrollment.</p></div>
+        <div class="faq-answer"><p>Cohort 01 begins July 1, 2026 — 6 live classes across 4 weeks, 60 minutes each. All sessions are live on Zoom and recorded for lifetime access. Exact schedule shared upon enrollment.</p></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
@@ -2286,7 +2310,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
           <span>I'm based in MENA/Pakistan/India — is this relevant for me?</span>
           <span class="faq-toggle">+</span>
         </div>
-        <div class="faq-answer"><p>This course is specifically built for you. Every example, case study, and playbook is designed for entrepreneurs operating from MENA, Pakistan, and India. We'll cover how to open a US company from abroad, how to sell to US/EU clients while living in Dubai or Lahore, and how to position yourself for acquisition as a founder from our region. We've done it — we'll show you how.</p></div>
+        <div class="faq-answer"><p>This course is specifically built for you. Every example, case study and playbook is designed for professionals and builders operating from MENA, Pakistan and India — how to become the AI-fluent person your company can't replace, land remote roles and clients paying in dollars, and ship real products from wherever you are. We built and sold an AI company from this region ourselves — we'll show you how.</p></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
@@ -2297,10 +2321,10 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
-          <span>Do I really need a US company to get acquired?</span>
+          <span>Will this actually help me in my job / career?</span>
           <span class="faq-toggle">+</span>
         </div>
-        <div class="faq-answer"><p>Almost always, yes. US acquirers overwhelmingly prefer buying Delaware C-Corporations because the legal framework is well-understood. In Class 03, we'll walk you through setting up your C-Corp via Stripe Atlas, opening a US bank account, and structuring equity — all from wherever you are. We'll also show you how we structured our own companies (Magnara Inc. in Delaware, YuYuan Capital in Pakistan) for exactly this purpose.</p></div>
+        <div class="faq-answer"><p>That's the entire point. You'll walk out able to build, automate and out-produce — the exact leverage now separating people who get promoted from people who get replaced. Whether you want to lock in your current role, land a better-paid AI-fluent job, or grow into a bigger one, every class ends with you having built something real you can show. (And if you ever want to start your own thing, Class 06 covers the optional founder/exit track.)</p></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
@@ -2320,8 +2344,8 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       <img src="/profile.jpeg" alt="Raheel" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); object-fit:cover;">
       <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); margin-left:-8px; object-fit:cover;">
     </div>
-    <h2>You've read the press. You've seen the results.<br>You know this is real.<br><em>Now build yours.</em></h2>
-    <p>In 30 days, you'll have a validated AI idea, a working product, your first customers, a US company, and a clear path to acquisition. Join 30 ambitious builders from MENA, Pakistan, and India in Cohort 1.</p>
+    <h2>AI won't take your job.<br>But someone who masters it will.<br><em>Be that someone.</em></h2>
+    <p>In 4 weeks you'll build real products with Claude, automate your own job, and out-produce teams 10x your size — the leverage that makes you impossible to replace. Join the founding cohort of ambitious builders from MENA, Pakistan & India.</p>
     <a href="#pricing" class="btn-primary" style="display:inline-flex;">
       Enroll Now — $650
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
@@ -2341,12 +2365,15 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- Sticky mobile enroll bar -->
+<a href="#pricing" class="mobile-buybar">Enroll Now — <s>$800</s> $650 →</a>
+
 <!-- Checkout is now Stripe-hosted via /api/create-checkout-session (see goCheckout) -->
 
 <script>
 // ─── Countdown to launch (Cohort 01 — July 1, 2026) ───
 (function(){
-  var dl=Date.UTC(2026,6,1,0,0,0); // enrollment closes / cohort starts July 1, 2026 (00:00 UTC)
+  var dl=Date.UTC(2026,5,14,0,0,0); // FOUNDING-PRICE deadline: ends end of Jun 13, 2026 (UTC). Bump this date to extend the $650 window. (Cohort still starts Jul 1.)
   function pad(n){ return (n<10?'0':'')+n; }
   function tick(){
     var diff=dl-Date.now(); if(diff<0) diff=0;
