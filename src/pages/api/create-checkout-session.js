@@ -9,6 +9,49 @@
  *
  * Dependency-free: Stripe REST API via fetch (Node 18+/24).
  */
+import crypto from 'crypto'
+
+const sha256 = (s) => crypto.createHash('sha256').update(String(s).trim().toLowerCase()).digest('hex')
+
+// Fire a server-side InitiateCheckout to Meta CAPI, deduped with the browser
+// Pixel event via the shared event_id. Best-effort / non-blocking.
+async function sendInitiateCheckoutCAPI({ event_id, email, fbp, fbc, ip, ua, pageUrl }) {
+  const token = process.env.META_CAPI_TOKEN
+  if (!token) return
+  const dataset = process.env.META_PIXEL_ID || '3295834153930056'
+  const user_data = {}
+  if (email) user_data.em = [sha256(email)]
+  if (fbp) user_data.fbp = fbp
+  if (fbc) user_data.fbc = fbc
+  if (ip) user_data.client_ip_address = ip
+  if (ua) user_data.client_user_agent = ua
+  const event = {
+    event_name: 'InitiateCheckout',
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'website',
+    event_source_url: pageUrl,
+    user_data,
+    custom_data: { value: 650, currency: 'USD', content_name: 'AI Product Academy — Cohort 01' },
+  }
+  if (event_id) event.event_id = event_id
+  const body = { data: [event] }
+  if (process.env.META_TEST_EVENT_CODE) body.test_event_code = process.env.META_TEST_EVENT_CODE
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), 2500)
+  try {
+    await fetch(`https://graph.facebook.com/v21.0/${dataset}/events?access_token=${encodeURIComponent(token)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: ctrl.signal,
+    })
+  } catch (_) {
+    /* best-effort: never block checkout on CAPI */
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
@@ -38,6 +81,10 @@ export default async function handler(req, res) {
   const base = `${proto}://${host}`
   const pageUrl = source === 'academy' ? `${base}/academy.html` : `${base}/start.html`
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+  const ua = req.headers['user-agent'] || ''
+
+  // Fire CAPI InitiateCheckout in parallel with the Stripe call (hides latency).
+  const capiP = sendInitiateCheckoutCAPI({ event_id, email, fbp, fbc, ip, ua, pageUrl }).catch(() => {})
 
   const params = new URLSearchParams()
   params.append('mode', 'payment')
@@ -77,6 +124,7 @@ export default async function handler(req, res) {
       body: params.toString(),
     })
     const session = await r.json()
+    try { await capiP } catch (_) {}
     if (session.error) {
       console.error('[checkout] Stripe error', session.error.message)
       return res.status(400).json({ error: session.error.message })
