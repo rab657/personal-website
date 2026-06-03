@@ -1356,7 +1356,7 @@ t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
 window.FB_PIXEL_ID = '3295834153930056';            // <-- paste your Meta Pixel ID here
 window.fbTrack = function(ev, params){ if(window.fbq && window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID'){ fbq('track', ev, params || {}); } };
-if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); fbq('track', 'PageView'); }
+if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); fbq('track', 'PageView'); fbq('track', 'ViewContent', { content_name: 'AI Product Academy — Cohort 01', content_category: 'course', value: 650, currency: 'USD' }); }
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=3295834153930056&ev=PageView&noscript=1"/></noscript>
 <!-- ===== End Meta Pixel ===== -->
