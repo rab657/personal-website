@@ -53,14 +53,14 @@ export default function Document() {
         />
           
         
-      <script async  src="https://www.googletagmanager.com/gtag/js?id=G-D3XYJQQN6H" />
+      <script async  src="https://www.googletagmanager.com/gtag/js?id=G-681V76ZVPK" />
       <script
             dangerouslySetInnerHTML={{
               __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-D3XYJQQN6H', {
+            gtag('config', 'G-681V76ZVPK', {
               page_path: window.location.pathname,
             });
           `,
