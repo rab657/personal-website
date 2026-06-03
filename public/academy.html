@@ -1365,6 +1365,9 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
 window.FB_PIXEL_ID = '3295834153930056';            // <-- paste your Meta Pixel ID here
 window.fbTrack = function(ev, params){ if(window.fbq && window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID'){ fbq('track', ev, params || {}); } };
 if (window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') { fbq('init', window.FB_PIXEL_ID); fbq('track', 'PageView'); fbq('track', 'ViewContent', { content_name: 'AI Product Academy — Cohort 01', content_category: 'course', value: 650, currency: 'USD' }); }
+// GA4 funnel — step 1: product viewed
+window.AIPA_ITEM = [{ item_id:'aipa-cohort-01', item_name:'AI Product Academy — Cohort 01', price:650, quantity:1 }];
+if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items: window.AIPA_ITEM }); }
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=3295834153930056&ev=PageView&noscript=1"/></noscript>
 <!-- ===== End Meta Pixel ===== -->
@@ -2391,6 +2394,7 @@ function toggleFaq(el) {
 function readCookie(n){ var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)'); return m?m.pop():''; }
 async function goCheckout(btn){
   try { if (window.fbTrack) fbTrack('InitiateCheckout', { value:650, currency:'USD', content_name:'AI Product Academy — Cohort 01' }); } catch(_){}
+  try { if (window.gtag) gtag('event','begin_checkout', { currency:'USD', value:650, items: window.AIPA_ITEM || [{item_id:'aipa-cohort-01', item_name:'AI Product Academy — Cohort 01', price:650, quantity:1}] }); } catch(_){}
   var label; if(btn){ label=btn.textContent; btn.textContent='Loading checkout…'; btn.disabled=true; }
   var email=''; try { email=localStorage.getItem('academy_lead_email')||''; } catch(_){}
   var eid='evt_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
