@@ -1330,6 +1330,10 @@ footer a:hover { color: var(--gold); }
 /* sticky mobile enroll bar (hidden on desktop) */
 .mobile-buybar { display: none; }
 
+/* authority credibility pills */
+.auth-pill { font-family: var(--mono); font-size: 12.5px; color: var(--text-secondary); border: 1px solid var(--border-gold); padding: 8px 15px; white-space: nowrap; background: var(--bg-card); letter-spacing: 0.02em; }
+.auth-pill b { color: var(--gold); font-weight: 600; }
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .hero { padding: 44px 0 52px; }
@@ -1432,7 +1436,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       <span>⏳ Founding price ($650) ends in <b data-cd style="font-weight:700;color:var(--gold-light);">--h --m --s</b></span>
     </div>
     <h1>AI won't take your job.<br>Someone who <em>masters it</em> will.</h1>
-    <p class="hero-sub">PM, engineer, designer, or just AI-curious — if you're still grinding the old way while the people around you quietly do 10x the work with AI, you're already being left behind (even if it doesn't feel like it yet). In 30 days we flip that: you'll build real products, automate your own job, and out-produce entire teams. Taught by two founders who built and <strong>sold</strong> an AI company — and now each run on that exact leverage.</p>
+    <p class="hero-sub">PM, engineer, designer, or just AI-curious — if you're still grinding the old way while the people around you quietly do 10x the work with AI, you're already being left behind (even if it doesn't feel like it yet). In 30 days we flip that: you'll build real products, automate your own job, and out-produce entire teams. Taught by two <strong>ex-NVIDIA engineers</strong> who built and <strong>sold</strong> an AI company — and now run on that exact leverage every single day.</p>
     <div class="hero-meta">
       <div class="hero-meta-item">
         <span class="label">Duration</span>
@@ -1465,6 +1469,24 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
         <span class="hero-image-caption">Featured in TechJuice — Feb 2026</span>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- Authority strip — front-loaded credibility -->
+<section style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--bg-secondary); padding:34px 0;">
+  <div class="container">
+    <p style="text-align:center; font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--gold-dim); margin-bottom:18px;">// You're not learning from influencers — you're learning from operators who actually did it</p>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:12px 16px;">
+      <span class="auth-pill">ex-<b>NVIDIA</b> AI engineers</span>
+      <span class="auth-pill"><b>NYU</b> (Stern · Tandon)</span>
+      <span class="auth-pill"><b>Techstars</b> — 1st Pakistani startup ever</span>
+      <span class="auth-pill">Built &amp; <b>sold</b> an AI company</span>
+      <span class="auth-pill"><b>7-figure</b> exit to a US firm</span>
+      <span class="auth-pill"><b>100+</b> clients shipped</span>
+      <span class="auth-pill"><b>$12M+</b> pipeline generated</span>
+      <span class="auth-pill"><b>40+</b> languages in production</span>
+    </div>
+    <p style="text-align:center; font-size:15px; color:var(--text-secondary); max-width:680px; margin:22px auto 0; line-height:1.6;">Most people teaching "AI" have never shipped a product. We built AI agents deployed across the UAE, Spain and the UK, sold the company to a US firm, and now run on that exact AI leverage daily — <strong style="color:var(--text-primary);">this is the system, taught by the people who actually live it.</strong></p>
   </div>
 </section>
 
