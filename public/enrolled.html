@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>You're in — AI Product Academy</title>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3XYJQQN6H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3XYJQQN6H');
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- Meta Pixel -->
 <script>
@@ -19,6 +27,8 @@ fbq('init','3295834153930056');fbq('track','PageView');
 (function(){
   var eid=new URLSearchParams(location.search).get('eid')||undefined;
   fbq('track','Purchase',{value:650,currency:'USD',content_name:'AI Product Academy — Cohort 01'}, eid?{eventID:eid}:undefined);
+  // GA4 ecommerce purchase (revenue shows up in GA reports)
+  if(window.gtag){ gtag('event','purchase',{ transaction_id: eid||('order_'+Date.now()), value:650, currency:'USD', items:[{item_id:'aipa-cohort-01', item_name:'AI Product Academy — Cohort 01', price:650, quantity:1}] }); }
 })();
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=3295834153930056&ev=PageView&noscript=1"/></noscript>
