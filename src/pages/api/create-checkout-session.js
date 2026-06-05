@@ -82,6 +82,11 @@ export default async function handler(req, res) {
   const pageUrl = source === 'academy' ? `${base}/academy.html` : `${base}/start.html`
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim()
   const ua = req.headers['user-agent'] || ''
+  const country = String(req.headers['x-vercel-ip-country'] || '').toUpperCase()
+  // Pakistan special: auto-apply the $100-off promo (geo-enforced server-side, so it can't leak).
+  const pkPromo =
+    process.env.STRIPE_PK_PROMO_ID ||
+    (live ? 'promo_1TexKuDP91d10cospv5S2doP' : 'promo_1TexJWE5ZSbFHm6SW8QO7T5O')
 
   // Fire CAPI InitiateCheckout in parallel with the Stripe call (hides latency).
   const capiP = sendInitiateCheckoutCAPI({ event_id, email, fbp, fbc, ip, ua, pageUrl }).catch(() => {})
@@ -90,7 +95,12 @@ export default async function handler(req, res) {
   params.append('mode', 'payment')
   params.append('line_items[0][price]', price)
   params.append('line_items[0][quantity]', '1')
-  params.append('allow_promotion_codes', 'true')
+  if (country === 'PK' && pkPromo) {
+    // Auto-apply the Pakistan discount. (Stripe forbids combining discounts with allow_promotion_codes.)
+    params.append('discounts[0][promotion_code]', pkPromo)
+  } else {
+    params.append('allow_promotion_codes', 'true')
+  }
   params.append(
     'success_url',
     `${base}/enrolled.html?eid=${encodeURIComponent(event_id || '')}&session_id={CHECKOUT_SESSION_ID}`

@@ -1412,6 +1412,11 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
   ⏳ Founding price <b style="color:var(--gold);">$650</b> ends in <b data-cd style="color:var(--gold);font-weight:600;">--h --m --s</b> &nbsp;·&nbsp; <b style="color:var(--accent-red);">then it goes to $800</b>
 </div>
 
+<!-- Pakistan special — revealed by /api/geo for PK visitors only -->
+<div id="pkBanner" style="display:none;background:#0d2818;border-bottom:1px solid #1f6e43;text-align:center;padding:11px 14px;font-family:var(--mono);font-size:12.5px;color:#8fe7b4;letter-spacing:.02em;line-height:1.4;">
+  🇵🇰 <b style="color:#c9f7dc;">Pakistan special</b> — $100 off, applied automatically · your price <b style="color:#fff;">$550</b> <s style="opacity:.55;">$650</s>
+</div>
+
 <!-- Ticker -->
 <div class="ticker">
   <div class="ticker-inner">
@@ -2463,5 +2468,21 @@ async function goCheckout(btn){
 }
 </script>
 
+<!-- Pakistan geo personalization: show the special price for PK visitors -->
+<script>
+(function(){
+  try {
+    fetch('/api/geo').then(function(r){return r.json();}).then(function(g){
+      if(!g || !g.isPK) return;
+      window.AIPA_PK = true;
+      try { var b=document.getElementById('pkBanner'); if(b) b.style.display='block'; } catch(e){}
+      try { document.querySelectorAll('.pricing-number').forEach(function(n){ n.textContent='550'; }); } catch(e){}
+      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price · $100 off applied automatically at checkout'; } catch(e){}
+      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g,'$550'); }); } catch(e){}
+      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Pakistan price · <s style="color:var(--accent-red);">$650</s> &nbsp;save $100'; } }); } catch(e){}
+    }).catch(function(){});
+  } catch(e){}
+})();
+</script>
 </body>
 </html>
