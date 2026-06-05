@@ -2483,7 +2483,7 @@ async function goCheckout(btn){
   try {
     var r = await fetch('/api/create-checkout-session', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ email:email, event_id:eid, fbp:readCookie('_fbp'), fbc:readCookie('_fbc'), source:'academy' })
+      body: JSON.stringify({ email:email, event_id:eid, fbp:readCookie('_fbp'), fbc:readCookie('_fbc'), source:'academy', price_variant: window.AIPA_PK_VARIANT || 'a' })
     });
     var j = await r.json();
     if (j.url) { window.location.href = j.url; return; }
@@ -2500,11 +2500,18 @@ async function goCheckout(btn){
     fetch('/api/geo').then(function(r){return r.json();}).then(function(g){
       if(!g || !g.isPK) return;
       window.AIPA_PK = true;
-      try { var b=document.getElementById('pkBanner'); if(b) b.style.display='block'; } catch(e){}
-      try { document.querySelectorAll('.pricing-number').forEach(function(n){ n.textContent='550'; }); } catch(e){}
-      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price · $100 off applied automatically at checkout'; } catch(e){}
-      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g,'$550'); }); } catch(e){}
-      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Pakistan price · <s style="color:var(--accent-red);">$650</s> &nbsp;save $100'; } }); } catch(e){}
+      // A/B price test (sticky per visitor): 'a' = $550, 'b' = $250
+      var v = localStorage.getItem('pk_price_variant');
+      if(v!=='a' && v!=='b'){ v = Math.random()<0.5 ? 'a' : 'b'; try{ localStorage.setItem('pk_price_variant', v); }catch(e){} }
+      window.AIPA_PK_VARIANT = v;
+      var usd = (v==='b') ? '250' : '550';
+      var pkr = (v==='b') ? '₨70,000' : '₨154,000';
+      try { if(window.gtag) gtag('event','pk_price_variant',{ variant:v, price_usd:usd }); } catch(e){}
+      try { var b=document.getElementById('pkBanner'); if(b){ b.innerHTML='🇵🇰 <b style="color:#c9f7dc;">Pakistan special</b> — your price <b style="color:#fff;">$'+usd+'</b> <span style="opacity:.85;">(≈ '+pkr+')</span> · applied automatically'; b.style.display='block'; } } catch(e){}
+      try { document.querySelectorAll('.pricing-number').forEach(function(n){ n.textContent=usd; }); } catch(e){}
+      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price ≈ '+pkr+' · applied automatically at checkout'; } catch(e){}
+      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g,'$'+usd); }); } catch(e){}
+      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Pakistan price · <s style="color:var(--accent-red);">$650</s> &nbsp;≈ '+pkr; } }); } catch(e){}
     }).catch(function(){});
   } catch(e){}
 })();

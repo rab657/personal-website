@@ -74,7 +74,7 @@ export default async function handler(req, res) {
       .json({ error: 'Checkout not configured (missing Stripe secret key or price id).' })
   }
 
-  const { email, event_id, fbp, fbc, source } = req.body || {}
+  const { email, event_id, fbp, fbc, source, price_variant } = req.body || {}
 
   const proto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0]
   const host = req.headers['x-forwarded-host'] || req.headers.host
@@ -83,10 +83,13 @@ export default async function handler(req, res) {
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim()
   const ua = req.headers['user-agent'] || ''
   const country = String(req.headers['x-vercel-ip-country'] || '').toUpperCase()
-  // Pakistan special: auto-apply the $100-off promo (geo-enforced server-side, so it can't leak).
-  const pkPromo =
-    process.env.STRIPE_PK_PROMO_ID ||
-    (live ? 'promo_1TexKuDP91d10cospv5S2doP' : 'promo_1TexJWE5ZSbFHm6SW8QO7T5O')
+  // Pakistan A/B pricing — apply the coupon DIRECTLY (geo-enforced server-side; can't leak).
+  //   variant 'a' = -$100 → $550   |   variant 'b' = -$400 → $250
+  const variant = price_variant === 'b' ? 'b' : 'a'
+  const PK_COUPONS = {
+    a: live ? 'jWXhAVRG' : 'MLxh3Vl8',
+    b: live ? 'K3Qqvg9a' : 'tb1WDW7O',
+  }
 
   // Fire CAPI InitiateCheckout in parallel with the Stripe call (hides latency).
   const capiP = sendInitiateCheckoutCAPI({ event_id, email, fbp, fbc, ip, ua, pageUrl }).catch(() => {})
@@ -95,9 +98,9 @@ export default async function handler(req, res) {
   params.append('mode', 'payment')
   params.append('line_items[0][price]', price)
   params.append('line_items[0][quantity]', '1')
-  if (country === 'PK' && pkPromo) {
-    // Auto-apply the Pakistan discount. (Stripe forbids combining discounts with allow_promotion_codes.)
-    params.append('discounts[0][promotion_code]', pkPromo)
+  if (country === 'PK') {
+    // Auto-apply the Pakistan A/B coupon (forbidden to combine with allow_promotion_codes).
+    params.append('discounts[0][coupon]', PK_COUPONS[variant])
   } else {
     params.append('allow_promotion_codes', 'true')
   }
@@ -116,6 +119,7 @@ export default async function handler(req, res) {
     event_source_url: pageUrl,
     client_user_agent: req.headers['user-agent'] || '',
     client_ip_address: ip,
+    price_tier: country === 'PK' ? (variant === 'b' ? 'PK_250' : 'PK_550') : 'STD_650',
   }
   for (const k of Object.keys(md)) {
     if (md[k]) {
