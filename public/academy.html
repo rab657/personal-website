@@ -2551,9 +2551,9 @@ async function goCheckout(btn){
       try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g, pkr).replace(/\$800/g, pkrAnchor); }); } catch(e){}
       // 4) hero "Investment" stat + banner + period note
       try { document.querySelectorAll('.hero-meta-item .value').forEach(function(el){ if(el.textContent.indexOf('150,000')>-1 || el.textContent.indexOf('$650')>-1){ el.textContent=pkr; } }); } catch(e){}
-      try { var b=document.getElementById('pkBanner'); if(b){ b.innerHTML='🇵🇰 <b style="color:#c9f7dc;">Pakistan price</b> — <b style="color:#fff;">'+pkr+'</b> <span style="opacity:.85;">(≈ $'+usd+')</span> · applied automatically'; b.style.display='block'; } } catch(e){}
-      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price · ≈ $'+usd+' USD, billed securely at checkout'; } catch(e){}
-      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Special Pakistan price · ≈ $'+usd+' USD'; } }); } catch(e){}
+      try { var b=document.getElementById('pkBanner'); if(b){ b.innerHTML='🇵🇰 <b style="color:#c9f7dc;">Special Pakistan price</b> — <b style="color:#fff;">'+pkr+'</b> · applied automatically at checkout'; b.style.display='block'; } } catch(e){}
+      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Special Pakistan price · billed securely in PKR at checkout'; } catch(e){}
+      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Special Pakistan price'; } }); } catch(e){}
     }).catch(function(){});
   } catch(e){}
 })();

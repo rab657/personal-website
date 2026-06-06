@@ -83,21 +83,20 @@ export default async function handler(req, res) {
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim()
   const ua = req.headers['user-agent'] || ''
   const country = String(req.headers['x-vercel-ip-country'] || '').toUpperCase()
-  // Pakistan price: $150 off the $650 base → ~$500 (shown as Rs.150,000).
-  // Applied as a coupon DIRECTLY (geo-enforced server-side; can't leak).
-  const PK_COUPON = live ? 'GAsw2aYO' : 'RBmYadVf'
+  // Pakistan: charge a NATIVE PKR price (Rs.150,000 ≈ $500) so Stripe checkout
+  // displays Rupees directly + improves local card acceptance. Geo-enforced.
+  const PK_PRICE_PKR = live ? 'price_1TfDbGDP91d10cosYttuQGrJ' : 'price_1TfDbIE5ZSbFHm6SYWUNouPO'
+  const checkoutPrice = country === 'PK' ? PK_PRICE_PKR : price
 
   // Fire CAPI InitiateCheckout in parallel with the Stripe call (hides latency).
   const capiP = sendInitiateCheckoutCAPI({ event_id, email, fbp, fbc, ip, ua, pageUrl }).catch(() => {})
 
   const params = new URLSearchParams()
   params.append('mode', 'payment')
-  params.append('line_items[0][price]', price)
+  params.append('line_items[0][price]', checkoutPrice)
   params.append('line_items[0][quantity]', '1')
-  if (country === 'PK') {
-    // Auto-apply the Pakistan coupon (forbidden to combine with allow_promotion_codes).
-    params.append('discounts[0][coupon]', PK_COUPON)
-  } else {
+  if (country !== 'PK') {
+    // PK pays the native PKR price (already final); everyone else can enter promo codes.
     params.append('allow_promotion_codes', 'true')
   }
   params.append(
