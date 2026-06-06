@@ -2513,7 +2513,8 @@ async function goCheckout(btn){
       try { document.querySelectorAll('.pricing-currency').forEach(function(c){ c.textContent='₨'; }); } catch(e){}
       try { document.querySelectorAll('.pricing-number').forEach(function(n){ n.textContent=pkrNum; n.style.fontSize='clamp(34px,9vw,48px)'; }); } catch(e){}
       try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price · ≈ $'+usd+' USD, billed securely at checkout'; } catch(e){}
-      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g, pkr); }); } catch(e){}
+      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g, pkr).replace(/\$800/g, '₨224,000'); }); } catch(e){}
+      try { document.querySelectorAll('.hero-meta-item .value').forEach(function(el){ if(el.textContent.indexOf('$650')>-1){ el.textContent=pkr; } }); } catch(e){}
       try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Special Pakistan price · ≈ $'+usd+' USD'; } }); } catch(e){}
     }).catch(function(){});
   } catch(e){}
