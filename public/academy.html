@@ -2505,13 +2505,16 @@ async function goCheckout(btn){
       if(v!=='a' && v!=='b'){ v = Math.random()<0.5 ? 'a' : 'b'; try{ localStorage.setItem('pk_price_variant', v); }catch(e){} }
       window.AIPA_PK_VARIANT = v;
       var usd = (v==='b') ? '250' : '550';
-      var pkr = (v==='b') ? '₨70,000' : '₨154,000';
+      var pkrNum = (v==='b') ? '70,000' : '154,000';   // ≈ PKR at ~280/USD
+      var pkr = '₨'+pkrNum;
       try { if(window.gtag) gtag('event','pk_price_variant',{ variant:v, price_usd:usd }); } catch(e){}
-      try { var b=document.getElementById('pkBanner'); if(b){ b.innerHTML='🇵🇰 <b style="color:#c9f7dc;">Pakistan special</b> — your price <b style="color:#fff;">$'+usd+'</b> <span style="opacity:.85;">(≈ '+pkr+')</span> · applied automatically'; b.style.display='block'; } } catch(e){}
-      try { document.querySelectorAll('.pricing-number').forEach(function(n){ n.textContent=usd; }); } catch(e){}
-      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price ≈ '+pkr+' · applied automatically at checkout'; } catch(e){}
-      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g,'$'+usd); }); } catch(e){}
-      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Pakistan price · <s style="color:var(--accent-red);">$650</s> &nbsp;≈ '+pkr; } }); } catch(e){}
+      // PKR-primary display for Pakistani visitors
+      try { var b=document.getElementById('pkBanner'); if(b){ b.innerHTML='🇵🇰 <b style="color:#c9f7dc;">Pakistan price</b> — <b style="color:#fff;">'+pkr+'</b> <span style="opacity:.85;">(≈ $'+usd+')</span> · applied automatically'; b.style.display='block'; } } catch(e){}
+      try { document.querySelectorAll('.pricing-currency').forEach(function(c){ c.textContent='₨'; }); } catch(e){}
+      try { document.querySelectorAll('.pricing-number').forEach(function(n){ n.textContent=pkrNum; n.style.fontSize='clamp(34px,9vw,48px)'; }); } catch(e){}
+      try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Pakistan price · ≈ $'+usd+' USD, billed securely at checkout'; } catch(e){}
+      try { document.querySelectorAll('.nav-cta, .mobile-buybar').forEach(function(el){ el.innerHTML = el.innerHTML.replace(/\$650/g, pkr); }); } catch(e){}
+      try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Special Pakistan price · ≈ $'+usd+' USD'; } }); } catch(e){}
     }).catch(function(){});
   } catch(e){}
 })();
