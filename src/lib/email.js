@@ -63,6 +63,99 @@ export function leadWelcomeHtml({ firstName } = {}) {
   `)
 }
 
+// ===================================================================
+//  APPLICATION SEQUENCE (premium · Pakistan · no income claims)
+//  Step 1 sent on apply; 2–4 dripped by the cron in /api/drip.
+// ===================================================================
+const SEAT = 'https://www.raheelab.com/academy.html#pricing'
+const first = (n) => (n ? String(n).trim().split(/\s+/)[0] : '')
+
+// Subjects, indexed by sequence step (2,3,4 used by the drip)
+export const SEQ_SUBJECTS = {
+  1: 'Your application is in — here’s what happens next',
+  2: 'We built it in Pakistan. A US firm bought it.',
+  3: 'What’s actually inside (6 live classes)',
+  4: 'A heads-up on seats',
+}
+export function seqHtml(step, { firstName } = {}) {
+  if (step === 2) return founderStoryHtml({ firstName })
+  if (step === 3) return whatsInsideHtml({ firstName })
+  if (step === 4) return lastCallHtml({ firstName })
+  return applicationReceivedHtml({ firstName })
+}
+
+// ---- Step 1: application received (immediate) ----
+export function applicationReceivedHtml({ firstName } = {}) {
+  const hi = firstName ? `Hey ${firstName},` : 'Hey,'
+  return shell(`
+    <div style="font-family:monospace;font-size:12px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Application received</div>
+    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">You’re on the shortlist.</h1>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Thanks for applying to the founding cohort. We review every application personally — our team will reach out on <strong>WhatsApp within 24 hours</strong> to confirm your seat and answer anything.</p>
+    <div style="background:#faf7f0;border:1px solid #ece4d2;border-radius:6px;padding:18px 20px;margin:22px 0;">
+      <div style="font-family:monospace;font-size:11px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">Why this cohort is different</div>
+      <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:#3a3a3a;">
+        <li>Taught <strong>live</strong> by two founders who built &amp; sold an AI company from Pakistan</li>
+        <li>Small and selective — not a pre-recorded course</li>
+        <li>Built for making money with AI <strong>from Pakistan</strong>: international clients, products that sell, your own US company</li>
+      </ul>
+    </div>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Don’t want to wait for the call? You can lock your seat in right now.</p>
+    <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+  `)
+}
+
+// ---- Step 2: founders' story / proof (day 1) ----
+export function founderStoryHtml({ firstName } = {}) {
+  const hi = firstName ? `${firstName},` : 'Quick story —'
+  return shell(`
+    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">From Pakistan — to a US acquisition.</h1>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">A few years ago we were two engineers in Pakistan. We built an AI company here — and a US firm acquired it. It was covered by <strong>Business Recorder</strong> and <strong>Profit by Pakistan Today</strong>.</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">We’re telling you this for one reason: <strong>it’s doable from here.</strong> You don’t need to move, and you don’t need to be a senior engineer. You need the right system.</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">That’s the entire cohort — the exact path we used: build with AI, land international clients, package your skills into something people pay for, and (if you want) set up your own US company.</p>
+    <p style="margin:24px 0;">${btn(SEAT, 'See what’s inside →')}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+  `)
+}
+
+// ---- Step 3: what's inside (day 2) ----
+export function whatsInsideHtml({ firstName } = {}) {
+  const hi = firstName ? `Hey ${firstName},` : 'Hey,'
+  return shell(`
+    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">6 live classes. Real outcomes.</h1>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi} here’s exactly what you walk away able to do:</p>
+    <div style="background:#faf7f0;border:1px solid #ece4d2;border-radius:6px;padding:18px 20px;margin:22px 0;">
+      <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
+        <li>Build real things with AI (Claude) — apps, agents, tools — no heavy coding</li>
+        <li>Land international clients: packaging, outreach &amp; pricing</li>
+        <li>Turn your skills into a product you can sell — not just freelance hours</li>
+        <li>Set up a US company &amp; take international payments</li>
+        <li>Optional: the full acquisition / exit playbook from our real exit</li>
+        <li>1-on-1 advisory calls + a private cohort community (lifetime access)</li>
+      </ul>
+    </div>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Six live sessions (60 min each, all recorded), taught by people who’ve actually done it — not theory.</p>
+    <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+  `)
+}
+
+// ---- Step 4: scarcity / last call (day 4) ----
+export function lastCallHtml({ firstName } = {}) {
+  const hi = firstName ? `${firstName},` : 'A heads-up —'
+  return shell(`
+    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">We keep the room small.</h1>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">The founding cohort is intentionally small and selective, and it starts <strong>July 1</strong>. Once the seats are gone, they’re gone — we’d rather keep it tight than pack the room.</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">If you’re serious about building real income with AI from Pakistan, this is the moment to lock it in.</p>
+    <p style="margin:24px 0;">${btn(SEAT, 'Claim my seat →')}</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Got a question first? Just reply to this email, or message us on WhatsApp — it reaches us directly.</p>
+    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+  `)
+}
+
 // ---- 2) Post-purchase welcome ----
 export function purchaseWelcomeHtml({ firstName } = {}) {
   const hi = firstName ? `Welcome, ${firstName} 🎉` : 'Welcome aboard 🎉'

@@ -7,6 +7,7 @@
  * Dependency-free: REST via fetch (Node 18+).
  */
 import crypto from 'crypto'
+import { sendEmail, applicationReceivedHtml, SEQ_SUBJECTS } from '../../lib/email'
 
 const sha256 = (s) => crypto.createHash('sha256').update(String(s).trim().toLowerCase()).digest('hex')
 const digits = (s) => String(s || '').replace(/[^\d]/g, '')
@@ -57,6 +58,7 @@ async function upsertStripeCustomer(key, { name, email, whatsapp, country, field
     goal: fields.goal || '',
     readiness: fields.readiness || '',
     applied_at: new Date().toISOString(),
+    seq_step: email ? '1' : '0', // 1 = welcome sent; drip continues from here
   }
   for (const k of Object.keys(md)) if (md[k]) params.append(`metadata[${k}]`, md[k])
   const r = await fetch('https://api.stripe.com/v1/customers', {
@@ -99,6 +101,17 @@ export default async function handler(req, res) {
       if (c && c.id) customer_id = c.id
       else if (c && c.error) console.error('[apply] stripe', c.error.message)
     } catch (e) { console.error('[apply] stripe failed', e) }
+  }
+
+  // Send the immediate "you're on the shortlist" email (no-ops if Resend unset)
+  if (email) {
+    try {
+      await sendEmail({
+        to: email,
+        subject: SEQ_SUBJECTS[1],
+        html: applicationReceivedHtml({ firstName: String(name).trim().split(/\s+/)[0] }),
+      })
+    } catch (e) { console.error('[apply] welcome email failed', e) }
   }
 
   try { await capiP } catch (_) {}
