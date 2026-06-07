@@ -35,3 +35,14 @@ yarn-error.log*
 
 # generated files
 /public/rss/
+*-service-account*.json
+
+# local-only (marketing assets, helper scripts, tooling — never deploy)
+/public/ads/
+/scripts/
+/.agents/
+/.claude/skills/
+skills-lock.json
+VSL-SCRIPT.md
+MARKETING-CREATIVE.md
+*.env
