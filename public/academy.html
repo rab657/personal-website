@@ -2660,7 +2660,8 @@ function openApply(e){
   showApplyStep(1);
   var ov = document.getElementById('applyOverlay'); ov.classList.add('open');
   document.body.style.overflow='hidden';
-  try { if(window.fbTrack) fbTrack('Lead', { content_name:'AIPA — Application started' }); } catch(_){}
+  // NOTE: modal-open is a CUSTOM event (not Lead) — keeps "Lead" = completed applications only.
+  try { if(window.fbq && window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') fbq('trackCustom', 'ApplicationStarted', { content_name:'AIPA — Application' }); } catch(_){}
   try { if(window.gtag) gtag('event','application_start'); } catch(_){}
   setTimeout(function(){ var n=document.getElementById('ap_name'); if(n) n.focus(); }, 120);
 }
