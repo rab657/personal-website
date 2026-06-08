@@ -107,10 +107,10 @@ export function proofHtml({ firstName } = {}) {
   return shell(`
     ${h1('From Pakistan — to a US acquisition.')}
     ${p(name1(firstName) || 'Quick story —')}
-    ${p('A few years ago I was just another engineer in Pakistan with a laptop and an internet connection.')}
-    ${p('I started building with AI, turned it into a real company — <strong>Virtuans AI</strong> — and earlier this year a US firm <strong>acquired it</strong>. <em>Business Recorder</em> and <em>Profit by Pakistan Today</em> both covered the deal.')}
-    ${p("I'm not telling you this to impress you. I'm telling you because of what it proves: <strong>you do not need to leave Pakistan, and you do not need to be a genius,</strong> to build something the world will pay for.")}
-    ${p('You need the right skills and the right path. That is the entire reason I built this cohort — to hand you the exact playbook I used, step by step.')}
+    ${p('A few years ago, my co-founder and I set out to build a world-class AI company — from Pakistan, for the world.')}
+    ${p('We built <strong>Virtuans AI</strong>, and earlier this year a US firm <strong>acquired it</strong>. <em>Business Recorder</em> and <em>Profit by Pakistan Today</em> both covered the deal.')}
+    ${p("I'm not telling you this to impress you. I'm telling you because of what it proves: <strong>you can build something the world will pay for from right here</strong> — with the right skills and the right path.")}
+    ${p('That is the entire reason I built this cohort — to hand you the exact playbook we used, step by step.')}
     <p style="margin:24px 0;">${btn(SEAT, "See what's inside →")}</p>
     ${sign}
   `)
