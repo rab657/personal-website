@@ -86,17 +86,17 @@ const name1 = (firstName) => (firstName ? `${firstName},` : '')
 export function applicationReceivedHtml({ firstName } = {}) {
   return shell(`
     ${eyebrow('Application received')}
-    ${h1("You're on the shortlist.")}
+    ${h1("You're in — now claim your seat.")}
     ${p(hey(firstName))}
-    ${p("Thanks for applying to <strong>Cohort 01</strong> of the AI Product Academy. You're officially on the shortlist.")}
-    ${p("Here's the honest part: <strong>seats are limited, and they go to the people who lock them in.</strong> Applying gets you considered — locking your seat is what guarantees your place before the cohort fills.")}
+    ${p("Thanks for applying to <strong>Cohort 01</strong> of the AI Product Academy.")}
+    ${p("Here's the honest part: <strong>there are only 10 seats — and they go to whoever locks them in first.</strong> Applying doesn't hold your spot. Locking your seat does.")}
     ${p("Quick context on why this isn't just another online course:")}
     ${box(`<ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
-      <li>It's taught <strong>live by me</strong> — someone who actually built an AI company in Pakistan and sold it to a US firm.</li>
-      <li>The cohort is small and selective on purpose. You get real access, not a recording library.</li>
+      <li>It's taught <strong>live</strong> — by me and my co-founder Muddassar, who built and sold an AI company from Pakistan. Real classes and Q&amp;A, not a recording library.</li>
+      <li>Cohort 01 is capped at <strong>10 people</strong>, so you get genuine access and 1-on-1 time.</li>
       <li>Everything is built for one outcome: <strong>making real money with AI from Pakistan</strong> — international clients, products that sell, even your own US company.</li>
     </ul>`)}
-    ${p('Want to lock yours in? It takes one minute, and your place in Cohort 01 is confirmed instantly.')}
+    ${p('Ready? It takes one minute to lock your seat in — your place in Cohort 01 is confirmed instantly.')}
     <p style="margin:24px 0;">${btn(SEAT, 'Lock in my seat →')}</p>
     ${sign}
   `)
@@ -129,7 +129,7 @@ export function outcomesHtml({ firstName } = {}) {
       <li>Set up a <strong>US company</strong> and receive international payments from Pakistan</li>
       <li>And if you want to go all the way — the same <strong>acquisition playbook</strong> I used to sell my company</li>
     </ul>`)}
-    ${p('Plus 1-on-1 advisory time with me, and a private community you keep for life.')}
+    ${p('Plus 1-on-1 advisory time with me and my co-founder Muddassar, and a private community you keep for life.')}
     ${p('Six live sessions, taught by someone who has actually done it — not theory off YouTube.')}
     <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
     ${sign}
@@ -156,11 +156,11 @@ export function objectionsHtml({ firstName } = {}) {
 // ---- Step 5: scarcity / decision (day 5) ----
 export function scarcityHtml({ firstName } = {}) {
   return shell(`
-    ${h1('Why I’m keeping the room small.')}
+    ${h1('Only 10 seats. Here’s why.')}
     ${p(name1(firstName) || 'Quick one —')}
-    ${p("I could let a thousand people into this cohort. I'm not going to.")}
-    ${p('Cohort 01 is intentionally small because I actually show up live, answer your questions, and look at your work. That only works with a tight group. It starts <strong>July 1</strong> — and once the seats are gone, that is it for this round.')}
-    ${p("If you've been thinking about it, this is the moment to decide. Don't spend another few months watching other people build with AI while you wait on the sidelines.")}
+    ${p("Cohort 01 is capped at <strong>10 people</strong>. Not 100, not 50 — 10.")}
+    ${p("That's on purpose: Muddassar and I show up live, answer your questions, and give real 1-on-1 advisory time. That only works with a tiny group. It starts <strong>July 1</strong>, and once the 10 seats are taken, that's it for this round.")}
+    ${p("If you've been thinking about it, this is the moment — there literally isn't room to wait.")}
     <p style="margin:24px 0;">${btn(SEAT, 'Claim my seat →')}</p>
     ${p('Got a question stopping you? Just reply to this email — it comes straight to me.')}
     ${sign}
@@ -172,9 +172,9 @@ export function lastCallHtml({ firstName } = {}) {
   return shell(`
     ${h1('Last call.')}
     ${p(name1(firstName) || "I'll keep this short —")}
-    ${p("We're about to close applications for Cohort 01, so this is the last you'll hear from me about it.")}
+    ${p("This is the last you'll hear from me about Cohort 01. There are only <strong>10 seats</strong>, and it starts <strong>July 1</strong> — so this is your moment to decide.")}
     ${p("You applied for a reason — something told you it's time to stop watching the AI wave and start riding it. That reason hasn't gone anywhere.")}
-    ${p('The job market isn’t going to save you. But the skill to build and sell with AI is yours for life — and it starts in this cohort on <strong>July 1</strong>.')}
+    ${p('The job market isn’t going to save you. But the skill to build and sell with AI is yours for life.')}
     <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
     ${p("If you're in, lock your seat now. If one last question is holding you back, just reply to this email — it comes straight to me and I'll personally make sure you get an answer.")}
     ${p("After this I won't keep emailing you about Cohort 01 — but I'd genuinely hate for you to miss it.")}
@@ -192,7 +192,7 @@ export function leadWelcomeHtml({ firstName } = {}) {
     ${h1('Your training is unlocked 🔓')}
     ${p(hey(firstName))}
     ${p("Thanks for signing up. Here's the one-sentence version: <strong>the people who learn to build and sell with AI right now will be miles ahead of everyone waiting.</strong> In the training I break down the exact system I used to build an AI company in Pakistan and sell it to a US firm.")}
-    ${p('Watch it — then if it clicks, apply for one of the limited seats in Cohort 01 (starts <strong>July 1</strong>).')}
+    ${p('Watch it — then if it clicks, apply for one of the 10 seats in Cohort 01 (starts <strong>July 1</strong>).')}
     <p style="margin:26px 0;">${btn('https://www.raheelab.com/academy.html', 'Watch & apply →')}</p>
     ${p("Over the next few days I'll send a couple of real lessons and answer the questions people always ask. Reply anytime — it reaches me directly.")}
     ${sign}
