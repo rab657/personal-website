@@ -1,7 +1,7 @@
 /**
  * Resend email helper + templates.
- * Set in Vercel env: RESEND_API_KEY, EMAIL_FROM (e.g. "AI Product Academy <hello@mail.raheelab.com>"),
- * EMAIL_REPLY_TO (optional, e.g. raheel@raheelab.com).
+ * Set in Vercel env: RESEND_API_KEY, EMAIL_FROM (e.g. "AI Product Academy <hello@raheelab.com>"),
+ * EMAIL_REPLY_TO (optional, e.g. raheel@autoacquireai.com).
  * No-ops safely if RESEND_API_KEY isn't set.
  */
 export async function sendEmail({ to, subject, html, replyTo }) {
@@ -41,139 +41,180 @@ function shell(bodyHtml) {
       ${bodyHtml}
     </div>
     <p style="font-size:12px;color:#9b9486;text-align:center;margin-top:22px;line-height:1.6;">
-      AI Product Academy · Built by the founders of Virtuans AI (acquired)<br>
-      You're receiving this because you signed up at raheelab.com.
+      AI Product Academy · Built by the founder of Virtuans AI (acquired)<br>
+      You're receiving this because you applied at raheelab.com.
     </p>
   </div></body></html>`
 }
 const btn = (href, label) =>
   `<a href="${href}" style="display:inline-block;background:#C8A44E;color:#0A0A0A;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:6px;font-size:15px;">${label}</a>`
-
-// ---- 1) Lead opt-in welcome (deliver the training) ----
-export function leadWelcomeHtml({ firstName } = {}) {
-  const hi = firstName ? `Hey ${firstName},` : 'Hey,'
-  return shell(`
-    <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:400;margin:0 0 16px;">Your training is unlocked 🔓</h1>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Thanks for signing up. Here's the deal in one sentence: <strong>AI won't take your job — but someone who's mastered it will.</strong> In the training, Muddassar and I break down the exact system the two of us use to do the work of an entire 20-person team.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Watch it, then if it clicks, grab one of the limited seats in the next cohort (starts <strong>July 1</strong>).</p>
-    <p style="margin:26px 0;">${btn('https://www.raheelab.com/start.html', 'Watch the training →')}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Over the next few days I'll send a couple of real case studies and answer the questions people always ask. Just reply if you have one — it reaches me directly.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
-  `)
-}
-
-// ===================================================================
-//  APPLICATION SEQUENCE (premium · Pakistan · no income claims)
-//  Step 1 sent on apply; 2–4 dripped by the cron in /api/drip.
-// ===================================================================
+const p = (t) => `<p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin:0 0 15px;">${t}</p>`
+const h1 = (t) => `<h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 18px;line-height:1.2;">${t}</h1>`
+const eyebrow = (t) => `<div style="font-family:monospace;font-size:12px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">${t}</div>`
+const sign = `<p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin:22px 0 0;">— Raheel</p>`
+const box = (inner) =>
+  `<div style="background:#faf7f0;border:1px solid #ece4d2;border-radius:6px;padding:18px 20px;margin:20px 0;">${inner}</div>`
 const SEAT = 'https://www.raheelab.com/academy.html#pricing'
-const first = (n) => (n ? String(n).trim().split(/\s+/)[0] : '')
 
-// Subjects, indexed by sequence step (2,3,4 used by the drip)
+// ===================================================================
+//  APPLICATION FUNNEL  (premium · Pakistan · Raheel's voice · no income claims)
+//  Step 1 sent on apply; 2–6 dripped by /api/drip.
+//  Arc: shortlist → proof → outcomes → objections → scarcity → last call.
+// ===================================================================
 export const SEQ_SUBJECTS = {
-  1: 'Your application is in — here’s what happens next',
-  2: 'We built it in Pakistan. A US firm bought it.',
-  3: 'What’s actually inside (6 live classes)',
-  4: 'A heads-up on seats',
+  1: 'Your application is in — what happens next',
+  2: 'We built it in Pakistan. A US company bought it.',
+  3: "Here's exactly what you'll be able to do",
+  4: "“But Raheel, I can't even code…”",
+  5: "We're keeping Cohort 01 small (please read)",
+  6: 'Last call before we close applications',
 }
-export function seqHtml(step, { firstName } = {}) {
-  if (step === 2) return founderStoryHtml({ firstName })
-  if (step === 3) return whatsInsideHtml({ firstName })
-  if (step === 4) return lastCallHtml({ firstName })
-  return applicationReceivedHtml({ firstName })
+export function seqHtml(step, ctx = {}) {
+  switch (step) {
+    case 2: return proofHtml(ctx)
+    case 3: return outcomesHtml(ctx)
+    case 4: return objectionsHtml(ctx)
+    case 5: return scarcityHtml(ctx)
+    case 6: return lastCallHtml(ctx)
+    default: return applicationReceivedHtml(ctx)
+  }
 }
+const hey = (firstName) => (firstName ? `Hey ${firstName},` : 'Hey,')
+const name1 = (firstName) => (firstName ? `${firstName},` : '')
 
 // ---- Step 1: application received (immediate) ----
 export function applicationReceivedHtml({ firstName } = {}) {
-  const hi = firstName ? `Hey ${firstName},` : 'Hey,'
   return shell(`
-    <div style="font-family:monospace;font-size:12px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Application received</div>
-    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">You’re on the shortlist.</h1>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Thanks for applying to the founding cohort. We review every application personally — our team will reach out on <strong>WhatsApp within 24 hours</strong> to confirm your seat and answer anything.</p>
-    <div style="background:#faf7f0;border:1px solid #ece4d2;border-radius:6px;padding:18px 20px;margin:22px 0;">
-      <div style="font-family:monospace;font-size:11px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">Why this cohort is different</div>
-      <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:#3a3a3a;">
-        <li>Taught <strong>live</strong> by two founders who built &amp; sold an AI company from Pakistan</li>
-        <li>Small and selective — not a pre-recorded course</li>
-        <li>Built for making money with AI <strong>from Pakistan</strong>: international clients, products that sell, your own US company</li>
-      </ul>
-    </div>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Don’t want to wait for the call? You can lock your seat in right now.</p>
+    ${eyebrow('Application received')}
+    ${h1("You're on the shortlist.")}
+    ${p(hey(firstName))}
+    ${p('Thanks for applying to <strong>Cohort 01</strong> of the AI Product Academy. I read every application personally — and my team will reach out on <strong>WhatsApp within 24 hours</strong> to talk through your goals and confirm your seat.')}
+    ${p("Quick context on why this isn't just another online course:")}
+    ${box(`<ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
+      <li>It's taught <strong>live by me</strong> — someone who actually built an AI company in Pakistan and sold it to a US firm.</li>
+      <li>The cohort is small and selective on purpose. You get real access, not a recording library.</li>
+      <li>Everything is built for one outcome: <strong>making real money with AI from Pakistan</strong> — international clients, products that sell, even your own US company.</li>
+    </ul>`)}
+    ${p("If you already know this is for you, you don't have to wait for the call — you can lock your seat in now.")}
     <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+    ${sign}
   `)
 }
 
-// ---- Step 2: founders' story / proof (day 1) ----
-export function founderStoryHtml({ firstName } = {}) {
-  const hi = firstName ? `${firstName},` : 'Quick story —'
+// ---- Step 2: proof / story (day 1) ----
+export function proofHtml({ firstName } = {}) {
   return shell(`
-    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">From Pakistan — to a US acquisition.</h1>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">A few years ago we were two engineers in Pakistan. We built an AI company here — and a US firm acquired it. It was covered by <strong>Business Recorder</strong> and <strong>Profit by Pakistan Today</strong>.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">We’re telling you this for one reason: <strong>it’s doable from here.</strong> You don’t need to move, and you don’t need to be a senior engineer. You need the right system.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">That’s the entire cohort — the exact path we used: build with AI, land international clients, package your skills into something people pay for, and (if you want) set up your own US company.</p>
-    <p style="margin:24px 0;">${btn(SEAT, 'See what’s inside →')}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+    ${h1('From Pakistan — to a US acquisition.')}
+    ${p(name1(firstName) || 'Quick story —')}
+    ${p('A few years ago I was just another engineer in Pakistan with a laptop and an internet connection.')}
+    ${p('I started building with AI, turned it into a real company — <strong>Virtuans AI</strong> — and earlier this year a US firm <strong>acquired it</strong>. <em>Business Recorder</em> and <em>Profit by Pakistan Today</em> both covered the deal.')}
+    ${p("I'm not telling you this to impress you. I'm telling you because of what it proves: <strong>you do not need to leave Pakistan, and you do not need to be a genius,</strong> to build something the world will pay for.")}
+    ${p('You need the right skills and the right path. That is the entire reason I built this cohort — to hand you the exact playbook I used, step by step.')}
+    <p style="margin:24px 0;">${btn(SEAT, "See what's inside →")}</p>
+    ${sign}
   `)
 }
 
-// ---- Step 3: what's inside (day 2) ----
-export function whatsInsideHtml({ firstName } = {}) {
-  const hi = firstName ? `Hey ${firstName},` : 'Hey,'
+// ---- Step 3: outcomes / what's inside (day 2) ----
+export function outcomesHtml({ firstName } = {}) {
   return shell(`
-    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">6 live classes. Real outcomes.</h1>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi} here’s exactly what you walk away able to do:</p>
-    <div style="background:#faf7f0;border:1px solid #ece4d2;border-radius:6px;padding:18px 20px;margin:22px 0;">
-      <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
-        <li>Build real things with AI (Claude) — apps, agents, tools — no heavy coding</li>
-        <li>Land international clients: packaging, outreach &amp; pricing</li>
-        <li>Turn your skills into a product you can sell — not just freelance hours</li>
-        <li>Set up a US company &amp; take international payments</li>
-        <li>Optional: the full acquisition / exit playbook from our real exit</li>
-        <li>1-on-1 advisory calls + a private cohort community (lifetime access)</li>
-      </ul>
-    </div>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Six live sessions (60 min each, all recorded), taught by people who’ve actually done it — not theory.</p>
+    ${h1('6 live classes. Real skills. Real outcomes.')}
+    ${p(hey(firstName))}
+    ${p('Most courses leave you with notes and motivation. This one leaves you with skills you can use the same week. By the end of the 6 live classes, you will be able to:')}
+    ${box(`<ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
+      <li>Build real things with AI (Claude) — apps, agents, tools — <strong>without being a hardcore coder</strong></li>
+      <li>Find and land <strong>international clients</strong>, and package your work so they pay you in dollars</li>
+      <li>Turn your skills into a <strong>product you can sell</strong> — not just hourly freelance work</li>
+      <li>Set up a <strong>US company</strong> and receive international payments from Pakistan</li>
+      <li>And if you want to go all the way — the same <strong>acquisition playbook</strong> I used to sell my company</li>
+    </ul>`)}
+    ${p('Plus 1-on-1 advisory time with me, and a private community you keep for life.')}
+    ${p('Six live sessions, taught by someone who has actually done it — not theory off YouTube.')}
     <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+    ${sign}
   `)
 }
 
-// ---- Step 4: scarcity / last call (day 4) ----
-export function lastCallHtml({ firstName } = {}) {
-  const hi = firstName ? `${firstName},` : 'A heads-up —'
+// ---- Step 4: objection crusher (day 3) ----
+export function objectionsHtml({ firstName } = {}) {
   return shell(`
-    <h1 style="font-family:Georgia,serif;font-size:27px;font-weight:400;margin:0 0 16px;">We keep the room small.</h1>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">${hi}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">The founding cohort is intentionally small and selective, and it starts <strong>July 1</strong>. Once the seats are gone, they’re gone — we’d rather keep it tight than pack the room.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">If you’re serious about building real income with AI from Pakistan, this is the moment to lock it in.</p>
+    ${h1('“I’m not technical. Will this even work for me?”')}
+    ${p(name1(firstName) || 'A straight answer —')}
+    ${p('This is the #1 thing people message me. So let me be honest with you:')}
+    ${box(`
+      <p style="font-size:14.5px;line-height:1.7;color:#3a3a3a;margin:0 0 12px;"><strong>“I can't code.”</strong> — Good. The whole point of AI is that you don't have to. I'll show you how to build working things with tools like Claude, in plain English. Class 02 is built exactly for non-technical people.</p>
+      <p style="font-size:14.5px;line-height:1.7;color:#3a3a3a;margin:0 0 12px;"><strong>“I don't have time.”</strong> — It's 6 live classes, 60 minutes each, over 4 weeks — all recorded. A few focused hours a week is enough.</p>
+      <p style="font-size:14.5px;line-height:1.7;color:#3a3a3a;margin:0;"><strong>“Will it work for someone in Pakistan?”</strong> — It was built by someone in Pakistan, for people in Pakistan. Every example — clients, payments, the US company — is designed for exactly your situation.</p>
+    `)}
+    ${p('The only people this does not work for are the ones who never start.')}
+    <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
+    ${sign}
+  `)
+}
+
+// ---- Step 5: scarcity / decision (day 5) ----
+export function scarcityHtml({ firstName } = {}) {
+  return shell(`
+    ${h1('Why I’m keeping the room small.')}
+    ${p(name1(firstName) || 'Quick one —')}
+    ${p("I could let a thousand people into this cohort. I'm not going to.")}
+    ${p('Cohort 01 is intentionally small because I actually show up live, answer your questions, and look at your work. That only works with a tight group. It starts <strong>July 1</strong> — and once the seats are gone, that is it for this round.')}
+    ${p("If you've been thinking about it, this is the moment to decide. Don't spend another few months watching other people build with AI while you wait on the sidelines.")}
     <p style="margin:24px 0;">${btn(SEAT, 'Claim my seat →')}</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Got a question first? Just reply to this email, or message us on WhatsApp — it reaches us directly.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">— Raheel &amp; Muddassar</p>
+    ${p('Got a question stopping you? Just reply to this email — it comes straight to me.')}
+    ${sign}
   `)
 }
 
-// ---- 2) Post-purchase welcome ----
+// ---- Step 6: last call / re-engagement (day 7) ----
+export function lastCallHtml({ firstName } = {}) {
+  return shell(`
+    ${h1('Last call.')}
+    ${p(name1(firstName) || "I'll keep this short —")}
+    ${p("We're about to close applications for Cohort 01, so this is the last you'll hear from me about it.")}
+    ${p("You applied for a reason — something told you it's time to stop watching the AI wave and start riding it. That reason hasn't gone anywhere.")}
+    ${p('The job market isn’t going to save you. But the skill to build and sell with AI is yours for life — and it starts in this cohort on <strong>July 1</strong>.')}
+    <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
+    ${p("If you're in, lock your seat now. If one last question is holding you back, just reply or message us on WhatsApp — I'll personally make sure you get an answer.")}
+    ${p("After this I won't keep emailing you about Cohort 01 — but I'd genuinely hate for you to miss it.")}
+    ${sign}
+  `)
+}
+
+// ===================================================================
+//  Other transactional emails
+// ===================================================================
+
+// ---- Lead opt-in welcome (legacy /start opt-in) ----
+export function leadWelcomeHtml({ firstName } = {}) {
+  return shell(`
+    ${h1('Your training is unlocked 🔓')}
+    ${p(hey(firstName))}
+    ${p("Thanks for signing up. Here's the one-sentence version: <strong>the people who learn to build and sell with AI right now will be miles ahead of everyone waiting.</strong> In the training I break down the exact system I used to build an AI company in Pakistan and sell it to a US firm.")}
+    ${p('Watch it — then if it clicks, apply for one of the limited seats in Cohort 01 (starts <strong>July 1</strong>).')}
+    <p style="margin:26px 0;">${btn('https://www.raheelab.com/academy.html', 'Watch & apply →')}</p>
+    ${p("Over the next few days I'll send a couple of real lessons and answer the questions people always ask. Reply anytime — it reaches me directly.")}
+    ${sign}
+  `)
+}
+
+// ---- Post-purchase welcome ----
 export function purchaseWelcomeHtml({ firstName } = {}) {
   const hi = firstName ? `Welcome, ${firstName} 🎉` : 'Welcome aboard 🎉'
   return shell(`
-    <div style="font-family:monospace;font-size:12px;color:#8B7332;letter-spacing:.06em;margin-bottom:6px;">COHORT 01 · STARTS JULY 1, 2026</div>
-    <h1 style="font-family:Georgia,serif;font-size:28px;font-weight:400;margin:0 0 16px;">${hi}</h1>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">You're officially enrolled in the <strong>AI Product Academy</strong>. Your payment is confirmed and your seat is locked in. Smart move — you just got on the right side of the AI gap.</p>
-    <div style="background:#faf7f0;border:1px solid #ece4d2;border-radius:6px;padding:18px 20px;margin:22px 0;">
-      <div style="font-family:monospace;font-size:11px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">What happens next</div>
+    ${eyebrow('Cohort 01 · Starts July 1, 2026')}
+    ${h1(hi)}
+    ${p("You're officially enrolled in the <strong>AI Product Academy</strong>. Your payment is confirmed and your seat is locked in — smart move. You just got on the right side of the AI gap.")}
+    ${box(`<div style="font-family:monospace;font-size:11px;color:#8B7332;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">What happens next</div>
       <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.7;color:#3a3a3a;">
-        <li>We'll email your cohort schedule &amp; Zoom links before July 1</li>
+        <li>I'll email your cohort schedule &amp; Zoom links before July 1</li>
         <li>You'll get an invite to the private community where everything happens</li>
         <li>A short pre-work checklist so you hit the ground running on day one</li>
         <li>Lifetime access to all recordings</li>
-      </ul>
-    </div>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">In the meantime, do one thing: create a <a href="https://claude.ai" style="color:#8B7332;">Claude</a> account if you don't have one — that's our main build tool.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;">Questions about anything? Just reply to this email — it comes straight to us.</p>
-    <p style="font-size:15px;line-height:1.7;color:#3a3a3a;margin-top:20px;">See you on the inside,<br>— Raheel &amp; Muddassar</p>
+      </ul>`)}
+    ${p('In the meantime, do one thing: create a <a href="https://claude.ai" style="color:#8B7332;">Claude</a> account if you don\'t have one — that\'s our main build tool.')}
+    ${p('Questions about anything? Just reply to this email — it comes straight to me.')}
+    ${p('See you on the inside,')}
+    ${sign}
   `)
 }

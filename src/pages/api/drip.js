@@ -9,7 +9,8 @@
  */
 import { sendEmail, seqHtml, SEQ_SUBJECTS } from '../../lib/email'
 
-const DUE_AFTER_DAYS = { 2: 1, 3: 2, 4: 4 } // step -> min age in days
+const DUE_AFTER_DAYS = { 2: 1, 3: 2, 4: 3, 5: 5, 6: 7 } // step -> min age in days
+const MAX_STEP = 6
 const firstName = (n) => (n ? String(n).trim().split(/\s+/)[0] : '')
 
 async function stripeGet(key, path) {
@@ -59,7 +60,7 @@ export default async function handler(req, res) {
         scanned++
         const step = parseInt(m.seq_step || '0', 10)
         const next = step + 1
-        if (next > 4 || !(next in DUE_AFTER_DAYS)) continue
+        if (next > MAX_STEP || !(next in DUE_AFTER_DAYS)) continue
         const appliedAt = Date.parse(m.applied_at || c.created * 1000) || now
         const ageDays = (now - appliedAt) / 86400000
         if (ageDays < DUE_AFTER_DAYS[next]) continue
