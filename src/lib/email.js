@@ -88,15 +88,16 @@ export function applicationReceivedHtml({ firstName } = {}) {
     ${eyebrow('Application received')}
     ${h1("You're on the shortlist.")}
     ${p(hey(firstName))}
-    ${p('Thanks for applying to <strong>Cohort 01</strong> of the AI Product Academy. I read every application personally — and my team will reach out on <strong>WhatsApp within 24 hours</strong> to talk through your goals and confirm your seat.')}
+    ${p("Thanks for applying to <strong>Cohort 01</strong> of the AI Product Academy. You're officially on the shortlist.")}
+    ${p("Here's the honest part: <strong>seats are limited, and they go to the people who lock them in.</strong> Applying gets you considered — locking your seat is what guarantees your place before the cohort fills.")}
     ${p("Quick context on why this isn't just another online course:")}
     ${box(`<ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
       <li>It's taught <strong>live by me</strong> — someone who actually built an AI company in Pakistan and sold it to a US firm.</li>
       <li>The cohort is small and selective on purpose. You get real access, not a recording library.</li>
       <li>Everything is built for one outcome: <strong>making real money with AI from Pakistan</strong> — international clients, products that sell, even your own US company.</li>
     </ul>`)}
-    ${p("If you already know this is for you, you don't have to wait for the call — you can lock your seat in now.")}
-    <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
+    ${p('Want to lock yours in? It takes one minute, and your place in Cohort 01 is confirmed instantly.')}
+    <p style="margin:24px 0;">${btn(SEAT, 'Lock in my seat →')}</p>
     ${sign}
   `)
 }
@@ -175,7 +176,7 @@ export function lastCallHtml({ firstName } = {}) {
     ${p("You applied for a reason — something told you it's time to stop watching the AI wave and start riding it. That reason hasn't gone anywhere.")}
     ${p('The job market isn’t going to save you. But the skill to build and sell with AI is yours for life — and it starts in this cohort on <strong>July 1</strong>.')}
     <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
-    ${p("If you're in, lock your seat now. If one last question is holding you back, just reply or message us on WhatsApp — I'll personally make sure you get an answer.")}
+    ${p("If you're in, lock your seat now. If one last question is holding you back, just reply to this email — it comes straight to me and I'll personally make sure you get an answer.")}
     ${p("After this I won't keep emailing you about Cohort 01 — but I'd genuinely hate for you to miss it.")}
     ${sign}
   `)
