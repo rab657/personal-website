@@ -82,7 +82,10 @@ async function buildState() {
     const m = c.metadata || {}
     const email = (c.email || '').toLowerCase()
     const paid = email && paidEmails.has(email)
-    let stage = m.stage || (paid ? 'won' : parseInt(m.seq_step || '1', 10) >= 5 ? 'hot' : parseInt(m.seq_step || '1', 10) >= 2 ? 'nurturing' : 'applied')
+    const started = email ? startedEmails.has(email) : false
+    const step = parseInt(m.seq_step || '1', 10)
+    // smart default: reached checkout = hot; deep in sequence = hot; else by drip depth
+    let stage = m.stage || (paid ? 'won' : started || step >= 5 ? 'hot' : step >= 2 ? 'nurturing' : 'applied')
     if (paid) stage = 'won'
     return {
       customer_id: c.id,
