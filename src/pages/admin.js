@@ -69,7 +69,7 @@ export default function Admin() {
     return (
       <Shell>
         <div className="gate">
-          <div className="kicker">// AIPA OPS</div>
+          <div className="kicker">{'// AIPA OPS'}</div>
           <h1>Mission control.</h1>
           <p className="sub">Enter the ops key to open the pipeline.</p>
           <input type="password" value={key} placeholder="ops key" onChange={(e) => setKey(e.target.value)}
@@ -87,7 +87,7 @@ export default function Admin() {
     <Shell>
       <header className="top">
         <div>
-          <div className="kicker">// AIPA MISSION CONTROL</div>
+          <div className="kicker">{'// AIPA MISSION CONTROL'}</div>
           <h1>{g.sold} <span className="dim">/ {g.seats} seats sold</span></h1>
           <div className="bar"><div className="fill" style={{ width: `${(g.sold / g.seats) * 100}%` }} /></div>
         </div>
