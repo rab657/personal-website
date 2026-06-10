@@ -1417,9 +1417,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
 </div>
 
 <!-- Pakistan special — revealed by /api/geo for PK visitors only -->
-<div id="pkBanner" style="display:none;background:#0d2818;border-bottom:1px solid #1f6e43;text-align:center;padding:11px 14px;font-family:var(--mono);font-size:12.5px;color:#8fe7b4;letter-spacing:.02em;line-height:1.4;">
-  🇵🇰 <b style="color:#c9f7dc;">Pakistan special</b> — $100 off, applied automatically · your price <b style="color:#fff;">$550</b> <s style="opacity:.55;">$650</s>
-</div>
+<div id="pkBanner" style="display:none;background:#0d2818;border-bottom:1px solid #1f6e43;text-align:center;padding:11px 14px;font-family:var(--mono);font-size:12.5px;color:#8fe7b4;letter-spacing:.02em;line-height:1.4;"></div>
 
 <!-- Ticker -->
 <div class="ticker">
@@ -1536,7 +1534,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
     <div style="text-align:center; max-width:760px; margin:0 auto;">
       <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:16px;">// Our Promise to You</div>
       <h2 style="font-family:var(--serif); font-size:36px; line-height:1.2; font-weight:400; margin-bottom:16px;">Give us 4 weeks.<br>We'll turn AI into <em style="color:var(--gold);">your income.</em></h2>
-      <p style="font-size:16px; color:var(--text-secondary); line-height:1.7; max-width:600px; margin:0 auto 40px;">Not a certificate. Not theory. The exact path we walked — freelance → clients → product → US company → exit — adapted so you can build a real income with AI from Pakistan.</p>
+      <p id="promiseDesc" style="font-size:16px; color:var(--text-secondary); line-height:1.7; max-width:600px; margin:0 auto 40px;">Not a certificate. Not theory. The exact path we walked — freelance → clients → product → US company → exit — adapted so you can build a real income with AI from anywhere in the world.</p>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; max-width:900px; margin:0 auto;">
@@ -1556,7 +1554,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
         <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 2</div>
         <div style="font-size:36px; margin-bottom:12px;">🌍</div>
         <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">Land International Clients</div>
-        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">How to package your AI services and win dollar-paying clients on Upwork, Fiverr, LinkedIn & direct outreach — from Pakistan.</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">How to package your AI services and win high-paying clients on Upwork, Fiverr, LinkedIn & direct outreach — wherever you're based.</div>
       </div>
       <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
         <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 3</div>
@@ -1568,7 +1566,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
         <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Week 3-4</div>
         <div style="font-size:36px; margin-bottom:12px;">🇺🇸</div>
         <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px;">Set Up Your US Company</div>
-        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Open a US company from Pakistan (Delaware C-Corp via Stripe Atlas), take international payments, and operate like a global business.</div>
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">Open a US company from anywhere (Delaware C-Corp via Stripe Atlas), take international payments, and operate like a global business.</div>
       </div>
       <div style="padding:28px; border:1px solid var(--border-gold); background:var(--bg-card); position:relative;">
         <div style="font-family:var(--mono); font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">Optional</div>
@@ -1920,8 +1918,8 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
 <section class="section who-for">
   <div class="container">
     <div class="section-label">// Who This Is For</div>
-    <h2 class="section-title">Built for Pakistanis who want to<br><em>make money with AI</em></h2>
-    <p class="section-desc">If you're in Pakistan and you'd rather make money with AI than wait on a job, this is built for you — technical or not.</p>
+    <h2 class="section-title" id="whoTitle">Built for people who want to<br><em>make money with AI</em></h2>
+    <p class="section-desc" id="whoDesc">If you'd rather make money with AI than wait on the old economy, this is built for you — technical or not, wherever you are.</p>
 
     <div class="persona-grid">
       <div class="persona-card">
@@ -2022,7 +2020,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
             <li>✨ You've packaged your skills into a service or product you can sell</li>
             <li>✨ You've got the roadmap to set up your own US company</li>
             <li>✨ You're the "AI person" clients seek out — not the one undercut by AI</li>
-            <li>✨ You have a real plan to make money with AI from Pakistan</li>
+            <li id="transformPlan">✨ You have a real plan to make money with AI — wherever you are</li>
           </ul>
         </div>
       </div>
@@ -2101,9 +2099,9 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       <div class="curriculum-card">
         <div class="class-number">Class 05</div>
         <span class="class-type type-strategy">Go Global</span>
-        <div class="class-title">Set Up Your US Company (from Pakistan)</div>
+        <div class="class-title">Set Up Your US Company (from Anywhere)</div>
         <ul class="class-topics">
-          <li>Open a US company from Pakistan: Delaware C-Corp via Stripe Atlas — EIN, US bank & payments in days</li>
+          <li>Open a US company from anywhere: Delaware C-Corp via Stripe Atlas — EIN, US bank & payments in days</li>
           <li>Take international payments and operate like a global business</li>
           <li>The exact setup we used — and what we'd do differently</li>
           <li>Staying compliant + the basics of US taxes for non-resident founders</li>
@@ -2200,7 +2198,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       <div class="included-item">
         <div class="included-icon">👥</div>
         <div class="included-title">Private Cohort + Advisory</div>
-        <div class="included-desc">1-on-1 advisory with Raheel & Muddassar + a tight-knit cohort of ambitious builders across Pakistan. Lifetime access.</div>
+        <div class="included-desc">1-on-1 advisory with Raheel & Muddassar + a tight-knit cohort of ambitious builders. Lifetime access.</div>
       </div>
     </div>
   </div>
@@ -2307,9 +2305,9 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       </div>
       <div class="letter-body">
         <p>Look, I'm going to be honest with you.</p>
-        <p>The old path — get a degree, wait for a job — is breaking. The market here is brutal, and AI is eating the easy work fast. But that <strong>same AI is the biggest money-making opening Pakistanis have ever had</strong> — if you know how to use it.</p>
+        <p id="letterMarket">The old path — get a degree, wait for a job — is breaking. The job market is brutal everywhere, and AI is eating the easy work fast. But that <strong>same AI is the biggest money-making opening of our generation</strong> — if you know how to use it.</p>
         <p>Muddassar and I figured it out the hard way — 8 years, 4 companies, two exits, and an acquisition by a US firm. And we did it <strong>from Pakistan.</strong> Today we build products, land international clients, and run a global business — and we want to show you exactly how.</p>
-        <p>You don't need to be technical. You don't need a CS degree. You need the right AI skills, the international clients who pay for them, and someone who's actually done it from here to show you the path.</p>
+        <p id="letterPath">You don't need to be technical. You don't need a CS degree. You need the right AI skills, the clients who pay for them, and someone who's actually done it to show you the path.</p>
         <p><strong>This is the playbook we wish someone had handed us.</strong> Whether you're a freelancer, a developer, a designer, or starting from zero — we'll take you from watching the AI wave to making real money from it.</p>
         <p>I won't pretend it's easy. But the people who move now will own the next few years. The ones who wait will keep refreshing the job boards.</p>
         <p>If you'd rather be the first kind, I want to work with you directly for 4 weeks.</p>
@@ -2399,7 +2397,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
           <span>I'm based in MENA/Pakistan/India — is this relevant for me?</span>
           <span class="faq-toggle">+</span>
         </div>
-        <div class="faq-answer"><p>Built for exactly this. Every example and playbook is designed for someone making money with AI from Pakistan — landing international clients who pay in dollars, packaging AI services, and even opening a US company from here. We did it from Pakistan ourselves — we'll show you the path.</p></div>
+        <div class="faq-answer"><p>Built for exactly this. Every example and playbook is designed for someone making money with AI from outside the US — landing international clients who pay in dollars, packaging AI services, and even opening a US company remotely. We did it from Pakistan ourselves — we'll show you the path from wherever you are.</p></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-question">
@@ -2434,7 +2432,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
       <img src="https://cdn.prod.website-files.com/62d08ba41587731f3556644b/62d08c8df372261178c2e968_dp.jpeg" alt="Muddassar" style="width:48px; height:48px; border-radius:50%; border: 2px solid var(--border-gold); margin-left:-8px; object-fit:cover;">
     </div>
     <h2>The old economy isn't coming back.<br><em>The new one is yours to build.</em></h2>
-    <p>In 4 weeks you'll have the skills, the clients, and the playbook to build a real income with AI from Pakistan — freelance, build a product you can sell, and set up your own US company. Join the founding cohort.</p>
+    <p>In 4 weeks you'll have the skills, the clients, and the playbook to build a real income with AI — freelance, build a product you can sell, and set up your own US company. From anywhere in the world. Join the founding cohort.</p>
     <a href="#pricing" class="btn-primary" style="display:inline-flex;">
       Apply for a Seat
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
@@ -2755,6 +2753,18 @@ document.addEventListener('DOMContentLoaded', function(){
       try { var b=document.getElementById('pkBanner'); if(b){ b.innerHTML='🇵🇰 <b style="color:#c9f7dc;">Special Pakistan price</b> — <b style="color:#fff;">'+pkr+'</b> · applied automatically at checkout'; b.style.display='block'; } } catch(e){}
       try { var per=document.querySelector('.pricing-period'); if(per) per.innerHTML='🇵🇰 Special Pakistan price · billed securely in PKR at checkout'; } catch(e){}
       try { document.querySelectorAll('.pricing-card div').forEach(function(d){ if(d.children.length===0 && d.textContent.indexOf('Founding-cohort price')>-1){ d.innerHTML='🇵🇰 Special Pakistan price'; } }); } catch(e){}
+      // 5) PK copy localization: base page is international; restore Pakistan-targeted copy for PK visitors
+      try {
+        var pkCopy = {
+          whoTitle: 'Built for Pakistanis who want to<br><em>make money with AI</em>',
+          whoDesc: "If you're in Pakistan and you'd rather make money with AI than wait on a job, this is built for you — technical or not.",
+          promiseDesc: 'Not a certificate. Not theory. The exact path we walked — freelance → clients → product → US company → exit — adapted so you can build a real income with AI from Pakistan.',
+          transformPlan: '✨ You have a real plan to make money with AI from Pakistan',
+          letterMarket: 'The old path — get a degree, wait for a job — is breaking. The market here is brutal, and AI is eating the easy work fast. But that <strong>same AI is the biggest money-making opening Pakistanis have ever had</strong> — if you know how to use it.',
+          letterPath: "You don't need to be technical. You don't need a CS degree. You need the right AI skills, the international clients who pay for them, and someone who's actually done it from here to show you the path."
+        };
+        for (var id in pkCopy) { var el=document.getElementById(id); if(el) el.innerHTML = pkCopy[id]; }
+      } catch(e){}
     }).catch(function(){});
   } catch(e){}
 })();
