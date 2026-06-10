@@ -57,6 +57,9 @@ async function upsertStripeCustomer(key, { name, email, whatsapp, country, field
     situation: fields.situation || '',
     goal: fields.goal || '',
     readiness: fields.readiness || '',
+    utm_source: fields.utm_source || '',
+    utm_campaign: fields.utm_campaign || '',
+    utm_content: fields.utm_content || '',
     applied_at: new Date().toISOString(),
     seq_step: email ? '1' : '0', // 1 = welcome sent; drip continues from here
   }
@@ -74,7 +77,7 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST')
     return res.status(405).json({ error: 'Method Not Allowed' })
   }
-  const { name, email, whatsapp, situation, goal, readiness, event_id, fbp, fbc } = req.body || {}
+  const { name, email, whatsapp, situation, goal, readiness, event_id, fbp, fbc, utm_source, utm_campaign, utm_content } = req.body || {}
   if (!name || !whatsapp || digits(whatsapp).length < 7) {
     return res.status(400).json({ error: 'Name and a valid WhatsApp number are required.' })
   }
@@ -96,7 +99,7 @@ export default async function handler(req, res) {
     try {
       const c = await upsertStripeCustomer(key, {
         name, email, whatsapp, country,
-        fields: { situation, goal, readiness },
+        fields: { situation, goal, readiness, utm_source, utm_campaign, utm_content },
       })
       if (c && c.id) customer_id = c.id
       else if (c && c.error) console.error('[apply] stripe', c.error.message)

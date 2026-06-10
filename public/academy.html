@@ -2645,6 +2645,19 @@ async function goCheckout(btn){
 
 <!-- ───────────────── Application modal logic ───────────────── -->
 <script>
+// First-touch attribution: remember UTM params so every application carries its source
+(function(){
+  try {
+    var q = new URLSearchParams(location.search);
+    if (q.get('utm_source') || q.get('src')) {
+      localStorage.setItem('aipa_utm', JSON.stringify({
+        s: q.get('utm_source') || q.get('src') || '',
+        c: q.get('utm_campaign') || '',
+        n: q.get('utm_content') || ''
+      }));
+    }
+  } catch(_){}
+})();
 var applyState = { ready:'', eid:'' };
 function openApply(e){
   if(e && e.preventDefault) e.preventDefault();
@@ -2691,6 +2704,8 @@ function applyPick(el){
 async function applySubmit(){
   var err=document.getElementById('ap_err3'); err.textContent='';
   if(!applyState.ready){ err.textContent='Please let us know where you stand.'; return; }
+  var utm = {};
+  try { utm = JSON.parse(localStorage.getItem('aipa_utm')||'{}'); } catch(_){}
   var data = {
     name:(document.getElementById('ap_name').value||'').trim(),
     whatsapp:(document.getElementById('ap_wa').value||'').trim(),
@@ -2698,6 +2713,7 @@ async function applySubmit(){
     situation:(document.getElementById('ap_situation').value||''),
     goal:(document.getElementById('ap_goal').value||''),
     readiness:applyState.ready,
+    utm_source:utm.s||'', utm_campaign:utm.c||'', utm_content:utm.n||'',
     event_id:applyState.eid, fbp:readCookie('_fbp'), fbc:readCookie('_fbc')
   };
   try { if(data.email) localStorage.setItem('academy_lead_email', data.email); } catch(_){}
