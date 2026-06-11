@@ -2749,11 +2749,19 @@ function showApplyStep(s){
 }
 // ─── Bank transfer (PK) flow ───
 var AIPA_WA = '971525414894';
+function bankLead(){
+  var name='', email='';
+  try { name=(document.getElementById('ap_name').value||'').trim() || localStorage.getItem('academy_lead_name')||''; } catch(_){}
+  try { email=localStorage.getItem('academy_lead_email')||''; } catch(_){}
+  return { name:name, email:email };
+}
 function showBankPanel(){
   document.getElementById('payChoose').style.display='none';
   document.getElementById('bankPanel').style.display='block';
   try { if(window.fbq) fbq('trackCustom','BankTransferViewed'); } catch(_){}
   try { if(window.gtag) gtag('event','bank_transfer_viewed'); } catch(_){}
+  // instant "your transfer details" email — puts the IBAN in their inbox/pocket
+  try { var l=bankLead(); if(l.email) fetch('/api/transfer-claim', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email:l.email, name:l.name, step:'viewed' }) }); } catch(_){}
 }
 function backToPay(){
   document.getElementById('bankPanel').style.display='none';
@@ -2777,7 +2785,7 @@ function madeTransfer(){
   document.getElementById('waReceiptBtn').href = 'https://wa.me/'+AIPA_WA+'?text='+encodeURIComponent(msg);
   try { if(window.fbq) fbq('trackCustom','TransferClaimed'); } catch(_){}
   try { if(window.gtag) gtag('event','transfer_claimed'); } catch(_){}
-  try { fetch('/api/transfer-claim', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email:email, name:name }) }); } catch(_){}
+  try { fetch('/api/transfer-claim', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email:email, name:name, step:'claimed' }) }); } catch(_){}
 }
 function applyBack(n){ showApplyStep(n-1); }
 function applyNext(n){

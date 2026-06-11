@@ -183,6 +183,52 @@ export function lastCallHtml({ firstName } = {}) {
 }
 
 // ===================================================================
+//  Bank-transfer flow emails (PK) — sent mid-payment, deepest funnel point
+// ===================================================================
+const WA_RECEIPT = (firstName) =>
+  `https://wa.me/971525414894?text=${encodeURIComponent(`Hi Raheel — I've transferred Rs.150,000 for AI Product Academy Cohort 01${firstName ? ` (name: ${firstName})` : ''}. Here's my receipt:`)}`
+const waBtn = (href, label) =>
+  `<a href="${href}" style="display:inline-block;background:#1fae54;color:#ffffff;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:6px;font-size:15px;">${label}</a>`
+
+// A) fires when they open the bank-details panel — puts the details in their pocket
+export const BANK_DETAILS_SUBJECT = 'Your transfer details — Cohort 01'
+export function bankDetailsHtml({ firstName } = {}) {
+  return shell(`
+    ${eyebrow('Bank transfer · Pakistan')}
+    ${h1('Your transfer details.')}
+    ${p(hey(firstName))}
+    ${p('Here are the details for your seat in <strong>Cohort 01</strong> — so you have them handy in your banking app:')}
+    ${box(`
+      <table style="width:100%;font-size:14px;color:#3a3a3a;line-height:2;">
+        <tr><td style="color:#8B7332;font-family:monospace;font-size:11px;text-transform:uppercase;">Bank</td><td><strong>Mashreq Bank</strong></td></tr>
+        <tr><td style="color:#8B7332;font-family:monospace;font-size:11px;text-transform:uppercase;">Account title</td><td><strong>Raheel Ahmad Butt</strong></td></tr>
+        <tr><td style="color:#8B7332;font-family:monospace;font-size:11px;text-transform:uppercase;">Account #</td><td><strong>089120117191</strong></td></tr>
+        <tr><td style="color:#8B7332;font-family:monospace;font-size:11px;text-transform:uppercase;">IBAN</td><td><strong>PK84MSHQ0000089120117191</strong></td></tr>
+        <tr><td style="color:#8B7332;font-family:monospace;font-size:11px;text-transform:uppercase;">SWIFT</td><td><strong>MSHQPKKK</strong></td></tr>
+        <tr><td style="color:#8B7332;font-family:monospace;font-size:11px;text-transform:uppercase;">Amount</td><td><strong>Rs.150,000 (PKR)</strong></td></tr>
+      </table>`)}
+    ${p('Use your <strong>full name</strong> as the payment reference. Once you\'ve sent it, send your receipt on WhatsApp and I\'ll personally confirm your enrollment:')}
+    <p style="margin:24px 0;">${waBtn(WA_RECEIPT(firstName), '📲 Send receipt on WhatsApp')}</p>
+    ${p('Your seat is held while we confirm. Only <strong>10 seats</strong> — Cohort 01 starts <strong>July 1</strong>.')}
+    ${sign}
+  `)
+}
+
+// B) fires on "I've made the transfer" — receipt reminder
+export const RECEIPT_SUBJECT = 'Last step — send your receipt 🧾'
+export function receiptReminderHtml({ firstName } = {}) {
+  return shell(`
+    ${eyebrow('Almost done')}
+    ${h1('Last step — send your receipt.')}
+    ${p(hey(firstName))}
+    ${p("Great — almost done. Send your transfer receipt on WhatsApp and I'll personally confirm your enrollment within a few hours:")}
+    <p style="margin:24px 0;">${waBtn(WA_RECEIPT(firstName), '📲 Send receipt on WhatsApp')}</p>
+    ${p('If anything went wrong with the transfer, just reply to this email — it comes straight to me.')}
+    ${sign}
+  `)
+}
+
+// ===================================================================
 //  Other transactional emails
 // ===================================================================
 
