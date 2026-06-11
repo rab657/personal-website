@@ -15,6 +15,17 @@ const STAGES = [
 ]
 const STEP_LABEL = { 1: 'E1 welcome', 2: 'E2 proof', 3: 'E3 inside', 4: 'E4 objections', 5: 'E5 scarcity', 6: 'E6 last call' }
 
+// wa.me link with a warm prefilled hello; fixes 0xxx → 92xxx numbers
+function waLink(a) {
+  let num = (a.whatsapp || '').replace(/[^\d]/g, '')
+  if (num.startsWith('0')) num = '92' + num.slice(1) // local PK format → E.164
+  const fn = (a.name || '').trim().split(/\s+/)[0]
+  const msg = a.transfer_claimed
+    ? `Salam ${fn} — Raheel here from AI Product Academy. Thanks for your transfer! Whenever you're ready, send over the receipt and I'll confirm your seat right away. 🙌`
+    : `Salam ${fn} — Raheel here, from AI Product Academy. Thanks for applying to Cohort 01! Just wanted to say hi personally. If you have any questions at all — about the classes, the schedule, anything — I'm right here, ask away. Time's a bit short before we kick off, so don't hesitate. 🙂`
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`
+}
+
 function ago(iso) {
   if (!iso) return '—'
   const d = (Date.now() - Date.parse(iso)) / 3600000
@@ -126,7 +137,7 @@ export default function Admin() {
                 </div>
                 {a.notes && <div className="notes">{a.notes}</div>}
                 <div className="cardacts">
-                  {a.whatsapp && <a href={`https://wa.me/${a.whatsapp.replace(/[^\d]/g, '')}`} target="_blank" rel="noreferrer">WhatsApp</a>}
+                  {a.whatsapp && <a href={waLink(a)} target="_blank" rel="noreferrer">WhatsApp</a>}
                   {a.seq_step < 6 && a.stage !== 'won' && (
                     <button disabled={!!busy} onClick={() => act('advance_drip', { customer_id: a.customer_id }, a.customer_id)}>
                       {busy === a.customer_id ? '…' : `Send E${a.seq_step + 1} now`}
