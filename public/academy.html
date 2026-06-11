@@ -2495,6 +2495,20 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
   .apply-trust{font-family:var(--mono);font-size:10.5px;color:var(--text-muted);text-align:center;margin-top:16px;letter-spacing:.04em;}
   .apply-check{width:60px;height:60px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--gold);font-size:30px;}
   .apply-step{display:none;}.apply-step.on{display:block;}
+  .bank-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #221d15;}
+  .bank-row:last-child{border-bottom:none;}
+  .bank-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);flex:0 0 92px;}
+  .bank-val{font-size:14px;color:var(--text-primary);word-break:break-all;flex:1;}
+  .bank-copy{background:transparent;border:1px solid var(--border-gold);color:var(--gold);font-family:var(--mono);font-size:10.5px;padding:5px 10px;cursor:pointer;flex:0 0 auto;}
+  .bank-copy:hover{background:var(--gold);color:#0a0a0a;}
+  .dropoff-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9998;background:linear-gradient(180deg,#15110a,#0c0a07);border-top:2px solid var(--gold);padding:20px 18px calc(20px + env(safe-area-inset-bottom));text-align:center;box-shadow:0 -18px 50px rgba(0,0,0,.6);display:none;}
+  .dropoff-sheet.show{display:block;animation:dropup .45s ease;}
+  @keyframes dropup{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .dropoff-sheet h4{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text-primary);margin-bottom:6px;}
+  .dropoff-sheet h4 em{color:var(--gold);}
+  .dropoff-sheet p{font-size:13.5px;color:var(--text-secondary);margin-bottom:14px;max-width:480px;margin-left:auto;margin-right:auto;}
+  .dropoff-wa{display:inline-block;background:#1fae54;color:#fff;font-weight:700;font-size:15px;padding:13px 26px;text-decoration:none;}
+  .dropoff-x{position:absolute;top:10px;right:14px;background:none;border:none;color:var(--text-muted);font-size:22px;cursor:pointer;}
 </style>
 <div class="apply-overlay" id="applyOverlay" role="dialog" aria-modal="true">
   <div class="apply-modal">
@@ -2558,15 +2572,48 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
         <div class="apply-trust">🔒 Cohort 01 · Only 10 seats</div>
       </div>
 
-      <!-- Success -->
+      <!-- Success → payment options -->
       <div class="apply-step" data-step="done">
-        <div class="apply-check">✓</div>
-        <div class="apply-title" style="text-align:center;">You're in — <em>claim your seat.</em></div>
-        <div class="apply-sub" style="text-align:center;">Cohort 01 has just <b style="color:var(--text-primary);">10 seats</b>, and they go to whoever locks in first. Applying doesn't hold your spot — <b style="color:var(--text-primary);">locking your seat does</b>. Confirmed instantly.</div>
-        <div class="apply-actions" style="flex-direction:column;">
-          <button class="apply-btn primary" onclick="goCheckout(this)">Lock in my seat →</button>
+        <div id="payChoose">
+          <div class="apply-check">✓</div>
+          <div class="apply-title" style="text-align:center;">You're in — <em>lock your seat.</em></div>
+          <div class="apply-sub" style="text-align:center;">Cohort 01 has just <b style="color:var(--text-primary);">10 seats</b>, and they go to whoever locks in first. Applying doesn't hold your spot — <b style="color:var(--text-primary);">locking your seat does</b>.</div>
+          <div class="apply-actions" style="flex-direction:column;">
+            <button class="apply-btn primary" onclick="goCheckout(this)">💳 Pay by card — instant confirmation</button>
+            <button class="apply-btn ghost" id="bankOptBtn" style="display:none;flex:1;width:100%;" onclick="showBankPanel()">🏦 Bank transfer (PKR) — Pakistan</button>
+          </div>
+          <div class="apply-trust">🔒 Secure Stripe payment · 🛡️ 14-day "No Fluff" guarantee</div>
         </div>
-        <div class="apply-trust">🔒 Secure Stripe payment · 🛡️ 14-day "No Fluff" guarantee</div>
+
+        <!-- Bank transfer details (PK only) -->
+        <div id="bankPanel" style="display:none;">
+          <div class="apply-eyebrow">// Bank transfer · Pakistan</div>
+          <div class="apply-title">Transfer <em>Rs.150,000</em></div>
+          <div class="apply-sub">Send the transfer from your bank app, then confirm below. Use your <b style="color:var(--text-primary);">full name</b> as the payment reference.</div>
+          <div style="border:1px solid var(--border-gold);background:#0d0b08;padding:18px;margin-bottom:18px;">
+            <div class="bank-row"><span class="bank-label">Bank</span><span class="bank-val">Mashreq Bank</span></div>
+            <div class="bank-row"><span class="bank-label">Account title</span><span class="bank-val">Raheel Ahmad Butt</span></div>
+            <div class="bank-row"><span class="bank-label">Account #</span><span class="bank-val" id="bk_acct">089120117191</span><button class="bank-copy" onclick="copyBank('bk_acct',this)">Copy</button></div>
+            <div class="bank-row"><span class="bank-label">IBAN</span><span class="bank-val" id="bk_iban">PK84MSHQ0000089120117191</span><button class="bank-copy" onclick="copyBank('bk_iban',this)">Copy</button></div>
+            <div class="bank-row"><span class="bank-label">SWIFT</span><span class="bank-val" id="bk_swift">MSHQPKKK</span><button class="bank-copy" onclick="copyBank('bk_swift',this)">Copy</button></div>
+            <div class="bank-row"><span class="bank-label">Amount</span><span class="bank-val" id="bk_amt">PKR 150,000</span><button class="bank-copy" onclick="copyBank('bk_amt',this)">Copy</button></div>
+          </div>
+          <div class="apply-actions" style="flex-direction:column;">
+            <button class="apply-btn primary" onclick="madeTransfer()">✓ I've made the transfer</button>
+            <button class="apply-btn ghost" style="width:100%;" onclick="backToPay()">← Back to payment options</button>
+          </div>
+        </div>
+
+        <!-- Receipt → WhatsApp (revealed only after transfer claim) -->
+        <div id="receiptStep" style="display:none;text-align:center;">
+          <div class="apply-check">💸</div>
+          <div class="apply-title">One last step — <em>send your receipt.</em></div>
+          <div class="apply-sub">Send your transfer receipt on WhatsApp and Raheel will personally confirm your enrollment within a few hours.</div>
+          <div class="apply-actions" style="flex-direction:column;">
+            <a id="waReceiptBtn" class="apply-btn primary" style="display:block;text-align:center;text-decoration:none;background:#1fae54;color:#fff;" href="#" target="_blank" rel="noopener">📲 Send receipt on WhatsApp</a>
+          </div>
+          <div class="apply-trust">Your seat is held while we confirm the transfer</div>
+        </div>
       </div>
     </div>
   </div>
@@ -2643,6 +2690,14 @@ async function goCheckout(btn){
 }
 </script>
 
+<!-- Drop-off rescue: shown ONLY when returning from Stripe without paying (?co=back) -->
+<div class="dropoff-sheet" id="dropoffSheet">
+  <button class="dropoff-x" onclick="document.getElementById('dropoffSheet').classList.remove('show')">×</button>
+  <h4>You were <em>one step away.</em></h4>
+  <p>Got a question before you lock your seat — price, schedule, fit? Skip the back-and-forth and ask Raheel directly. He answers personally.</p>
+  <a class="dropoff-wa" id="dropoffWa" href="#" target="_blank" rel="noopener">💬 Talk to Raheel on WhatsApp</a>
+</div>
+
 <!-- ───────────────── Application modal logic ───────────────── -->
 <script>
 // First-touch attribution: remember UTM params so every application carries its source
@@ -2682,6 +2737,47 @@ function showApplyStep(s){
   var dots = document.querySelectorAll('#applyProg span');
   var idx = (s==='done')?3:s;
   dots.forEach(function(d,i){ d.classList.toggle('on', i < idx); });
+  if(s==='done'){
+    // payment step: reset panels; bank transfer is offered to Pakistan only
+    try {
+      document.getElementById('payChoose').style.display='block';
+      document.getElementById('bankPanel').style.display='none';
+      document.getElementById('receiptStep').style.display='none';
+      document.getElementById('bankOptBtn').style.display = window.AIPA_PK ? 'block' : 'none';
+    } catch(_){}
+  }
+}
+// ─── Bank transfer (PK) flow ───
+var AIPA_WA = '971525414894';
+function showBankPanel(){
+  document.getElementById('payChoose').style.display='none';
+  document.getElementById('bankPanel').style.display='block';
+  try { if(window.fbq) fbq('trackCustom','BankTransferViewed'); } catch(_){}
+  try { if(window.gtag) gtag('event','bank_transfer_viewed'); } catch(_){}
+}
+function backToPay(){
+  document.getElementById('bankPanel').style.display='none';
+  document.getElementById('payChoose').style.display='block';
+}
+function copyBank(id, btn){
+  try {
+    var t = document.getElementById(id).textContent.replace(/[^A-Za-z0-9]/g, id==='bk_amt' ? '' : '');
+    if(id==='bk_amt') t = '150000';
+    navigator.clipboard.writeText(t);
+    var old = btn.textContent; btn.textContent='✓'; setTimeout(function(){ btn.textContent=old; }, 1200);
+  } catch(_){}
+}
+function madeTransfer(){
+  document.getElementById('bankPanel').style.display='none';
+  document.getElementById('receiptStep').style.display='block';
+  var name=''; var email='';
+  try { name=(document.getElementById('ap_name').value||'').trim(); } catch(_){}
+  try { email=localStorage.getItem('academy_lead_email')||''; } catch(_){}
+  var msg = "Hi Raheel — I've transferred Rs.150,000 for AI Product Academy Cohort 01" + (name ? " (name: "+name+")" : "") + ". Here's my receipt:";
+  document.getElementById('waReceiptBtn').href = 'https://wa.me/'+AIPA_WA+'?text='+encodeURIComponent(msg);
+  try { if(window.fbq) fbq('trackCustom','TransferClaimed'); } catch(_){}
+  try { if(window.gtag) gtag('event','transfer_claimed'); } catch(_){}
+  try { fetch('/api/transfer-claim', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email:email, name:name }) }); } catch(_){}
 }
 function applyBack(n){ showApplyStep(n-1); }
 function applyNext(n){
@@ -2717,6 +2813,7 @@ async function applySubmit(){
     event_id:applyState.eid, fbp:readCookie('_fbp'), fbc:readCookie('_fbc')
   };
   try { if(data.email) localStorage.setItem('academy_lead_email', data.email); } catch(_){}
+  try { if(data.name) localStorage.setItem('academy_lead_name', data.name); } catch(_){}
   var btn=document.getElementById('ap_submit'); var lbl=btn.textContent; btn.textContent='Submitting…'; btn.disabled=true;
   try { if(window.fbTrack) fbTrack('Lead', { content_name:'AIPA — Application', value:(window.AIPA_PK?500:650), currency:'USD' }, { eventID: applyState.eid }); } catch(_){}
   try { if(window.gtag) gtag('event','generate_lead', { value:(window.AIPA_PK?500:650), currency:'USD' }); } catch(_){}
@@ -2726,6 +2823,20 @@ async function applySubmit(){
   btn.textContent=lbl; btn.disabled=false;
   showApplyStep('done');
 }
+// Drop-off rescue: only fires when Stripe sends them back unpaid (?co=back)
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    var q = new URLSearchParams(location.search);
+    if (q.get('co') === 'back') {
+      var name=''; try { name=localStorage.getItem('academy_lead_name')||''; } catch(_){}
+      var msg = 'Hi Raheel — I applied for Cohort 01' + (name ? ' (name: '+name+')' : '') + ' and have a question before locking my seat.';
+      document.getElementById('dropoffWa').href = 'https://wa.me/'+AIPA_WA+'?text='+encodeURIComponent(msg);
+      setTimeout(function(){ document.getElementById('dropoffSheet').classList.add('show'); }, 900);
+      try { if(window.fbq) fbq('trackCustom','CheckoutDropoff'); } catch(_){}
+      try { if(window.gtag) gtag('event','checkout_dropoff'); } catch(_){}
+    }
+  } catch(_){}
+});
 // Wire all CTAs to open the application
 document.addEventListener('DOMContentLoaded', function(){
   try {
@@ -2742,7 +2853,10 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 (function(){
   try {
-    fetch('/api/geo').then(function(r){return r.json();}).then(function(g){
+    var geoP = (new URLSearchParams(location.search)).get('geo')==='pk'
+      ? Promise.resolve({isPK:true})  // test override: ?geo=pk previews the Pakistan experience
+      : fetch('/api/geo').then(function(r){return r.json();});
+    geoP.then(function(g){
       if(!g || !g.isPK) return;
       window.AIPA_PK = true;
       var pkr = 'Rs.150,000';        // ≈ $500 (at ~300 PKR/USD)

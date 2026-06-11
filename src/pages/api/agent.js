@@ -84,8 +84,9 @@ async function buildState() {
     const paid = email && paidEmails.has(email)
     const started = email ? startedEmails.has(email) : false
     const step = parseInt(m.seq_step || '1', 10)
-    // smart default: reached checkout = hot; deep in sequence = hot; else by drip depth
-    let stage = m.stage || (paid ? 'won' : started || step >= 5 ? 'hot' : step >= 2 ? 'nurturing' : 'applied')
+    const transferClaimed = m.transfer_claimed === '1'
+    // smart default: claimed transfer / reached checkout = hot; else by drip depth
+    let stage = m.stage || (paid ? 'won' : transferClaimed || started || step >= 5 ? 'hot' : step >= 2 ? 'nurturing' : 'applied')
     if (paid) stage = 'won'
     return {
       customer_id: c.id,
@@ -104,6 +105,7 @@ async function buildState() {
       touches: parseInt(m.touches || '0', 10),
       source: [m.utm_source, m.utm_campaign, m.utm_content].filter(Boolean).join(' / ') || 'direct',
       checkout_started: email ? startedEmails.has(email) : false,
+      transfer_claimed: transferClaimed,
       paid,
     }
   }).sort((a, b) => (b.applied_at || '').localeCompare(a.applied_at || ''))

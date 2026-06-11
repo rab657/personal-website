@@ -122,6 +122,7 @@ export default function Admin() {
                   {a.country && <span className="tag">{a.country}</span>}
                   <span className="tag">{a.source}</span>
                   {a.checkout_started && <span className="tag hotTag">💳 reached checkout</span>}
+                  {a.transfer_claimed && <span className="tag hotTag">💸 transfer claimed — confirm receipt</span>}
                 </div>
                 {a.notes && <div className="notes">{a.notes}</div>}
                 <div className="cardacts">

@@ -103,7 +103,8 @@ export default async function handler(req, res) {
     'success_url',
     `${base}/enrolled.html?eid=${encodeURIComponent(event_id || '')}&session_id={CHECKOUT_SESSION_ID}`
   )
-  params.append('cancel_url', pageUrl)
+  // ?co=back triggers the drop-off WhatsApp rescue sheet on the page
+  params.append('cancel_url', `${pageUrl}?co=back`)
   if (email) params.append('customer_email', email)
 
   // Pass identifiers through to the webhook → strong CAPI match + Pixel dedup.
