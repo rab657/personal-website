@@ -34,6 +34,7 @@ const HELP = {
     'POST set_stage {customer_id, stage}': `One of ${STAGES.join('|')}`,
     'POST add_note {customer_id, note}': 'Append timestamped note (kept in Stripe metadata)',
     'POST run_drip {}': 'Run the standard due-now drip pass across all applicants',
+    'POST clear_claim {customer_id}': 'Clear a false/premature "I made the transfer" claim (claims are unverified signals until money lands)',
   },
 }
 
@@ -217,6 +218,15 @@ export default async function handler(req, res) {
       if (!STAGES.includes(stage)) return res.status(400).json({ error: `stage must be one of ${STAGES.join('|')}` })
       await stripe(`customers/${customer_id}`, { 'metadata[stage]': stage })
       return res.status(200).json({ ok: true, stage })
+    }
+    if (action === 'clear_claim') {
+      const stamp = new Date().toISOString().slice(0, 10)
+      const merged = `${m.notes ? m.notes + ' | ' : ''}${stamp}: transfer claim cleared (not paid)`.slice(-450)
+      await stripe(`customers/${customer_id}`, {
+        'metadata[transfer_claimed]': '',
+        'metadata[notes]': merged,
+      })
+      return res.status(200).json({ ok: true })
     }
     if (action === 'add_note') {
       if (!note) return res.status(400).json({ error: 'note required' })

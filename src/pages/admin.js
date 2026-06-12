@@ -133,7 +133,7 @@ export default function Admin() {
                   {a.country && <span className="tag">{a.country}</span>}
                   <span className="tag">{a.source}</span>
                   {a.checkout_started && <span className="tag hotTag">💳 reached checkout</span>}
-                  {a.transfer_claimed && <span className="tag hotTag">💸 transfer claimed — confirm receipt</span>}
+                  {a.transfer_claimed && <span className="tag hotTag">💸 claims transfer — VERIFY in bank first</span>}
                 </div>
                 {a.notes && <div className="notes">{a.notes}</div>}
                 <div className="cardacts">
@@ -142,6 +142,9 @@ export default function Admin() {
                     <button disabled={!!busy} onClick={() => act('advance_drip', { customer_id: a.customer_id }, a.customer_id)}>
                       {busy === a.customer_id ? '…' : `Send E${a.seq_step + 1} now`}
                     </button>
+                  )}
+                  {a.transfer_claimed && (
+                    <button disabled={!!busy} onClick={() => act('clear_claim', { customer_id: a.customer_id })}>✕ didn&apos;t pay</button>
                   )}
                   <button disabled={!!busy} onClick={() => { const n = prompt('Note:'); if (n) act('add_note', { customer_id: a.customer_id, note: n }) }}>Note</button>
                   <select value={a.stage} disabled={!!busy} onChange={(e) => act('set_stage', { customer_id: a.customer_id, stage: e.target.value })}>
