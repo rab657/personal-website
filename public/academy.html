@@ -1448,6 +1448,7 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
 
 <!-- Pakistan special — revealed by /api/geo for PK visitors only -->
 <div id="pkBanner" style="display:none;background:#0d2818;border-bottom:1px solid #1f6e43;text-align:center;padding:11px 14px;font-family:var(--mono);font-size:12.5px;color:#8fe7b4;letter-spacing:.02em;line-height:1.4;"></div>
+<div id="womenBanner" style="display:none;background:#1a1024;border-bottom:1px solid #5a3d7a;text-align:center;padding:11px 14px;font-family:var(--mono);font-size:12.5px;color:#e2c9ff;letter-spacing:.02em;line-height:1.4;">🎓 <b style="color:#fff;">Women in CS — 20% Scholarship.</b> Use code <b style="color:#fff;letter-spacing:.05em;">WOMENCS20</b> at checkout (or transfer Rs.120,000 &amp; mention it on WhatsApp).</div>
 
 <!-- Ticker -->
 <div class="ticker">
@@ -2891,6 +2892,18 @@ async function applySubmit(){
   btn.textContent=lbl; btn.disabled=false;
   showApplyStep('done');
 }
+// Women-in-CS scholarship banner: shown when arriving from the targeted ad (?offer=women-cs)
+(function(){
+  try {
+    var q = new URLSearchParams(location.search);
+    var isWomen = q.get('offer') === 'women-cs';
+    try { if(!isWomen && localStorage.getItem('aipa_offer')==='women-cs') isWomen = true; } catch(_){}
+    if (isWomen) {
+      try { localStorage.setItem('aipa_offer','women-cs'); } catch(_){}
+      var b = document.getElementById('womenBanner'); if(b) b.style.display='block';
+    }
+  } catch(_){}
+})();
 // Drop-off rescue: only fires when Stripe sends them back unpaid (?co=back)
 document.addEventListener('DOMContentLoaded', function(){
   try {

@@ -95,10 +95,9 @@ export default async function handler(req, res) {
   params.append('mode', 'payment')
   params.append('line_items[0][price]', checkoutPrice)
   params.append('line_items[0][quantity]', '1')
-  if (country !== 'PK') {
-    // PK pays the native PKR price (already final); everyone else can enter promo codes.
-    params.append('allow_promotion_codes', 'true')
-  }
+  // Allow promo codes for everyone so WOMENCS20 (women-in-CS scholarship, 20% off)
+  // works on both the USD and the native PKR price.
+  params.append('allow_promotion_codes', 'true')
   params.append(
     'success_url',
     `${base}/enrolled.html?eid=${encodeURIComponent(event_id || '')}&session_id={CHECKOUT_SESSION_ID}`
