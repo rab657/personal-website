@@ -128,6 +128,26 @@ nav .container {
   text-decoration: none;
 }
 .nav-cta:hover { background: var(--gold-light); }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.04em;
+  color: var(--text-secondary); text-decoration: none; transition: color 0.2s ease;
+}
+.nav-links a:hover { color: var(--gold); }
+@media (max-width: 760px) {
+  .nav-logo { display: none; }
+  .nav-links { gap: 18px; flex: 1; }
+  .nav-links a { font-size: 12px; }
+}
+@media (max-width: 420px) {
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 11px; letter-spacing: 0; }
+  .nav-cta { padding: 9px 14px; font-size: 11px; }
+}
+@media (max-width: 680px) {
+  .sched-stats { grid-template-columns: repeat(2,1fr) !important; }
+  .sched-info { grid-template-columns: 1fr !important; }
+}
 
 /* ─── Hero ─── */
 .hero {
@@ -1447,6 +1467,11 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
 <nav>
   <div class="container">
     <a href="/" class="nav-logo">← BUILD → EXIT</a>
+    <div class="nav-links">
+      <a href="#curriculum">Curriculum</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#pricing">Pricing</a>
+    </div>
     <a href="#pricing" class="nav-cta">Apply for a Seat</a>
   </div>
 </nav>
@@ -2035,6 +2060,48 @@ if (window.gtag) { gtag('event','view_item', { currency:'USD', value:650, items:
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- Schedule / Format -->
+<section class="section" id="schedule" style="border-top:1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">// The Schedule</div>
+    <h2 class="section-title">How Cohort 01 <em>runs</em></h2>
+    <p class="section-desc">Live, hands-on, and built around your week — not a pile of pre-recorded videos.</p>
+    <div class="sched-stats" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; max-width:920px; margin:36px auto 0;">
+      <div style="border:1px solid var(--border-gold); background:var(--bg-card); padding:24px 18px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:38px; color:var(--gold); line-height:1;">6</div>
+        <div style="font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-top:8px;">Live classes</div>
+      </div>
+      <div style="border:1px solid var(--border-gold); background:var(--bg-card); padding:24px 18px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:38px; color:var(--gold); line-height:1;">4</div>
+        <div style="font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-top:8px;">Weeks</div>
+      </div>
+      <div style="border:1px solid var(--border-gold); background:var(--bg-card); padding:24px 18px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:38px; color:var(--gold); line-height:1;">60<span style="font-size:18px;">m</span></div>
+        <div style="font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-top:8px;">Per session</div>
+      </div>
+      <div style="border:1px solid var(--border-gold); background:var(--bg-card); padding:24px 18px; text-align:center;">
+        <div style="font-family:var(--serif); font-size:38px; color:var(--gold); line-height:1;">10</div>
+        <div style="font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-top:8px;">Seats only</div>
+      </div>
+    </div>
+    <div class="sched-info" style="max-width:920px; margin:18px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+      <div style="padding:18px 20px; border:1px solid var(--border); background:var(--bg-secondary);">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;">When</div>
+        <div style="font-size:15px; color:var(--text-primary); line-height:1.5;">Cohort 01 starts <b>July 1, 2026</b>. Live sessions in the evening (PKT) — exact weekly times shared on enrollment.</div>
+      </div>
+      <div style="padding:18px 20px; border:1px solid var(--border); background:var(--bg-secondary);">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;">Where</div>
+        <div style="font-size:15px; color:var(--text-primary); line-height:1.5;">100% online, live on Zoom. Every class recorded — <b>lifetime access</b> to replays + the private community.</div>
+      </div>
+      <div style="padding:18px 20px; border:1px solid var(--border); background:var(--bg-secondary);">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;">Commitment</div>
+        <div style="font-size:15px; color:var(--text-primary); line-height:1.5;">~6–8 focused hours/week. You leave each class having <b>built something real</b>.</div>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:26px;"><a href="#curriculum" style="font-family:var(--mono); font-size:13px; color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold-dim); padding-bottom:2px;">See the full curriculum ↓</a></p>
   </div>
 </section>
 
