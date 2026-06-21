@@ -23,7 +23,8 @@ function waLink(a) {
   const msg = a.transfer_claimed
     ? `Salam ${fn} — Raheel here from AI Product Academy. Thanks for your transfer! Whenever you're ready, send over the receipt and I'll confirm your seat right away. 🙌`
     : `Salam ${fn} — Raheel here, from AI Product Academy. Thanks for applying to Cohort 01! Just wanted to say hi personally. If you have any questions at all — about the classes, the schedule, anything — I'm right here, ask away. Time's a bit short before we kick off, so don't hesitate. 🙂`
-  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`
+  // whatsapp:// deep link opens the native Desktop app directly with the message pre-typed
+  return `whatsapp://send?phone=${num}&text=${encodeURIComponent(msg)}`
 }
 
 function ago(iso) {
