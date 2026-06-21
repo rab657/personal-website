@@ -35,6 +35,7 @@ const HELP = {
     'POST add_note {customer_id, note}': 'Append timestamped note (kept in Stripe metadata)',
     'POST run_drip {}': 'Run the standard due-now drip pass across all applicants',
     'POST clear_claim {customer_id}': 'Clear a false/premature "I made the transfer" claim (claims are unverified signals until money lands)',
+    'POST mark_contacted {customer_id}': 'Stamp that you reached out (sets contacted_at + increments outreach_count) — fired when the WhatsApp button is clicked',
   },
 }
 
@@ -107,6 +108,8 @@ async function buildState() {
       source: [m.utm_source, m.utm_campaign, m.utm_content].filter(Boolean).join(' / ') || 'direct',
       checkout_started: email ? startedEmails.has(email) : false,
       transfer_claimed: transferClaimed,
+      contacted_at: m.contacted_at || '',
+      outreach_count: parseInt(m.outreach_count || '0', 10),
       paid,
     }
   }).sort((a, b) => (b.applied_at || '').localeCompare(a.applied_at || ''))
@@ -218,6 +221,14 @@ export default async function handler(req, res) {
       if (!STAGES.includes(stage)) return res.status(400).json({ error: `stage must be one of ${STAGES.join('|')}` })
       await stripe(`customers/${customer_id}`, { 'metadata[stage]': stage })
       return res.status(200).json({ ok: true, stage })
+    }
+    if (action === 'mark_contacted') {
+      const n = parseInt(m.outreach_count || '0', 10) + 1
+      await stripe(`customers/${customer_id}`, {
+        'metadata[contacted_at]': new Date().toISOString(),
+        'metadata[outreach_count]': String(n),
+      })
+      return res.status(200).json({ ok: true, outreach_count: n })
     }
     if (action === 'clear_claim') {
       const stamp = new Date().toISOString().slice(0, 10)

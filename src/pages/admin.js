@@ -71,6 +71,18 @@ export default function Admin() {
     } catch (e) { setErr(String(e)) } finally { setBusy('') }
   }
 
+  // Log outreach the instant the WhatsApp deep-link is clicked (optimistic + background POST)
+  function markContacted(a) {
+    fetch('/api/agent?key=' + encodeURIComponent(key), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'mark_contacted', customer_id: a.customer_id }),
+    }).catch(() => {})
+    setState((s) => s ? { ...s, applicants: s.applicants.map((x) =>
+      x.customer_id === a.customer_id
+        ? { ...x, contacted_at: new Date().toISOString(), outreach_count: (x.outreach_count || 0) + 1 }
+        : x) } : s)
+  }
+
   const cols = useMemo(() => {
     const by = {}; STAGES.forEach((s) => (by[s.id] = []))
     ;(state?.applicants || []).forEach((a) => (by[a.stage] || by.applied).push(a))
@@ -135,10 +147,11 @@ export default function Admin() {
                   <span className="tag">{a.source}</span>
                   {a.checkout_started && <span className="tag hotTag">💳 reached checkout</span>}
                   {a.transfer_claimed && <span className="tag hotTag">💸 claims transfer — VERIFY in bank first</span>}
+                  {a.contacted_at && <span className="tag doneTag">✓ messaged {ago(a.contacted_at)}{a.outreach_count > 1 ? ` ×${a.outreach_count}` : ''}</span>}
                 </div>
                 {a.notes && <div className="notes">{a.notes}</div>}
                 <div className="cardacts">
-                  {a.whatsapp && <a href={waLink(a)} target="_blank" rel="noreferrer">WhatsApp</a>}
+                  {a.whatsapp && <a href={waLink(a)} rel="noreferrer" onClick={() => markContacted(a)} style={a.contacted_at ? { borderColor: '#1f6e43', color: '#8fe7b4' } : null}>{a.contacted_at ? 'Message again' : 'WhatsApp'}</a>}
                   {a.seq_step < 6 && a.stage !== 'won' && (
                     <button disabled={!!busy} onClick={() => act('advance_drip', { customer_id: a.customer_id }, a.customer_id)}>
                       {busy === a.customer_id ? '…' : `Send E${a.seq_step + 1} now`}
@@ -217,6 +230,7 @@ function Shell({ children }) {
         .tags { display:flex; gap:5px; flex-wrap:wrap; margin:8px 0; }
         .tag { font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--goldD); border:1px solid var(--bdG); padding:2px 7px; text-transform:uppercase; letter-spacing:.05em; }
         .hotTag { color:#c9f7dc; border-color:#1f6e43; }
+        .doneTag { color:#8fe7b4; border-color:#1f6e43; background:rgba(31,110,67,.12); }
         .notes { font-size:11.5px; color:var(--mut); font-style:italic; margin:6px 0; }
         .cardacts { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-top:8px; }
         .cardacts a { color:#8fe7b4; font-size:12px; text-decoration:none; border:1px solid #1f6e43; padding:7px 10px; }
