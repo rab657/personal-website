@@ -16,7 +16,7 @@
  * State storage: Stripe customer metadata (no DB in this stack — deliberate).
  * Keys used: seq_step, seq_last_at, stage, notes, touches, utm_source/campaign/content.
  */
-import { sendEmail, seqHtml, SEQ_SUBJECTS } from '../../lib/email'
+import { sendEmail, seqHtml, SEQ_SUBJECTS, finalHtml, FINAL_SUBJECTS } from '../../lib/email'
 
 const MAX_STEP = 6
 const DUE_AFTER_DAYS = { 2: 1, 3: 2, 4: 3, 5: 5, 6: 7 }
@@ -34,6 +34,7 @@ const HELP = {
     'POST set_stage {customer_id, stage}': `One of ${STAGES.join('|')}`,
     'POST add_note {customer_id, note}': 'Append timestamped note (kept in Stripe metadata)',
     'POST run_drip {}': 'Run the standard due-now drip pass across all applicants',
+    'POST final_push {step:1|2|3}': 'Broadcast a final-week closing email to all warm (non-won/lost) leads; deduped via final_step',
     'POST clear_claim {customer_id}': 'Clear a false/premature "I made the transfer" claim (claims are unverified signals until money lands)',
     'POST mark_contacted {customer_id}': 'Stamp that you reached out (sets contacted_at + increments outreach_count) — fired when the WhatsApp button is clicked',
   },
@@ -173,6 +174,25 @@ export default async function handler(req, res) {
 
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' })
     const { action, customer_id, stage, note, subject, body } = req.body || {}
+
+    if (action === 'final_push') {
+      const step = parseInt(req.body.step || '1', 10)
+      if (!(step in FINAL_SUBJECTS)) return res.status(400).json({ error: 'step must be 1, 2, or 3' })
+      const apps = await getApplicants()
+      let sent = 0
+      const results = []
+      for (const c of apps) {
+        const m = c.metadata || {}
+        if (!c.email || m.stage === 'won' || m.stage === 'lost' || m.purchased === '1') continue
+        if (parseInt(m.final_step || '0', 10) >= step) continue // already got this step or later
+        const r = await sendEmail({ to: c.email, subject: FINAL_SUBJECTS[step], html: finalHtml(step, { firstName: firstName(c.name) }) })
+        if (r && !r.error && !r.skipped) {
+          await stripe(`customers/${c.id}`, { 'metadata[final_step]': String(step) })
+          sent++; results.push({ id: c.id, email: c.email })
+        }
+      }
+      return res.status(200).json({ ok: true, step, sent, results })
+    }
 
     if (action === 'run_drip') {
       const apps = await getApplicants()

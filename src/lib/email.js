@@ -229,6 +229,64 @@ export function receiptReminderHtml({ firstName } = {}) {
 }
 
 // ===================================================================
+//  FINAL-WEEK closing sequence (broadcast to warm leads before July 1)
+//  Honest urgency: cohort starts July 1, limited seats, enrollment closing.
+// ===================================================================
+export const FINAL_SUBJECTS = {
+  1: 'Cohort 01 starts July 1 — is your seat in?',
+  2: "What you'll walk out of Cohort 01 with",
+  3: 'Final call — enrollment closes before July 1',
+}
+export function finalHtml(step, ctx = {}) {
+  if (step === 2) return finalOutcomesHtml(ctx)
+  if (step === 3) return finalLastCallHtml(ctx)
+  return finalKickoffHtml(ctx)
+}
+export function finalKickoffHtml({ firstName } = {}) {
+  return shell(`
+    ${eyebrow('Cohort 01 · Starts July 1')}
+    ${h1('We start in days — is your seat in?')}
+    ${p(hey(firstName))}
+    ${p('Cohort 01 of the AI Product Academy kicks off <strong>July 1</strong>, and the room is genuinely small — we cap it so everyone gets real attention. A few seats are already taken.')}
+    ${p('You applied for a reason. Here\'s what it is: live, hands-on training with two founders who built and sold an AI company — learning to <strong>build AI products and actually sell them</strong> (international clients, your own US company, the works).')}
+    ${p('If you want in, now\'s the moment to lock your seat before we kick off.')}
+    <p style="margin:24px 0;">${btn(SEAT, 'Lock my seat →')}</p>
+    ${p('Questions? Just reply — it comes straight to me.')}
+    ${sign}
+  `)
+}
+export function finalOutcomesHtml({ firstName } = {}) {
+  return shell(`
+    ${eyebrow('Cohort 01 · Starts July 1')}
+    ${h1('Here\'s exactly what you walk out with.')}
+    ${p(hey(firstName))}
+    ${p('Quick reminder of what 4 weeks in Cohort 01 actually gets you:')}
+    ${box(`<ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.8;color:#3a3a3a;">
+      <li>A real AI product you built yourself — not notes, a working thing you can sell</li>
+      <li>How to land international clients and get paid in dollars</li>
+      <li>Your own US company setup (Stripe Atlas) to operate globally</li>
+      <li>1-on-1 advisory with me &amp; Muddassar + a lifetime community</li>
+    </ul>`)}
+    ${p('Taught by founders who did it and <strong>sold their company to a US firm</strong> — covered by Business Recorder &amp; Profit. This isn\'t theory; it\'s the exact playbook.')}
+    ${p('We start July 1 and seats are limited — lock yours while they\'re open.')}
+    <p style="margin:24px 0;">${btn(SEAT, 'Secure my seat →')}</p>
+    ${sign}
+  `)
+}
+export function finalLastCallHtml({ firstName } = {}) {
+  return shell(`
+    ${eyebrow('Final call · Closes before July 1')}
+    ${h1('Last call for Cohort 01.')}
+    ${p(hey(firstName))}
+    ${p('We\'re closing enrollment for Cohort 01 before classes start <strong>July 1</strong>. After that, the next chance is a future cohort — months away.')}
+    ${p('If building and selling with AI has been on your mind, this is the moment. The seats that are left won\'t be for long.')}
+    <p style="margin:24px 0;">${btn(SEAT, 'Claim my seat →')}</p>
+    ${p('If something\'s holding you back — price, timing, a question — just reply and tell me honestly. I read every message and I\'ll help however I can.')}
+    ${sign}
+  `)
+}
+
+// ===================================================================
 //  Other transactional emails
 // ===================================================================
 
